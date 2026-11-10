@@ -44,6 +44,11 @@ def head(title, desc, path):
 </head>
 <body>
 '''
+NAVER_WA = "2f20872af9da4a"  # 네이버 애널리틱스 발급 ID
+ANALYTICS = f'''<script src="https://wcs.pstatic.net/wcslog.js"></script>
+<script>if(!wcs_add) var wcs_add={{}};wcs_add["wa"]="{NAVER_WA}";if(window.wcs){{wcs_do();}}</script>
+'''
+fin = lambda h: h.replace("</body>", ANALYTICS + "</body>")
 won = lambda n: f"{n:,}원"
 SC = {"lift": "리프트권만", "gear": "리프트 + 장비 렌탈", "wear": "리프트 + 장비 + 의류"}
 
@@ -54,7 +59,7 @@ idx = head("스노우딜 | 전국 스키장 렌탈샵·리프트권 가격 비�
 links = "".join(f'<a href="/{D["SLUG"][n]}/">{n} 렌탈샵 가격</a> ' for n, _ in D["RESORTS"])
 idx += body + f'\n<noscript><div class="gut"><h1>전국 스키장 렌탈샵·리프트권 가격 비교</h1><p>{links}</p></div></noscript>\n'
 idx += f'<nav class="gut seo-links" aria-label="스키장별 가격">{links}</nav>\n<script src="/data.js"></script>\n<script src="/app.js"></script>\n</body>\n</html>\n'
-(ROOT / "index.html").write_text(idx, encoding="utf-8")
+(ROOT / "index.html").write_text(fin(idx), encoding="utf-8")
 
 # 스키장별
 urls = ["/"]
@@ -102,7 +107,7 @@ for n, _ in D["RESORTS"]:
     others = " ".join(f'<a href="/{D["SLUG"][m]}/">{m}</a>' for m, _ in D["RESORTS"] if m != n)
     h += f'<h2>다른 스키장 가격</h2>\n<p class="seo-links">{others}</p>\n'
     h += f'<p class="note">{TODAY_KO} 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 옮겼으며, "~"는 최저 시작가입니다. 예약 전 해당 샵에 반드시 확인하세요.</p>\n</main></div>\n</body>\n</html>\n'
-    (ROOT / slug).mkdir(exist_ok=True); (ROOT / slug / "index.html").write_text(h, encoding="utf-8")
+    (ROOT / slug).mkdir(exist_ok=True); (ROOT / slug / "index.html").write_text(fin(h), encoding="utf-8")
     urls.append(f"/{slug}/")
 
 (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
