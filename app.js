@@ -25,6 +25,7 @@ function rows(res=st.resort){
   return out;
 }
 function render(){
+  syncHub();
   $("#people").textContent=st.people+"명"; $("#resort").value=st.resort;
   $$("#grid .rz").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===st.resort));
   [["day","day"],["scope","scope"],["hours","hours"],["sh","sh"]].forEach(([id,k])=>$$("#"+id+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===st[k])));
@@ -95,10 +96,7 @@ $("#ebOnly").addEventListener("click",()=>set("eb",!st.eb));
 $("#newOnly").addEventListener("click",()=>set("nw",!st.nw));
 $("#offShow").addEventListener("click",()=>set("off",!st.off));
 $("#ebBtn").addEventListener("click",()=>{st={...init(),eb:true,hours:"any"};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
-$$(".nav button").forEach(b=>b.addEventListener("click",()=>{
-  $$(".nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
-  ["home","official","join","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0); if(b.dataset.v==="join")joinInit();
-}));
+$$(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.v)));
 $("#shuttle").innerHTML=RESORTS.map(([n])=>{const s=SHUTTLE[n];return `<div class="sh-item"><div class="t">${n}${s&&s.rt?`<span>왕복 ${won(s.rt)}</span>`:`<span class="na">${s?"요금 미확인":"조사 중"}</span>`}</div>${s?`${s.from?`<p>탑승: ${s.from}</p>`:""}<p>${s.st}</p><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a>`:""}</div>`}).join("");
 $("#list").addEventListener("click",e=>{
   const rr=e.target.closest(".rrow");if(rr){st.resort=rr.dataset.r;render();$("#pills").scrollIntoView({block:"start"});return}
@@ -112,7 +110,7 @@ $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const b=st.resort==="all"?null:best(st.resort);
   const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
   copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
-window.addEventListener("hashchange",()=>{const k=enc();dec();if(enc()!==k)render()});
+window.addEventListener("hashchange",route);window.addEventListener("popstate",route);
 /* ── 동행 구하기 ── */
 const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DEMO=/[?&]demo=1/.test(location.search);
@@ -120,9 +118,7 @@ const J={ready:false,posts:[],uid:null,store:null};
 const jMine=()=>{try{return JSON.parse(localStorage.getItem("jRep")||"[]")}catch(e){return []}};
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
 async function fbStore(){
-  const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
-  await loadScript(b+"firebase-app-compat.js");await loadScript(b+"firebase-auth-compat.js");await loadScript(b+"firebase-firestore-compat.js");
-  firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid;
+  await fbReady();
   const col=firebase.firestore().collection("joins"),inc=firebase.firestore.FieldValue.increment(1);
   return {
     list:async()=>(await col.where("date",">=",today()).orderBy("date").limit(200).get()).docs.map(d=>({id:d.id,...d.data()})),
@@ -158,6 +154,84 @@ function joinRender(){
 function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").textContent="";$("#jfDate").min=today();if($("#jResort").value!=="all")$("#jfResort").value=$("#jResort").value}}
 RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
 if(FB||DEMO)$("#navJoin").hidden=false;
+/* ── 스키장 허브 ── */
+let view="guide";
+const VIEWS={guide:["guide"],home:["home"],talk:["talk"],join:["join"],more:["official","report"]};
+const LIVE=FB||DEMO;
+function go(v,keep){view=v;$$(".nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
+  ["guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
+  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide()}
+function syncHub(){if(view==="guide")renderGuide();if(view==="talk")talkSync()}
+function renderGuide(){
+  const n=st.resort,h=$("#gHero"),b=$("#gBody"),want=n==="all"?"":"#g-"+SLUG[n];
+  if(view==="guide"&&location.hash!==want&&!location.hash.startsWith("#q-")){try{history.replaceState(null,"",want||location.pathname+location.search)}catch(e){}}
+  if(n==="all"){
+    h.innerHTML=`<h1>스키장 갈 땐<br><em>스노우딜</em>부터</h1><p class="hsub">슬로프·셔틀·요금·동행까지, 스키장별로 한곳에 모았어요.</p><button class="live" data-a="nt"><i></i>26/27 요금, 공개되는 대로 바로 업데이트 중<span>개장 일정 ›</span></button>`;
+    const card=([r])=>{const g=GUIDE[r],c=new Set(DATA.filter(d=>d.resort===r&&!d.off).map(d=>d.shop)).size;
+      return `<button class="hcard${g?" g":""}" data-r="${r}"><b>${r}</b><span>${REGION[r]}${g&&g.from?" · "+g.from:""}</span><span>${openTxt(r)}</span><em>${g?"가이드":"기본 정보"}${c?" · 렌탈샵 "+c+"곳":""} ›</em></button>`};
+    b.className="gut";
+    b.innerHTML=`<h2>수도권에서 가까운 스키장</h2><div class="hub">${RESORTS.filter(([r])=>GUIDE[r]).map(card).join("")}</div><h2>강원·그 외 스키장</h2><div class="hub">${RESORTS.filter(([r])=>!GUIDE[r]).map(card).join("")}</div><p class="note">가이드는 리조트 안내와 보도자료를 바탕으로 쓴 초안이에요. 수도권 4곳부터 채우고 있고, 다녀온 분들의 이야기는 각 스키장 톡에 모읍니다.</p>`;
+    return}
+  const g=GUIDE[n],bs=best(n),s=SHUTTLE[n],o=OPEN[n]||{};
+  h.innerHTML=`<button class="back" data-a="all">‹ 전체 스키장</button><h1>${n}</h1><p class="hsub">${REGION[n]}${g&&g.from?" · "+g.from:""} · ${openTxt(n)}</p><div class="hact"><button class="on" data-a="home">최저가 보기</button>${LIVE?'<button data-a="talk">톡</button><button data-a="join">동행 구하기</button>':""}</div>`;
+  const sec=x=>`<div class="gsec"><h3>${x.t}</h3>${x.tb?`<div class="tw"><table><tr>${x.tb.h.map(c=>`<th>${c}</th>`).join("")}</tr>${x.tb.r.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`:""}${x.li?`<ul>${x.li.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}</div>`;
+  const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${won(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
+  const bus=`<div class="gsec"><h3>서울 출발 셔틀버스</h3>${s?`<ul><li>${s.rt?"왕복 "+won(s.rt):"요금 미확인"}${s.from?" · 탑승: "+s.from:""}</li><li>${s.st}</li></ul><p class="gsrc"><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a></p>`:`<p>아직 확인하지 못했어요.</p>`}</div>`;
+  const ask=`<div class="gask"><b>${g?"아직 확인하지 못한 것":"가이드를 준비하고 있어요"}</b>${g?`<ul>${g.todo.map(c=>`<li>${c}</li>`).join("")}</ul>`:`<p>${n}은(는) 기본 정보만 먼저 올렸어요. 슬로프, 주차, 셔틀처럼 다녀온 사람만 아는 이야기를 기다리고 있어요.</p>`}${LIVE?`<p>아는 분은 ${n} 톡에 한 줄 남겨 주세요. 확인해서 가이드에 반영할게요.</p><button data-a="talk">${n} 톡에 남기기</button>`:""}</div>`;
+  b.className="gut one";
+  b.innerHTML=(g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`+g.secs.map(sec).join(""):`<div class="gsec"><h3>개장 일정</h3><ul><li>${o.d?"26/27 개장 "+o.d+" ("+o.src+")":"26/27 개장일은 아직 발표되지 않았어요."}</li>${o.last?`<li>지난 시즌에는 ${o.last}에 개장했어요.</li>`:""}</ul></div>`)
+    +price+bus+ask+(g?`<p class="gsrc">${g.base}. 출처: ${g.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join(", ")}. 운영 내용은 시즌마다 바뀌니 방문 전 리조트 공지를 확인하세요.</p>`:"");
+}
+$("#v-guide").addEventListener("click",e=>{
+  const c=e.target.closest(".hcard");
+  if(c){try{history.pushState(null,"","#g-"+SLUG[c.dataset.r])}catch(x){}set("resort",c.dataset.r);window.scrollTo(0,0);return}
+  const a=e.target.closest("[data-a]");if(!a)return;const k=a.dataset.a;
+  if(k==="nt")openNotice();else if(k==="all"){try{history.pushState(null,"",location.pathname+location.search)}catch(x){}set("resort","all");window.scrollTo(0,0)}else go(k)});
+function route(){const a=location.hash.slice(1);
+  if(a.startsWith("q-")){dec();go("home",true);render();return}
+  const m=/^([gt])-([a-z0-9]+)$/.exec(a),rn=m&&Object.keys(SLUG).find(k=>SLUG[k]===m[2]);
+  if(rn){st.resort=rn;go(m[1]==="t"&&LIVE?"talk":"guide",true);render();return}
+  if(!a&&view==="guide"&&st.resort!=="all"){st.resort="all";render()}}
+/* ── 스키장 톡 ── */
+const T={posts:[],store:null,resort:null,loaded:false,last:0};
+let fbP;
+function fbReady(){return fbP||(fbP=(async()=>{if(DEMO){J.uid="me";return}
+  const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
+  await loadScript(b+"firebase-app-compat.js");await loadScript(b+"firebase-auth-compat.js");await loadScript(b+"firebase-firestore-compat.js");
+  if(!firebase.apps.length)firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid})().catch(e=>{fbP=null;throw e}))}
+function talkStore(){
+  if(DEMO){const m={"곤지암":[{id:"t1",nick:"곤지암보더",text:"토요일 9시 도착했는데 리프트 대기 15분쯤이었어요.",uid:"x",reports:0,ts:Date.now()-72e5},{id:"t2",nick:"눈사람",text:"셔틀은 잠실에서 탔고 앉아서 갔습니다.",uid:"me",reports:0,ts:Date.now()-864e5*2}]};let n=3;const g=r=>m[r]||(m[r]=[]);
+    return {list:async r=>g(r).slice().sort((x,y)=>y.ts-x.ts),add:async(r,p)=>{g(r).push({...p,id:"t"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(r,id)=>{const a=g(r);a.splice(a.findIndex(x=>x.id===id),1)},report:async(r,id)=>{g(r).find(x=>x.id===id).reports++}}}
+  const db=firebase.firestore(),col=r=>db.collection("talk").doc(SLUG[r]).collection("posts"),inc=firebase.firestore.FieldValue.increment(1);
+  return {list:async r=>(await col(r).orderBy("created","desc").limit(100).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
+    add:(r,p)=>col(r).add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),del:(r,id)=>col(r).doc(id).delete(),report:(r,id)=>col(r).doc(id).update({reports:inc})}}
+const ago=ts=>{const m=Math.floor((Date.now()-ts)/6e4);if(m<1)return "방금";if(m<60)return m+"분 전";if(m<1440)return Math.floor(m/60)+"시간 전";const d=new Date(ts);return (d.getMonth()+1)+"월 "+d.getDate()+"일"};
+async function talkSync(force){
+  const r=st.resort!=="all"?st.resort:(T.resort||RESORTS[0][0]);$("#tkResort").value=r;$("#tkT").textContent=r+" 톡";
+  if(T.resort===r&&T.loaded&&!force){talkRender();return}
+  T.resort=r;T.loaded=false;$("#tkCount").textContent="";$("#tkList").innerHTML='<div class="empty">글을 불러오는 중이에요.</div>';
+  try{await fbReady();T.store=T.store||talkStore();const a=await T.store.list(r);if(T.resort!==r)return;T.posts=a;T.loaded=true;talkRender()}
+  catch(e){if(T.resort===r)$("#tkList").innerHTML='<div class="empty">글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}}
+function talkRender(){const hid=jMine(),a=T.posts.filter(p=>(p.reports||0)<3&&!hid.includes(p.id));
+  $("#tkCount").textContent=a.length?`글 ${a.length}개 · 최신순`:"";
+  $("#tkList").innerHTML=a.length?a.map(p=>`<div class="tk"><div class="h"><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span><button class="rep" data-a="${p.uid===J.uid?"del":"rep"}" data-id="${esc(p.id)}">${p.uid===J.uid?"삭제":"신고"}</button></div><p>${esc(p.text)}</p></div>`).join(""):`<div class="empty">${esc(T.resort)} 톡에 아직 글이 없어요.<br>첫 글을 남겨 보세요.</div>`}
+RESORTS.forEach(([n])=>{const o=document.createElement("option");o.value=n;o.textContent=n;$("#tkResort").appendChild(o)});
+try{$("#tkNick").value=localStorage.getItem("tkNick")||""}catch(e){}
+$("#tkResort").addEventListener("change",e=>set("resort",e.target.value));
+$("#tkForm").addEventListener("submit",async e=>{e.preventDefault();const err=m=>{$("#tkErr").textContent=m},nick=$("#tkNick").value.trim(),text=$("#tkText").value.trim();err("");
+  if(!nick)return err("닉네임을 넣어 주세요.");
+  if(text.length<2)return err("내용을 적어 주세요.");
+  if(/https?:\/\/|www\./i.test(text))return err("링크는 올릴 수 없어요.");
+  if(/01[016789][-.\s]?\d{3,4}[-.\s]?\d{4}/.test(text+" "+nick))return err("전화번호는 올릴 수 없어요.");
+  if(Date.now()-T.last<20000)return err("잠시 뒤에 다시 남겨 주세요.");
+  try{await fbReady();T.store=T.store||talkStore();await T.store.add(T.resort,{nick,text});T.last=Date.now();try{localStorage.setItem("tkNick",nick)}catch(x){}$("#tkText").value="";toast("글을 남겼어요.");await talkSync(true)}
+  catch(x){err("남기지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
+$("#tkList").addEventListener("click",async e=>{const b=e.target.closest("[data-a]");if(!b)return;const id=b.dataset.id;
+  if(!b.dataset.sure){b.dataset.sure="1";b.textContent=b.dataset.a==="del"?"한 번 더 누르면 삭제":"한 번 더 누르면 신고";return}
+  if(b.dataset.a==="del"){try{await T.store.del(T.resort,id);toast("글을 삭제했어요.")}catch(x){toast("삭제하지 못했어요.")}}
+  else{try{await T.store.report(T.resort,id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),id]))}catch(x){}toast("신고했어요. 이 글은 내 화면에서 가려집니다.")}
+  await talkSync(true)});
+if(LIVE)$("#navTalk").hidden=false;
 $("#jResort").addEventListener("change",joinRender);
 $("#jNew").addEventListener("click",()=>joinForm(true));
 $("#jfCancel").addEventListener("click",()=>joinForm(false));
@@ -173,7 +247,7 @@ $("#jForm").addEventListener("submit",async e=>{e.preventDefault();const g=id=>$
   if(!$("#jfOk").checked)return err("만 19세 이상 확인에 체크해 주세요.");
   try{await J.store.add(p);joinForm(false);$("#jForm").reset();toast("모집글을 올렸어요.");await joinLoad()}catch(x){err("올리지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
 $("#jList").addEventListener("click",async e=>{const b=e.target.closest("[data-a]");if(!b)return;const p=J.posts.find(x=>x.id===b.dataset.id);if(!p)return;
-  if(b.dataset.a==="price"){st={...init(),resort:p.resort,people:p.want,day:[0,6].includes(new Date(p.date+"T00:00:00").getDay())?"we":"wd"};$$(".nav button")[0].click();render();return}
+  if(b.dataset.a==="price"){st={...init(),resort:p.resort,people:p.want,day:[0,6].includes(new Date(p.date+"T00:00:00").getDay())?"we":"wd"};go("home");render();return}
   if(b.dataset.a==="del"){if(b.dataset.sure){try{await J.store.del(p.id);toast("글을 삭제했어요.");await joinLoad()}catch(x){toast("삭제하지 못했어요.")}}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 삭제"}return}
   if(b.dataset.a==="rep"){if(b.dataset.sure){try{await J.store.report(p.id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),p.id]))}catch(x){}toast("신고했어요. 이 글은 내 화면에서 가려집니다.");await joinLoad()}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 신고"}}});
 $("#ntBtn").addEventListener("click",openNotice);
@@ -181,6 +255,6 @@ $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));
 $("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
-dec();render();renderOfficial();renderNotice();
+route();render();renderOfficial();renderNotice();
 (function(){let seen=false;try{seen=localStorage.getItem("ntDay")===today()||sessionStorage.getItem("ntS")==="1";sessionStorage.setItem("ntS","1")}catch(e){}
   if(seen||location.hash)return;setTimeout(openNotice,$("#splash").hidden?600:1900)})();

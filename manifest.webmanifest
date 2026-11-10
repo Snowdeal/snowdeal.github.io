@@ -1,7 +1,7 @@
 {
  "name": "스노우딜",
  "short_name": "스노우딜",
- "description": "전국 스키장 렌탈샵·리프트권 가격 비교",
+ "description": "전국 스키장 정보·렌탈샵 리프트권 최저가·동행",
  "start_url": "/",
  "scope": "/",
  "display": "standalone",

@@ -290,3 +290,56 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .sp-d{font-size:min(18vw,82px);color:#ffe14d;letter-spacing:.13em;padding-left:.13em;margin-top:.1em}
 #splash p{font-family:var(--font);font-weight:700;font-size:16px;margin:26px 0 0;opacity:.92;letter-spacing:-.01em}
 @media (prefers-reduced-motion:reduce){#splash{transition:none}}
+/* ── 스키장 허브 · 가이드 · 톡 ── */
+.hero .hsub{margin:-6px 0 14px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.92)}
+.hero .back{display:block;border:0;background:none;color:rgba(255,255,255,.92);font-size:13px;font-weight:700;padding:4px 0;margin-top:2px}
+.hero .hact{display:flex;flex-wrap:wrap;gap:8px}
+.hero .hact button{border:0;border-radius:999px;padding:10px 16px;font-weight:800;font-size:14px;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);color:#fff}
+.hero .hact button.on{background:var(--sun);color:var(--sun-fg);box-shadow:none}
+.hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.hcard{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:18px;padding:14px;display:grid;gap:4px;align-content:start;min-width:0}
+.hcard b{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.hcard span{font-size:12px;color:var(--muted)}
+.hcard em{font-style:normal;font-size:12px;font-weight:700;color:var(--p);margin-top:4px}
+.hcard.g{background:var(--soft)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:20px}
+.facts div{background:var(--soft);border-radius:14px;padding:12px;display:grid;gap:2px;min-width:0}
+.facts span{font-size:12px;color:var(--muted)}
+.facts b{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.gsec{margin-bottom:22px;min-width:0}
+.gsec h3{font-size:16px;font-weight:800;margin:0 0 8px;letter-spacing:-.02em}
+.gsec h3 small{font-size:11px;font-weight:500;color:var(--muted);margin-left:6px}
+.gsec ul{margin:0;padding-left:18px;font-size:14px;line-height:1.65}
+.gsec p{margin:0 0 8px;font-size:14px;line-height:1.6}
+.gsec th:first-child,.gsec td:first-child{text-align:left}
+.gsec .rrow{margin-top:8px}
+.gask{border-radius:18px;background:var(--navy);color:#fff;padding:16px;display:grid;gap:8px;margin-bottom:22px}
+.gask b{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.25}
+.gask ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6;color:rgba(255,255,255,.92)}
+.gask p{margin:0;font-size:13px;line-height:1.55;color:rgba(255,255,255,.92)}
+.gask button{justify-self:start;border:0;border-radius:999px;background:var(--sun);color:var(--sun-fg);font-weight:800;font-size:14px;padding:10px 16px;margin-top:2px}
+.gsrc{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 8px}
+.gsrc a{color:var(--p)}
+.tkform{display:grid;gap:8px;margin-bottom:14px}
+.tkform input,.tkform textarea{font:inherit;font-size:14px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);width:100%;box-sizing:border-box}
+.tkform input{max-width:220px}
+.tkrow{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.tkrow .cta{margin:0;border:0;flex:none}
+#tkList{gap:0}
+.tk{border-bottom:1px solid var(--line);padding:12px 0;display:grid;gap:4px;min-width:0}
+.tk .h{display:flex;gap:8px;align-items:baseline;font-size:13px}
+.tk .h b{font-weight:800}
+.tk .h span{color:var(--muted);font-size:12px}
+.tk .h .rep{margin-left:auto}
+.tk p{margin:0;font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.page .gsec ul{font-size:13px}
+@media (min-width:960px){
+  #v-guide>.hero{display:block;margin:0 0 26px;padding:14px 36px 36px;border-radius:0 0 34px 34px}
+  #v-guide>.hero .live{margin-top:6px}
+  .hub{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  #gBody.one{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px;align-items:start}
+  #gBody.one>.facts,#gBody.one>.gask,#gBody.one>.gsrc,#gBody.one>.wide{grid-column:1/-1}
+  #tkList{grid-template-columns:minmax(0,1fr)}
+  #v-talk{max-width:760px}
+}

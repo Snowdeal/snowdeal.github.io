@@ -292,17 +292,75 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .sp-d{font-size:min(18vw,82px);color:#ffe14d;letter-spacing:.13em;padding-left:.13em;margin-top:.1em}
 #splash p{font-family:var(--font);font-weight:700;font-size:16px;margin:26px 0 0;opacity:.92;letter-spacing:-.01em}
 @media (prefers-reduced-motion:reduce){#splash{transition:none}}
+/* ── 스키장 허브 · 가이드 · 톡 ── */
+.hero .hsub{margin:-6px 0 14px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.92)}
+.hero .back{display:block;border:0;background:none;color:rgba(255,255,255,.92);font-size:13px;font-weight:700;padding:4px 0;margin-top:2px}
+.hero .hact{display:flex;flex-wrap:wrap;gap:8px}
+.hero .hact button{border:0;border-radius:999px;padding:10px 16px;font-weight:800;font-size:14px;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);color:#fff}
+.hero .hact button.on{background:var(--sun);color:var(--sun-fg);box-shadow:none}
+.hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.hcard{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:18px;padding:14px;display:grid;gap:4px;align-content:start;min-width:0}
+.hcard b{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.hcard span{font-size:12px;color:var(--muted)}
+.hcard em{font-style:normal;font-size:12px;font-weight:700;color:var(--p);margin-top:4px}
+.hcard.g{background:var(--soft)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:20px}
+.facts div{background:var(--soft);border-radius:14px;padding:12px;display:grid;gap:2px;min-width:0}
+.facts span{font-size:12px;color:var(--muted)}
+.facts b{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.gsec{margin-bottom:22px;min-width:0}
+.gsec h3{font-size:16px;font-weight:800;margin:0 0 8px;letter-spacing:-.02em}
+.gsec h3 small{font-size:11px;font-weight:500;color:var(--muted);margin-left:6px}
+.gsec ul{margin:0;padding-left:18px;font-size:14px;line-height:1.65}
+.gsec p{margin:0 0 8px;font-size:14px;line-height:1.6}
+.gsec th:first-child,.gsec td:first-child{text-align:left}
+.gsec .rrow{margin-top:8px}
+.gask{border-radius:18px;background:var(--navy);color:#fff;padding:16px;display:grid;gap:8px;margin-bottom:22px}
+.gask b{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.25}
+.gask ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6;color:rgba(255,255,255,.92)}
+.gask p{margin:0;font-size:13px;line-height:1.55;color:rgba(255,255,255,.92)}
+.gask button{justify-self:start;border:0;border-radius:999px;background:var(--sun);color:var(--sun-fg);font-weight:800;font-size:14px;padding:10px 16px;margin-top:2px}
+.gsrc{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 8px}
+.gsrc a{color:var(--p)}
+.tkform{display:grid;gap:8px;margin-bottom:14px}
+.tkform input,.tkform textarea{font:inherit;font-size:14px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);width:100%;box-sizing:border-box}
+.tkform input{max-width:220px}
+.tkrow{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.tkrow .cta{margin:0;border:0;flex:none}
+#tkList{gap:0}
+.tk{border-bottom:1px solid var(--line);padding:12px 0;display:grid;gap:4px;min-width:0}
+.tk .h{display:flex;gap:8px;align-items:baseline;font-size:13px}
+.tk .h b{font-weight:800}
+.tk .h span{color:var(--muted);font-size:12px}
+.tk .h .rep{margin-left:auto}
+.tk p{margin:0;font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.page .gsec ul{font-size:13px}
+@media (min-width:960px){
+  #v-guide>.hero{display:block;margin:0 0 26px;padding:14px 36px 36px;border-radius:0 0 34px 34px}
+  #v-guide>.hero .live{margin-top:6px}
+  .hub{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  #gBody.one{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px;align-items:start}
+  #gBody.one>.facts,#gBody.one>.gask,#gBody.one>.gsrc,#gBody.one>.wide{grid-column:1/-1}
+  #tkList{grid-template-columns:minmax(0,1fr)}
+  #v-talk{max-width:760px}
+}
 </style>
 
 <div class="app">
-  <div id="splash" hidden aria-hidden="true"><div class="sp-w">SN<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0-10V10M-8.66-5L8.66 5M-8.66 5L8.66-5" stroke-width="3"/><path d="M-3.2-8.2L0-5.4 3.2-8.2M-3.2 8.2L0 5.4 3.2 8.2M-8.7-1.3L-6.3-3.3-9.3-4.9M8.7 1.3L6.3 3.3 9.3 4.9M-8.7 1.3L-6.3 3.3-9.3 4.9M8.7-1.3L6.3-3.3 9.3-4.9" stroke-width="2.1"/></svg>W</div><div class="sp-d">DEAL</div><p>스키장 리프트·렌탈 최저가</p></div>
+  <div id="splash" hidden aria-hidden="true"><div class="sp-w">SN<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0-10V10M-8.66-5L8.66 5M-8.66 5L8.66-5" stroke-width="3"/><path d="M-3.2-8.2L0-5.4 3.2-8.2M-3.2 8.2L0 5.4 3.2 8.2M-8.7-1.3L-6.3-3.3-9.3-4.9M8.7 1.3L6.3 3.3 9.3 4.9M-8.7 1.3L-6.3 3.3-9.3 4.9M8.7-1.3L6.3-3.3 9.3-4.9" stroke-width="2.1"/></svg>W</div><div class="sp-d">DEAL</div><p>스키장 정보 · 최저가 · 동행</p></div>
   <script>(function(){var s=document.getElementById("splash"),on=false;try{on=(matchMedia("(display-mode: standalone)").matches&&!sessionStorage.getItem("sd"))||/[?&]splash=1/.test(location.search);sessionStorage.setItem("sd","1")}catch(e){}if(!on)return;s.hidden=false;setTimeout(function(){s.classList.add("out");setTimeout(function(){s.hidden=true},450)},1200)})()</script>
   <div class="bar gut">
     <a class="logo" href="/" aria-label="스노우딜 홈"><span class="wm">SN<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0-10V10M-8.66-5L8.66 5M-8.66 5L8.66-5" stroke-width="3"/><path d="M-3.2-8.2L0-5.4 3.2-8.2M-3.2 8.2L0 5.4 3.2 8.2M-8.7-1.3L-6.3-3.3-9.3-4.9M8.7 1.3L6.3 3.3 9.3 4.9M-8.7 1.3L-6.3 3.3-9.3 4.9M8.7-1.3L6.3-3.3 9.3-4.9" stroke-width="2.1"/></svg>W<em>DEAL</em></span></a>
     <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
   </div>
 
-  <section id="v-home">
+  <section id="v-guide">
+    <div class="hero gut" id="gHero"></div>
+    <div class="gut" id="gBody"></div>
+  </section>
+
+  <section id="v-home" hidden>
     <div class="hero gut">
       <h1>스키장 리프트·렌탈<br><em>최저가</em> 한눈에</h1>
       <button class="live" id="ntBtn"><i></i>26/27 요금, 공개되는 대로 바로 업데이트 중<span>개장 일정 ›</span></button>
@@ -383,6 +441,20 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
     <div class="safe"><b>안전하게 만나요</b><ul><li>연락은 카카오톡 오픈채팅으로만 하고, 전화번호나 계좌는 올리지 마세요.</li><li>리프트권·숙소 비용을 먼저 보내 달라는 요청은 거절하세요.</li><li>처음 만날 때는 스키장 매표소처럼 사람이 많은 곳에서 만나세요.</li><li>불쾌한 글은 "신고"를 눌러 주세요. 신고가 쌓이면 자동으로 가려집니다.</li></ul></div>
   </section>
 
+  <section id="v-talk" class="gut pane" hidden>
+    <h2 id="tkT">스키장 톡</h2>
+    <p class="jlead">설질, 리프트 대기, 셔틀, 주차처럼 다녀온 사람만 아는 이야기를 글로 남겨 주세요.</p>
+    <div class="jbar"><select id="tkResort" aria-label="스키장 고르기"></select></div>
+    <form class="tkform" id="tkForm" novalidate>
+      <input type="text" id="tkNick" maxlength="12" placeholder="닉네임" aria-label="닉네임">
+      <textarea id="tkText" maxlength="300" rows="3" placeholder="예: 토요일 9시에 도착했는데 리프트 대기가 15분쯤이었어요." aria-label="내용"></textarea>
+      <div class="tkrow"><span class="jerr" id="tkErr" role="alert"></span><button type="submit" class="cta">남기기</button></div>
+    </form>
+    <p class="summary" id="tkCount"></p>
+    <div class="list" id="tkList"></div>
+    <p class="note">글만 올릴 수 있어요(사진·링크 불가). 전화번호 같은 개인정보는 올리지 마세요. 올린 글과 닉네임은 누구나 볼 수 있고, 내 글은 언제든 삭제할 수 있어요. 신고가 쌓인 글은 자동으로 가려집니다. 문의 apap1685@gmail.com</p>
+  </section>
+
   <section id="v-report" class="gut pane" hidden>
     <h2>가격 제보 · 렌탈샵 등록</h2>
     <div class="contact">
@@ -420,10 +492,11 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
     </div>
   </div>
   <nav class="nav">
-    <button aria-selected="true" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>최저가</button>
-    <button aria-selected="false" data-v="official"><svg viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 3-4 5 8z"/></svg>요금·셔틀</button>
+    <button aria-selected="true" data-v="guide"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>스키장</button>
+    <button aria-selected="false" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.500" cy="8.500" r="1.300"/></svg>최저가</button>
+    <button aria-selected="false" data-v="talk" id="navTalk" hidden><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>톡</button>
     <button aria-selected="false" data-v="join" id="navJoin" hidden><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.700 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.200c3 .200 5 2.400 5 5.300"/></svg>동행</button>
-    <button aria-selected="false" data-v="report"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>제보</button>
+    <button aria-selected="false" data-v="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.400"/><circle cx="12" cy="12" r="1.400"/><circle cx="19" cy="12" r="1.400"/></svg>더보기</button>
   </nav>
 </div>
 
@@ -526,6 +599,43 @@ const SHUTTLE={
 const FB={apiKey:"AIzaSyBz4lHynwKkVHtfbNmbo0TpH3IRost79wQ",authDomain:"snowdeal-2f46a.firebaseapp.com",projectId:"snowdeal-2f46a",storageBucket:"snowdeal-2f46a.firebasestorage.app",messagingSenderId:"763259120331",appId:"1:763259120331:web:5b7ebc2fa0adac068d894e"};
 const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
 const CHECKED="11월 10일 확인";
+const REGION={"지산":"경기 이천","곤지암":"경기 광주","비발디파크":"강원 홍천","엘리시안 강촌":"강원 춘천","오크밸리":"강원 원주","웰리힐리":"강원 횡성","휘닉스":"강원 평창","모나용평":"강원 평창","알펜시아":"강원 평창","하이원":"강원 정선","오투":"강원 태백","무주":"전북 무주","에덴밸리":"경남 양산"};
+/* 스키장 가이드: 공개 자료로 쓴 초안. base=자료 기준 시즌, todo=직접 확인이 필요한 항목 */
+const GUIDE={
+ "지산":{from:"서울에서 약 40분",base:"25/26 시즌 안내 기준",
+  facts:[["슬로프","10면"],["경사","7~30도"],["가장 긴 코스","1,200m (중상급)"],["지난 시즌 운영","09:00~익일 02:00"]],
+  secs:[
+   {t:"슬로프",li:["경사 7~30도의 슬로프 10면을 운영해요.","가장 긴 코스는 중상급 1,200m예요.","6인승 고속 리프트가 있어요."]},
+   {t:"운영 시간",li:["지난 시즌 안내 기준 09:00~익일 02:00.","17:00~18:30은 정설(눈 고르기) 시간이라 슬로프가 닫혀요.","26/27 운영 시간은 개장 공지가 나오면 바꿔 둘게요."]},
+   {t:"가는 법",li:["주소: 경기 이천시 마장면 지산로 267","리조트 문의: 031-644-1200"]},
+   {t:"알아 두면 좋은 것",li:["25/26 시즌에는 엘리시안 강촌과 함께 X5 통합 시즌권 사용처였어요."]}],
+  todo:["서울 출발 셔틀 탑승 위치와 요금","주말 주차장이 차는 시간","초보가 타기 좋은 슬로프와 리프트 대기 시간"],
+  src:[["한국관광공사 관광정보","https://www.ktriptips.com/kor/leisure/131723"],["지산리조트","http://www.jisanresort.co.kr"]]},
+ "곤지암":{from:"서울에서 약 40분",base:"25/26 시즌 리조트 발표 기준",
+  facts:[["슬로프","8면"],["최대 폭","154m"],["리프트권","시간제"],["입장","슬로프 정원제"]],
+  secs:[
+   {t:"슬로프",li:["최대 폭 154m의 넓은 슬로프 8면을 운영해요.","파노라마 슬로프는 정상에서 베이스까지 길고 완만하게 이어져 초·중급자에게 맞아요.","초급 강습 전용 슬로프가 따로 있어요."]},
+   {t:"리프트권과 입장",li:["타기 시작한 시간부터 계산하는 시간제 리프트권을 써요.","같은 시간대 이용객 수를 제한하는 슬로프 정원제라 성수기 주말은 미리 예매하는 편이 안전해요.","모바일 퀵패스로 휴대폰에서 예매하고 바로 입장할 수 있어요."]},
+   {t:"운영 시간",li:["25/26 시즌 성수기(12/20~1/31)에는 주말·공휴일 07:00, 주중 08:00에 열었어요.","26/27 운영 시간은 개장 공지가 나오면 바꿔 둘게요."]}],
+  todo:["슬로프별 난이도와 초보 추천 코스","주말 주차장이 차는 시간, 주차장에서 매표소까지 거리","셔틀버스가 앉아서 가는지, 정류장 정확한 위치"],
+  src:[["헤럴드경제 2025.12.1","https://www.heraldk.com/article/2025120118211649680"],["아주경제 2025.12.8","https://www.ajunews.com/view/20251208105937835"]]},
+ "비발디파크":{from:"",base:"25/26 시즌 리조트 안내 기준",
+  facts:[["슬로프","10면 운영"],["가장 긴 코스","재즈 900m"],["지난 시즌 운영","09:00~익일 03:00"],["리프트·곤돌라","총 10기"]],
+  secs:[
+   {t:"슬로프",tb:{h:["슬로프","난이도","길이","평균 경사"],r:[["블루스","초심","365m","4°"],["발라드","초급","508m","8°"],["재즈","중급","900m","12°"],["힙합Ⅰ","중상급","240m","11°"],["테크노Ⅰ","중상급","480m","11°"],["클래식","중상급","450m","12°"],["레게","중상급","570m","14°"],["힙합Ⅱ","중상급","620m","15°"],["펑키","중상급","575m","16°"],["테크노Ⅱ","상급","680m","17°"],["락","최상급","610m","21°"]]},li:["락(최상급)은 24/25 시즌부터 운영하지 않고 있어요.","처음이라면 블루스(4°)에서 연습하고 발라드(8°)로 넘어가는 순서가 무난해요."]},
+   {t:"운영 시간",li:["야간·심야까지 정상 운영하는 날은 09:00~익일 03:00.","정설 시간은 매일 17:30~19:00이고, 블루스·힙합Ⅰ·힙합Ⅱ는 17:00부터 닫혀요.","심야 스키는 매주 월요일 23:00~화요일 03:00에 쉬어요."]},
+   {t:"주차",li:["당일 이용객은 소노펠리체 야외 대형주차장이나 오션월드 주차장을 이용해요."]}],
+  todo:["주차장에서 스키장까지 걸리는 시간과 순환버스","셔틀버스 정류장별 탑승 위치와 좌석 상황","주말 리프트 대기가 짧은 시간대"],
+  src:[["비발디파크 스키 안내","https://www.sonohotelsresorts.com/skiboard/aboutus"],["비발디파크 이용 안내","https://www.sonohotelsresorts.com/skiboard/info"]]},
+ "엘리시안 강촌":{from:"경춘선 백양리역",base:"25/26 시즌 발표 기준",
+  facts:[["슬로프","10면"],["난이도","8면이 초·중급"],["전철","경춘선 백양리역"],["정설 시간","17:00~18:30"]],
+  secs:[
+   {t:"슬로프",li:["슬로프 10면 가운데 8면이 초·중급이라 처음 타는 사람에게 부담이 적어요.","초보 연습 슬로프와 스키학교 강습 슬로프가 따로 있어요.","6인승 고속 리프트가 있어요."]},
+   {t:"가는 법",li:["경춘선 백양리역에서 내리면 되는, 전철로 갈 수 있는 스키장이에요.","25/26 시즌에는 수도권 주요 지점에서 무료 셔틀버스를 운행했어요.","주소: 강원 춘천시 남산면 북한강변길 688 · 문의 033-260-2000","지상 주차장과 지하 주차장이 있어요."]},
+   {t:"리프트권",li:["25/26 시즌에는 3·5·7시간권을 홈페이지 전용 상품으로 팔았어요.","17:00~18:30은 정설 시간이에요.","25/26 시즌에는 지산과 함께 X5 통합 시즌권 사용처였어요."]}],
+  todo:["백양리역에서 스키장까지 이동 방법(도보·역 셔틀)과 걸리는 시간","무료 셔틀 26/27 운행 여부와 예약 방법","슬로프 이름별 난이도"],
+  src:[["세계일보 2025.12.1","https://www.segye.com/newsView/20251201510235"],["놀이의발견 장소 정보","https://xn--ok0b236bp0a.com/place/4130"]]}
+};
 const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};
 // 가격표를 숫자로 공개하지 않았거나 읽지 못한 샵
 const DIR={
@@ -591,6 +701,7 @@ function rows(res=st.resort){
   return out;
 }
 function render(){
+  syncHub();
   $("#people").textContent=st.people+"명"; $("#resort").value=st.resort;
   $$("#grid .rz").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===st.resort));
   [["day","day"],["scope","scope"],["hours","hours"],["sh","sh"]].forEach(([id,k])=>$$("#"+id+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===st[k])));
@@ -661,10 +772,7 @@ $("#ebOnly").addEventListener("click",()=>set("eb",!st.eb));
 $("#newOnly").addEventListener("click",()=>set("nw",!st.nw));
 $("#offShow").addEventListener("click",()=>set("off",!st.off));
 $("#ebBtn").addEventListener("click",()=>{st={...init(),eb:true,hours:"any"};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
-$$(".nav button").forEach(b=>b.addEventListener("click",()=>{
-  $$(".nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
-  ["home","official","join","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0); if(b.dataset.v==="join")joinInit();
-}));
+$$(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.v)));
 $("#shuttle").innerHTML=RESORTS.map(([n])=>{const s=SHUTTLE[n];return `<div class="sh-item"><div class="t">${n}${s&&s.rt?`<span>왕복 ${won(s.rt)}</span>`:`<span class="na">${s?"요금 미확인":"조사 중"}</span>`}</div>${s?`${s.from?`<p>탑승: ${s.from}</p>`:""}<p>${s.st}</p><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a>`:""}</div>`}).join("");
 $("#list").addEventListener("click",e=>{
   const rr=e.target.closest(".rrow");if(rr){st.resort=rr.dataset.r;render();$("#pills").scrollIntoView({block:"start"});return}
@@ -678,7 +786,7 @@ $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const b=st.resort==="all"?null:best(st.resort);
   const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
   copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
-window.addEventListener("hashchange",()=>{const k=enc();dec();if(enc()!==k)render()});
+window.addEventListener("hashchange",route);window.addEventListener("popstate",route);
 /* ── 동행 구하기 ── */
 const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DEMO=/[?&]demo=1/.test(location.search);
@@ -686,9 +794,7 @@ const J={ready:false,posts:[],uid:null,store:null};
 const jMine=()=>{try{return JSON.parse(localStorage.getItem("jRep")||"[]")}catch(e){return []}};
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
 async function fbStore(){
-  const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
-  await loadScript(b+"firebase-app-compat.js");await loadScript(b+"firebase-auth-compat.js");await loadScript(b+"firebase-firestore-compat.js");
-  firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid;
+  await fbReady();
   const col=firebase.firestore().collection("joins"),inc=firebase.firestore.FieldValue.increment(1);
   return {
     list:async()=>(await col.where("date",">=",today()).orderBy("date").limit(200).get()).docs.map(d=>({id:d.id,...d.data()})),
@@ -724,6 +830,84 @@ function joinRender(){
 function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").textContent="";$("#jfDate").min=today();if($("#jResort").value!=="all")$("#jfResort").value=$("#jResort").value}}
 RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
 if(FB||DEMO)$("#navJoin").hidden=false;
+/* ── 스키장 허브 ── */
+let view="guide";
+const VIEWS={guide:["guide"],home:["home"],talk:["talk"],join:["join"],more:["official","report"]};
+const LIVE=FB||DEMO;
+function go(v,keep){view=v;$$(".nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
+  ["guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
+  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide()}
+function syncHub(){if(view==="guide")renderGuide();if(view==="talk")talkSync()}
+function renderGuide(){
+  const n=st.resort,h=$("#gHero"),b=$("#gBody"),want=n==="all"?"":"#g-"+SLUG[n];
+  if(view==="guide"&&location.hash!==want&&!location.hash.startsWith("#q-")){try{history.replaceState(null,"",want||location.pathname+location.search)}catch(e){}}
+  if(n==="all"){
+    h.innerHTML=`<h1>스키장 갈 땐<br><em>스노우딜</em>부터</h1><p class="hsub">슬로프·셔틀·요금·동행까지, 스키장별로 한곳에 모았어요.</p><button class="live" data-a="nt"><i></i>26/27 요금, 공개되는 대로 바로 업데이트 중<span>개장 일정 ›</span></button>`;
+    const card=([r])=>{const g=GUIDE[r],c=new Set(DATA.filter(d=>d.resort===r&&!d.off).map(d=>d.shop)).size;
+      return `<button class="hcard${g?" g":""}" data-r="${r}"><b>${r}</b><span>${REGION[r]}${g&&g.from?" · "+g.from:""}</span><span>${openTxt(r)}</span><em>${g?"가이드":"기본 정보"}${c?" · 렌탈샵 "+c+"곳":""} ›</em></button>`};
+    b.className="gut";
+    b.innerHTML=`<h2>수도권에서 가까운 스키장</h2><div class="hub">${RESORTS.filter(([r])=>GUIDE[r]).map(card).join("")}</div><h2>강원·그 외 스키장</h2><div class="hub">${RESORTS.filter(([r])=>!GUIDE[r]).map(card).join("")}</div><p class="note">가이드는 리조트 안내와 보도자료를 바탕으로 쓴 초안이에요. 수도권 4곳부터 채우고 있고, 다녀온 분들의 이야기는 각 스키장 톡에 모읍니다.</p>`;
+    return}
+  const g=GUIDE[n],bs=best(n),s=SHUTTLE[n],o=OPEN[n]||{};
+  h.innerHTML=`<button class="back" data-a="all">‹ 전체 스키장</button><h1>${n}</h1><p class="hsub">${REGION[n]}${g&&g.from?" · "+g.from:""} · ${openTxt(n)}</p><div class="hact"><button class="on" data-a="home">최저가 보기</button>${LIVE?'<button data-a="talk">톡</button><button data-a="join">동행 구하기</button>':""}</div>`;
+  const sec=x=>`<div class="gsec"><h3>${x.t}</h3>${x.tb?`<div class="tw"><table><tr>${x.tb.h.map(c=>`<th>${c}</th>`).join("")}</tr>${x.tb.r.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`:""}${x.li?`<ul>${x.li.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}</div>`;
+  const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${won(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
+  const bus=`<div class="gsec"><h3>서울 출발 셔틀버스</h3>${s?`<ul><li>${s.rt?"왕복 "+won(s.rt):"요금 미확인"}${s.from?" · 탑승: "+s.from:""}</li><li>${s.st}</li></ul><p class="gsrc"><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a></p>`:`<p>아직 확인하지 못했어요.</p>`}</div>`;
+  const ask=`<div class="gask"><b>${g?"아직 확인하지 못한 것":"가이드를 준비하고 있어요"}</b>${g?`<ul>${g.todo.map(c=>`<li>${c}</li>`).join("")}</ul>`:`<p>${n}은(는) 기본 정보만 먼저 올렸어요. 슬로프, 주차, 셔틀처럼 다녀온 사람만 아는 이야기를 기다리고 있어요.</p>`}${LIVE?`<p>아는 분은 ${n} 톡에 한 줄 남겨 주세요. 확인해서 가이드에 반영할게요.</p><button data-a="talk">${n} 톡에 남기기</button>`:""}</div>`;
+  b.className="gut one";
+  b.innerHTML=(g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`+g.secs.map(sec).join(""):`<div class="gsec"><h3>개장 일정</h3><ul><li>${o.d?"26/27 개장 "+o.d+" ("+o.src+")":"26/27 개장일은 아직 발표되지 않았어요."}</li>${o.last?`<li>지난 시즌에는 ${o.last}에 개장했어요.</li>`:""}</ul></div>`)
+    +price+bus+ask+(g?`<p class="gsrc">${g.base}. 출처: ${g.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join(", ")}. 운영 내용은 시즌마다 바뀌니 방문 전 리조트 공지를 확인하세요.</p>`:"");
+}
+$("#v-guide").addEventListener("click",e=>{
+  const c=e.target.closest(".hcard");
+  if(c){try{history.pushState(null,"","#g-"+SLUG[c.dataset.r])}catch(x){}set("resort",c.dataset.r);window.scrollTo(0,0);return}
+  const a=e.target.closest("[data-a]");if(!a)return;const k=a.dataset.a;
+  if(k==="nt")openNotice();else if(k==="all"){try{history.pushState(null,"",location.pathname+location.search)}catch(x){}set("resort","all");window.scrollTo(0,0)}else go(k)});
+function route(){const a=location.hash.slice(1);
+  if(a.startsWith("q-")){dec();go("home",true);render();return}
+  const m=/^([gt])-([a-z0-9]+)$/.exec(a),rn=m&&Object.keys(SLUG).find(k=>SLUG[k]===m[2]);
+  if(rn){st.resort=rn;go(m[1]==="t"&&LIVE?"talk":"guide",true);render();return}
+  if(!a&&view==="guide"&&st.resort!=="all"){st.resort="all";render()}}
+/* ── 스키장 톡 ── */
+const T={posts:[],store:null,resort:null,loaded:false,last:0};
+let fbP;
+function fbReady(){return fbP||(fbP=(async()=>{if(DEMO){J.uid="me";return}
+  const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
+  await loadScript(b+"firebase-app-compat.js");await loadScript(b+"firebase-auth-compat.js");await loadScript(b+"firebase-firestore-compat.js");
+  if(!firebase.apps.length)firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid})().catch(e=>{fbP=null;throw e}))}
+function talkStore(){
+  if(DEMO){const m={"곤지암":[{id:"t1",nick:"곤지암보더",text:"토요일 9시 도착했는데 리프트 대기 15분쯤이었어요.",uid:"x",reports:0,ts:Date.now()-72e5},{id:"t2",nick:"눈사람",text:"셔틀은 잠실에서 탔고 앉아서 갔습니다.",uid:"me",reports:0,ts:Date.now()-864e5*2}]};let n=3;const g=r=>m[r]||(m[r]=[]);
+    return {list:async r=>g(r).slice().sort((x,y)=>y.ts-x.ts),add:async(r,p)=>{g(r).push({...p,id:"t"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(r,id)=>{const a=g(r);a.splice(a.findIndex(x=>x.id===id),1)},report:async(r,id)=>{g(r).find(x=>x.id===id).reports++}}}
+  const db=firebase.firestore(),col=r=>db.collection("talk").doc(SLUG[r]).collection("posts"),inc=firebase.firestore.FieldValue.increment(1);
+  return {list:async r=>(await col(r).orderBy("created","desc").limit(100).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
+    add:(r,p)=>col(r).add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),del:(r,id)=>col(r).doc(id).delete(),report:(r,id)=>col(r).doc(id).update({reports:inc})}}
+const ago=ts=>{const m=Math.floor((Date.now()-ts)/6e4);if(m<1)return "방금";if(m<60)return m+"분 전";if(m<1440)return Math.floor(m/60)+"시간 전";const d=new Date(ts);return (d.getMonth()+1)+"월 "+d.getDate()+"일"};
+async function talkSync(force){
+  const r=st.resort!=="all"?st.resort:(T.resort||RESORTS[0][0]);$("#tkResort").value=r;$("#tkT").textContent=r+" 톡";
+  if(T.resort===r&&T.loaded&&!force){talkRender();return}
+  T.resort=r;T.loaded=false;$("#tkCount").textContent="";$("#tkList").innerHTML='<div class="empty">글을 불러오는 중이에요.</div>';
+  try{await fbReady();T.store=T.store||talkStore();const a=await T.store.list(r);if(T.resort!==r)return;T.posts=a;T.loaded=true;talkRender()}
+  catch(e){if(T.resort===r)$("#tkList").innerHTML='<div class="empty">글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}}
+function talkRender(){const hid=jMine(),a=T.posts.filter(p=>(p.reports||0)<3&&!hid.includes(p.id));
+  $("#tkCount").textContent=a.length?`글 ${a.length}개 · 최신순`:"";
+  $("#tkList").innerHTML=a.length?a.map(p=>`<div class="tk"><div class="h"><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span><button class="rep" data-a="${p.uid===J.uid?"del":"rep"}" data-id="${esc(p.id)}">${p.uid===J.uid?"삭제":"신고"}</button></div><p>${esc(p.text)}</p></div>`).join(""):`<div class="empty">${esc(T.resort)} 톡에 아직 글이 없어요.<br>첫 글을 남겨 보세요.</div>`}
+RESORTS.forEach(([n])=>{const o=document.createElement("option");o.value=n;o.textContent=n;$("#tkResort").appendChild(o)});
+try{$("#tkNick").value=localStorage.getItem("tkNick")||""}catch(e){}
+$("#tkResort").addEventListener("change",e=>set("resort",e.target.value));
+$("#tkForm").addEventListener("submit",async e=>{e.preventDefault();const err=m=>{$("#tkErr").textContent=m},nick=$("#tkNick").value.trim(),text=$("#tkText").value.trim();err("");
+  if(!nick)return err("닉네임을 넣어 주세요.");
+  if(text.length<2)return err("내용을 적어 주세요.");
+  if(/https?:\/\/|www\./i.test(text))return err("링크는 올릴 수 없어요.");
+  if(/01[016789][-.\s]?\d{3,4}[-.\s]?\d{4}/.test(text+" "+nick))return err("전화번호는 올릴 수 없어요.");
+  if(Date.now()-T.last<20000)return err("잠시 뒤에 다시 남겨 주세요.");
+  try{await fbReady();T.store=T.store||talkStore();await T.store.add(T.resort,{nick,text});T.last=Date.now();try{localStorage.setItem("tkNick",nick)}catch(x){}$("#tkText").value="";toast("글을 남겼어요.");await talkSync(true)}
+  catch(x){err("남기지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
+$("#tkList").addEventListener("click",async e=>{const b=e.target.closest("[data-a]");if(!b)return;const id=b.dataset.id;
+  if(!b.dataset.sure){b.dataset.sure="1";b.textContent=b.dataset.a==="del"?"한 번 더 누르면 삭제":"한 번 더 누르면 신고";return}
+  if(b.dataset.a==="del"){try{await T.store.del(T.resort,id);toast("글을 삭제했어요.")}catch(x){toast("삭제하지 못했어요.")}}
+  else{try{await T.store.report(T.resort,id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),id]))}catch(x){}toast("신고했어요. 이 글은 내 화면에서 가려집니다.")}
+  await talkSync(true)});
+if(LIVE)$("#navTalk").hidden=false;
 $("#jResort").addEventListener("change",joinRender);
 $("#jNew").addEventListener("click",()=>joinForm(true));
 $("#jfCancel").addEventListener("click",()=>joinForm(false));
@@ -739,7 +923,7 @@ $("#jForm").addEventListener("submit",async e=>{e.preventDefault();const g=id=>$
   if(!$("#jfOk").checked)return err("만 19세 이상 확인에 체크해 주세요.");
   try{await J.store.add(p);joinForm(false);$("#jForm").reset();toast("모집글을 올렸어요.");await joinLoad()}catch(x){err("올리지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
 $("#jList").addEventListener("click",async e=>{const b=e.target.closest("[data-a]");if(!b)return;const p=J.posts.find(x=>x.id===b.dataset.id);if(!p)return;
-  if(b.dataset.a==="price"){st={...init(),resort:p.resort,people:p.want,day:[0,6].includes(new Date(p.date+"T00:00:00").getDay())?"we":"wd"};$$(".nav button")[0].click();render();return}
+  if(b.dataset.a==="price"){st={...init(),resort:p.resort,people:p.want,day:[0,6].includes(new Date(p.date+"T00:00:00").getDay())?"we":"wd"};go("home");render();return}
   if(b.dataset.a==="del"){if(b.dataset.sure){try{await J.store.del(p.id);toast("글을 삭제했어요.");await joinLoad()}catch(x){toast("삭제하지 못했어요.")}}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 삭제"}return}
   if(b.dataset.a==="rep"){if(b.dataset.sure){try{await J.store.report(p.id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),p.id]))}catch(x){}toast("신고했어요. 이 글은 내 화면에서 가려집니다.");await joinLoad()}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 신고"}}});
 $("#ntBtn").addEventListener("click",openNotice);
@@ -747,7 +931,7 @@ $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));
 $("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
-dec();render();renderOfficial();renderNotice();
+route();render();renderOfficial();renderNotice();
 (function(){let seen=false;try{seen=localStorage.getItem("ntDay")===today()||sessionStorage.getItem("ntS")==="1";sessionStorage.setItem("ntS","1")}catch(e){}
   if(seen||location.hash)return;setTimeout(openNotice,$("#splash").hidden?600:1900)})();
 </script>

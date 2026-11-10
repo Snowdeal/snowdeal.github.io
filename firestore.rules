@@ -23,5 +23,21 @@ service cloud.firestore {
         && request.resource.data.reports == resource.data.reports + 1;
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
+  
+    // 스키장 톡: 글만 올리는 댓글 (talk/{스키장}/posts)
+    match /talk/{slug}/posts/{id} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['text','nick','uid','reports','created'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.reports == 0
+        && request.resource.data.created == request.time
+        && request.resource.data.text is string && request.resource.data.text.size() >= 2 && request.resource.data.text.size() <= 300
+        && request.resource.data.nick is string && request.resource.data.nick.size() >= 1 && request.resource.data.nick.size() <= 12;
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reports'])
+        && request.resource.data.reports == resource.data.reports + 1;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
   }
 }
