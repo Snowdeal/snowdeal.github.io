@@ -35,7 +35,7 @@ def head(title, desc, path):
 <meta property="og:image" content="{BASE}/og.png">
 <meta name="naver-site-verification" content="d333804e6ecbe52e15f939a35f0522378cf165fb">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#0e7ccf">
+<meta name="theme-color" content="#1f97ec">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon-192.png">
 <link rel="apple-touch-icon" href="/icon-192.png">
@@ -76,7 +76,7 @@ for n, _ in D["RESORTS"]:
     else:
         desc = f"{n} 스키장 렌탈샵·리프트권 가격을 조사하고 있습니다. 확인된 렌탈샵 정보와 셔틀 안내."
     h = head(title, desc, f"/{slug}/")
-    h += f'<div class="app page"><div class="bar gut"><a class="logo" href="/"><i></i>스노우딜</a></div>\n<main class="gut">\n'
+    h += f'<div class="app page"><div class="bar gut"><a class="logo" href="/"><img src="/icon-192.png" alt="" width="32" height="32">스노우딜</a></div>\n<main class="gut">\n'
     h += f'<h1>{n} 렌탈샵 가격 비교</h1>\n<p class="lead">{html.escape(desc)}</p>\n'
     h += f'<p><a class="btn" href="/#q-{slug}-p2-wd-gear-hany-car">내 인원·요일로 최저가 계산하기</a></p>\n'
     for sc, label in SC.items():
@@ -108,7 +108,7 @@ for n, _ in D["RESORTS"]:
             f'<li><a href="{html.escape(x[2])}" rel="noopener nofollow" target="_blank">{html.escape(x[0])}</a>: {html.escape(x[1])}</li>' for x in dr) + "</ul>\n"
     others = " ".join(f'<a href="/{D["SLUG"][m]}/">{m}</a>' for m, _ in D["RESORTS"] if m != n)
     h += f'<h2>다른 스키장 가격</h2>\n<p class="seo-links">{others}</p>\n'
-    h += f'<p class="note">{TODAY_KO} 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 옮겼으며, "~"는 최저 시작가입니다. 예약 전 해당 샵에 반드시 확인하세요.</p>\n</main></div>\n</body>\n</html>\n'
+    h += f'<p class="note">{TODAY_KO} 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 옮겼으며, "~"는 최저 시작가입니다. 예약 전 해당 샵에 반드시 확인하세요. 가격 제보와 렌탈샵 등록 문의는 <a href="https://open.kakao.com/o/sglgUtWi" rel="noopener" target="_blank">카카오톡 오픈채팅</a>으로 보내 주세요.</p>\n</main></div>\n</body>\n</html>\n'
     (ROOT / slug).mkdir(exist_ok=True); (ROOT / slug / "index.html").write_text(fin(h), encoding="utf-8")
     urls.append(f"/{slug}/")
 
@@ -117,7 +117,7 @@ for n, _ in D["RESORTS"]:
 (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n", encoding="utf-8")
 (ROOT / "manifest.webmanifest").write_text(json.dumps({
     "name": "스노우딜", "short_name": "스노우딜", "description": "전국 스키장 렌탈샵·리프트권 가격 비교",
-    "start_url": "/", "scope": "/", "display": "standalone", "background_color": "#ffffff", "theme_color": "#0e7ccf", "lang": "ko",
+    "start_url": "/", "scope": "/", "display": "standalone", "background_color": "#ffffff", "theme_color": "#1f97ec", "lang": "ko",
     "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
-              {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+              {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 print("built", len(urls), "pages")

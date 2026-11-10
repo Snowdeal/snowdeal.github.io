@@ -4,8 +4,9 @@
 /* 모바일 앱형: 상단바(로고+스키장 선택) → 얼리버드 배너 → 스키장 원형 그리드 → 필터 알약 → 카드 → 하단 탭바. 설원 하늘색. */
 :root{
   --bg:#e6f3fc; --card:#ffffff; --fg:#14222e; --muted:#687c8d; --line:#d9e8f3; --soft:#f3f9fe;
-  --p:#0e7ccf; --p-dk:#0a64a8; --p-bg:#dceffc; --p-fg:#ffffff;
-  --red:#e8466b; --sun:#fff3c4; --sun-fg:#7a5a00; --ok:#0f9d77;
+  --p:#0f7fd6; --p-dk:#0a4f9e; --p-bg:#dcefff; --p-fg:#ffffff;
+  --red:#e8466b; --sun:#ffe14d; --sun-fg:#0a4f9e; --ok:#0f9d77;
+  --g0:#4cc2ff; --g1:#1f97ec; --g2:#0a64c8; --navy:#0a4f9e;
   --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --display:"Black Han Sans","Pretendard Variable",Pretendard,"Apple SD Gothic Neo",sans-serif;
   --ban:linear-gradient(135deg,#bfe3fb 0%,#e9f6ff 70%); --on:#eef7fe; --old:#fde9ee;
@@ -14,12 +15,14 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0c151c; --card:#121d26; --fg:#e7eef3; --muted:#8fa3b3; --line:#243441; --soft:#17242e;
   --p:#4fb0ee; --p-dk:#9ad5fb; --p-bg:#16344a; --p-fg:#06131c;
-  --red:#ff7592; --sun:#3d3312; --sun-fg:#f3d573; --ok:#3fcfa6;
+  --red:#ff7592; --sun:#ffe14d; --sun-fg:#0a3a70; --ok:#3fcfa6;
+  --g0:#1f7fc9; --g1:#145c9c; --g2:#0c3a69; --navy:#0e2f52;
   --ban:linear-gradient(135deg,#143f5c 0%,#16283a 70%); --on:#143246; --old:#3b1a24; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#0c151c; --card:#121d26; --fg:#e7eef3; --muted:#8fa3b3; --line:#243441; --soft:#17242e;
   --p:#4fb0ee; --p-dk:#9ad5fb; --p-bg:#16344a; --p-fg:#06131c;
-  --red:#ff7592; --sun:#3d3312; --sun-fg:#f3d573; --ok:#3fcfa6;
+  --red:#ff7592; --sun:#ffe14d; --sun-fg:#0a3a70; --ok:#3fcfa6;
+  --g0:#1f7fc9; --g1:#145c9c; --g2:#0c3a69; --navy:#0e2f52;
   --ban:linear-gradient(135deg,#143f5c 0%,#16283a 70%); --on:#143246; --old:#3b1a24; color-scheme:dark }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.45;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
@@ -143,20 +146,73 @@ body>.seo-links{background:var(--card);padding-bottom:calc(84px + env(safe-area-
 .page td:first-child{white-space:normal;min-width:96px}
 .page th,.page td{padding:8px 5px;font-size:12px}
 .notes{margin:0;padding-left:18px;font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── 브랜드 테마: 아이콘과 같은 파란 그라데이션 + 흰 굵은 글자 + 노란 포인트 ── */
+.bar{background:linear-gradient(180deg,var(--g0),color-mix(in srgb,var(--g0) 45%,var(--g1)));padding-block:14px 10px}
+.logo{color:#fff;gap:8px;font-size:25px;text-decoration:none}
+.logo img{width:32px;height:32px;border-radius:9px;display:block;box-shadow:0 0 0 1.5px rgba(255,255,255,.55)}
+.bar select{color:#fff;font-weight:800}
+.bar select option{color:#14222e}
+.hero{background:linear-gradient(180deg,color-mix(in srgb,var(--g0) 45%,var(--g1)),var(--g2));padding-block:6px 22px;border-radius:0 0 26px 26px;color:#fff;margin-bottom:18px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:34px;line-height:1.12;letter-spacing:-.01em;margin:6px 0 16px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--sun)}
+.banner{margin:0;border-radius:18px;background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.banner b{color:#fff;font-size:21px}
+.banner span{background:var(--sun);color:var(--sun-fg);font-weight:800}
+.banner em{background:var(--sun);color:var(--sun-fg);font-family:var(--display);font-weight:400;font-size:17px;width:68px;height:68px;transform:rotate(-8deg)}
+h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01em}
+.quick{display:flex;gap:8px;overflow-x:auto;padding-bottom:16px;scrollbar-width:none}
+.quick::-webkit-scrollbar{display:none}
+.quick button{flex:none;border:0;border-radius:999px;background:var(--navy);color:#fff;font-weight:700;font-size:13px;padding:9px 14px;white-space:nowrap}
+.quick button:first-child{background:var(--sun);color:var(--sun-fg)}
+.rz .dot{width:54px;height:54px;font-family:var(--display);font-weight:400;font-size:18px}
+.rz[aria-pressed="true"] .dot{background:linear-gradient(160deg,var(--g0),var(--g2));color:#fff}
+.rz .n{background:var(--sun);color:var(--sun-fg);font-weight:800}
+.chip{border-radius:999px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--p);border-color:var(--p);color:var(--p-fg);font-weight:700}
+.seg,.stepper{border-radius:14px}
+.card,.rrow{border-radius:18px}
+.card.best{border:2px solid var(--p);box-shadow:none}
+.tag{border-radius:6px}
+.tag.best{background:var(--sun);color:var(--sun-fg)}
+.tag.eb{background:var(--navy);color:#fff}
+.sale{font-size:24px;letter-spacing:-.02em}
+.btn{border-radius:999px;padding:11px 16px}
+.rrow.top{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:none;color:#fff}
+.rrow.top .sb,.rrow.top .pr span{color:rgba(255,255,255,.86)}
+.rrow.top .pr b{color:var(--sun);font-size:19px}
+.rrow .nm{font-weight:800;letter-spacing:-.02em}
+.partner{margin-top:18px;border-radius:20px;background:var(--navy);color:#fff;padding:18px;display:grid;gap:8px}
+.partner b{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.2}
+.partner p{margin:0;font-size:13px;color:rgba(255,255,255,.86)}
+.partner a,.cta{justify-self:start;margin-top:4px;background:var(--sun);color:var(--sun-fg);font-weight:800;font-size:14px;border-radius:999px;padding:10px 16px;text-decoration:none;display:inline-block}
+.contact{display:grid;gap:10px;justify-items:start}
+.contact p{margin:0;font-size:14px;line-height:1.6}
+.page .bar .logo{color:#fff}
 </style>
 
 <div class="app">
   <div class="bar gut">
-    <div class="logo"><i></i>스노우딜</div>
+    <a class="logo" href="/"><img src="/icon-192.png" alt="" width="32" height="32">스노우딜</a>
     <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
   </div>
 
   <section id="v-home">
-    <div class="gut">
+    <div class="hero gut">
+      <h1>스키장 리프트·렌탈<br><em>최저가</em> 한눈에</h1>
       <button class="banner" id="ebBtn">
-        <div><b>얼리버드<br>지금 살 수 있는 특가</b><span>곤지암 12/6까지 · 개장~폐장 사용</span></div>
+        <div><b>얼리버드 특가</b><span>곤지암 12/6까지 · 개장~폐장 사용</span></div>
         <em>최대<br>36%</em>
       </button>
+    </div>
+    <div class="gut">
+      <div class="quick" id="quick">
+        <button data-q='{"eb":true}'>얼리버드만 보기</button>
+        <button data-q='{"people":4,"day":"we","scope":"gear"}'>4명 · 주말 · 장비 포함</button>
+        <button data-q='{"people":1,"day":"wd","scope":"lift"}'>혼자 · 주중 · 리프트만</button>
+        <button data-q='{"people":2,"day":"we","scope":"wear"}'>둘이 · 주말 · 의류까지</button>
+        <button data-q='{"people":2,"day":"we","scope":"gear","sh":"bus"}'>셔틀 타고 가요</button>
+      </div>
       <h2>어느 스키장으로 가세요?</h2>
       <div class="grid" id="grid"></div>
     </div>
@@ -199,6 +255,7 @@ body>.seo-links{background:var(--card);padding-bottom:calc(84px + env(safe-area-
       <p class="summary" id="count"></p>
       <div class="list" id="list"></div>
       <div class="dir" id="dir"></div>
+      <div class="partner"><b>렌탈샵 사장님이신가요?</b><p>26/27 시즌 가격표를 보내 주시면 무료로 등록해 드려요. 가격이 바뀌었을 때도 알려 주시면 바로 고칩니다.</p><a href="https://open.kakao.com/o/sglgUtWi" target="_blank" rel="noopener">오픈채팅으로 문의하기</a></div>
       <p class="note">2026년 11월 10일 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 확인된 3곳(곤지암·비발디파크·하이원)만 총액에 더해지며, 지난 시즌 또는 예시 요금이라 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
     </div>
   </section>
@@ -213,7 +270,11 @@ body>.seo-links{background:var(--card);padding-bottom:calc(84px + env(safe-area-
 
   <section id="v-report" class="gut pane" hidden>
     <h2>가격 제보 · 렌탈샵 등록</h2>
-    <p class="pending">가격이 바뀌었거나 빠진 렌탈샵이 있으면 알려 주세요. 렌탈샵 사장님은 26/27 가격표를 보내 주시면 무료로 등록해 드립니다. 각 가격 카드의 "가격이 달라요"를 누르면 제보 내용이 복사됩니다. 접수 창구는 준비 중입니다.</p>
+    <div class="contact">
+      <p>가격이 바뀌었거나 빠진 렌탈샵이 있으면 알려 주세요. 가격 카드의 "가격이 달라요"를 누르면 제보 내용이 복사되고 오픈채팅이 열립니다. 붙여 넣기만 하면 돼요.</p>
+      <p>렌탈샵 사장님은 26/27 가격표를 보내 주시면 무료로 등록해 드립니다.</p>
+      <a class="cta" href="https://open.kakao.com/o/sglgUtWi" target="_blank" rel="noopener">카카오톡 오픈채팅 열기</a>
+    </div>
   </section>
 
   <div class="toast" id="toast" hidden></div>
@@ -319,7 +380,7 @@ const SHUTTLE={
  "엘리시안 강촌":{rt:null,from:"홍대입구·남산·동대문·강남·잠실",st:"무료 셔틀로 소개된 적 있으나 26/27은 미확인",url:"https://www.trazy.com/ko/experience/detail/elysian-gangchon-ski-resort-shuttle-bus"},
  "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
 };
-const REPORT_URL=""; // 오픈채팅·구글폼 주소가 정해지면 여기에
+const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
 const CHECKED="11월 10일 확인";
 const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};
 // 가격표를 숫자로 공개하지 않았거나 읽지 못한 샵
@@ -441,6 +502,7 @@ $("#list").addEventListener("click",e=>{
   const rp=e.target.closest(".rep");if(rp){const d=cur[+rp.dataset.i];
     copy(`[가격 제보] ${d.shop} / ${d.resort} / ${d.h?d.h+"시간":"시간 미표기"} · ${SCOPE[st.scope]} / ${st.day==="wd"?"주중":"주말"} 표시가 ${won(d.base)} → 실제 가격: `,REPORT_URL?"제보 내용이 복사됐어요. 제보 창구에 붙여 넣어 주세요.":"제보 내용이 복사됐어요. 접수 창구는 준비 중이에요.");
     if(REPORT_URL)window.open(REPORT_URL,"_blank")}});
+$("#quick").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st={...init(),...JSON.parse(b.dataset.q)};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
 $("#crumb").addEventListener("click",()=>set("resort","all"));
 $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const hosted=/github\.io$|\.kr$|\.com$/.test(location.hostname)&&!/claude/.test(location.hostname);

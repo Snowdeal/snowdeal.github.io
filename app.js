@@ -97,6 +97,7 @@ $("#list").addEventListener("click",e=>{
   const rp=e.target.closest(".rep");if(rp){const d=cur[+rp.dataset.i];
     copy(`[가격 제보] ${d.shop} / ${d.resort} / ${d.h?d.h+"시간":"시간 미표기"} · ${SCOPE[st.scope]} / ${st.day==="wd"?"주중":"주말"} 표시가 ${won(d.base)} → 실제 가격: `,REPORT_URL?"제보 내용이 복사됐어요. 제보 창구에 붙여 넣어 주세요.":"제보 내용이 복사됐어요. 접수 창구는 준비 중이에요.");
     if(REPORT_URL)window.open(REPORT_URL,"_blank")}});
+$("#quick").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st={...init(),...JSON.parse(b.dataset.q)};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
 $("#crumb").addEventListener("click",()=>set("resort","all"));
 $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const hosted=/github\.io$|\.kr$|\.com$/.test(location.hostname)&&!/claude/.test(location.hostname);
