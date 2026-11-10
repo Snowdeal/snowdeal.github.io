@@ -190,3 +190,10 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .contact{display:grid;gap:10px;justify-items:start}
 .contact p{margin:0;font-size:14px;line-height:1.6}
 .page .bar .logo{color:#fff}
+#splash{position:fixed;inset:0;z-index:99;background:linear-gradient(160deg,#4cc2ff 0%,#1287e0 55%,#0a64c8 100%);color:#fff;display:grid;place-content:center;justify-items:center;font-family:var(--display);line-height:1;transition:opacity .4s}
+#splash.out{opacity:0}
+.sp-w{font-size:min(23vw,104px);display:flex;align-items:center}
+.sp-w svg{width:.76em;height:.76em;color:#ffe14d;margin:0 .04em .03em}
+.sp-d{font-size:min(18vw,82px);color:#ffe14d;letter-spacing:.13em;padding-left:.13em;margin-top:.1em}
+#splash p{font-family:var(--font);font-weight:700;font-size:16px;margin:26px 0 0;opacity:.92;letter-spacing:-.01em}
+@media (prefers-reduced-motion:reduce){#splash{transition:none}}

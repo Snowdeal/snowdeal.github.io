@@ -117,7 +117,7 @@ for n, _ in D["RESORTS"]:
 (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n", encoding="utf-8")
 (ROOT / "manifest.webmanifest").write_text(json.dumps({
     "name": "스노우딜", "short_name": "스노우딜", "description": "전국 스키장 렌탈샵·리프트권 가격 비교",
-    "start_url": "/", "scope": "/", "display": "standalone", "background_color": "#ffffff", "theme_color": "#1f97ec", "lang": "ko",
+    "start_url": "/", "scope": "/", "display": "standalone", "background_color": "#1287e0", "theme_color": "#1f97ec", "lang": "ko",
     "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
               {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}]}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 print("built", len(urls), "pages")
