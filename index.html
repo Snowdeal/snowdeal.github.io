@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>스노우딜 | 전국 스키장 렌탈샵·리프트권 가격 비교</title>
+<meta name="description" content="지산, 곤지암, 비발디파크, 엘리시안 강촌, 오크밸리, 웰리힐리 등 전국 스키장의 렌탈샵 패키지와 리프트권 가격을 인원·요일·이용시간 조건으로 비교합니다. 2026년 11월 10일 조사.">
+<link rel="canonical" href="https://snowdeal.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="스노우딜">
+<meta property="og:title" content="스노우딜 | 전국 스키장 렌탈샵·리프트권 가격 비교">
+<meta property="og:description" content="지산, 곤지암, 비발디파크, 엘리시안 강촌, 오크밸리, 웰리힐리 등 전국 스키장의 렌탈샵 패키지와 리프트권 가격을 인원·요일·이용시간 조건으로 비교합니다. 2026년 11월 10일 조사.">
+<meta property="og:url" content="https://snowdeal.github.io/">
+<meta property="og:image" content="https://snowdeal.github.io/og.png">
+<meta name="theme-color" content="#0e7ccf">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+  <div class="bar gut">
+    <div class="logo"><i></i>스노우딜</div>
+    <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
+  </div>
+
+  <section id="v-home">
+    <div class="gut">
+      <button class="banner" id="ebBtn">
+        <div><b>얼리버드<br>지금 살 수 있는 특가</b><span>곤지암 12/6까지 · 개장~폐장 사용</span></div>
+        <em>최대<br>36%</em>
+      </button>
+      <h2>어느 스키장으로 가세요?</h2>
+      <div class="grid" id="grid"></div>
+    </div>
+    <div class="sep"></div>
+    <div class="gut cond">
+      <div class="row">
+        <div class="field"><label>인원</label>
+          <div class="stepper"><button id="minus" aria-label="인원 줄이기">−</button><output id="people">2명</output><button id="plus" aria-label="인원 늘리기">+</button></div></div>
+        <div class="field"><label>요일</label>
+          <div class="seg" id="day"><button aria-pressed="true" data-v="wd">주중</button><button aria-pressed="false" data-v="we">주말·공휴일</button></div></div>
+      </div>
+      <div class="field"><label>이동</label>
+        <div class="seg" id="sh"><button aria-pressed="true" data-v="car">자차 · 따로 이동</button><button aria-pressed="false" data-v="bus">서울 셔틀 왕복 포함</button></div></div>
+      <div class="field"><label>필요한 범위</label>
+        <div class="chips" id="scope">
+          <button class="chip" aria-pressed="false" data-v="lift">리프트만</button>
+          <button class="chip" aria-pressed="true" data-v="gear">리프트 + 장비</button>
+          <button class="chip" aria-pressed="false" data-v="wear">리프트 + 장비 + 의류</button>
+        </div></div>
+      <div class="field"><label>이용 시간</label>
+        <div class="chips" id="hours">
+          <button class="chip" aria-pressed="true" data-v="any">상관없음</button>
+          <button class="chip" aria-pressed="false" data-v="s">2~3시간</button>
+          <button class="chip" aria-pressed="false" data-v="m">4시간</button>
+          <button class="chip" aria-pressed="false" data-v="l">5~6시간</button>
+          <button class="chip" aria-pressed="false" data-v="f">7시간 이상</button>
+        </div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="gut">
+      <div class="pills" id="pills">
+        <button class="chip" id="sortBtn">↕ 총액 낮은 순</button>
+        <button class="chip" id="resetBtn">↺ 초기화</button>
+        <button class="chip" id="shareBtn">↗ 조건 공유</button>
+        <button class="chip" aria-pressed="false" id="ebOnly">얼리버드만</button>
+        <button class="chip" aria-pressed="false" id="newOnly">26/27 가격만</button>
+        <button class="chip" aria-pressed="true" id="offShow">리조트 공식가 포함</button>
+      </div>
+      <button class="crumb" id="crumb" hidden>‹ 전체 스키장 비교로</button>
+      <p class="summary" id="count"></p>
+      <div class="list" id="list"></div>
+      <div class="dir" id="dir"></div>
+      <p class="note">2026년 11월 10일 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 확인된 3곳(곤지암·비발디파크·하이원)만 총액에 더해지며, 지난 시즌 또는 예시 요금이라 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
+    </div>
+  </section>
+
+  <section id="v-official" class="gut pane" hidden>
+    <h2>리조트 공식 리프트 요금</h2>
+    <div id="official"></div>
+    <h2 style="margin-top:22px">서울 출발 셔틀버스</h2>
+    <div id="shuttle"></div>
+    <p class="note">개장일: 휘닉스 11월 27일 목표(날씨에 따라 변동), 곤지암 12월 중, 오투 시즌권 사용 시작 12월 5일. 나머지는 미발표입니다.</p>
+  </section>
+
+  <section id="v-report" class="gut pane" hidden>
+    <h2>가격 제보 · 렌탈샵 등록</h2>
+    <p class="pending">가격이 바뀌었거나 빠진 렌탈샵이 있으면 알려 주세요. 렌탈샵 사장님은 26/27 가격표를 보내 주시면 무료로 등록해 드립니다. 각 가격 카드의 "가격이 달라요"를 누르면 제보 내용이 복사됩니다. 접수 창구는 준비 중입니다.</p>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+  <nav class="nav">
+    <button aria-selected="true" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>최저가</button>
+    <button aria-selected="false" data-v="official"><svg viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 3-4 5 8z"/></svg>요금·셔틀</button>
+    <button aria-selected="false" data-v="report"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>제보</button>
+  </nav>
+</div>
+
+<noscript><div class="gut"><h1>전국 스키장 렌탈샵·리프트권 가격 비교</h1><p><a href="/jisan/">지산 렌탈샵 가격</a> <a href="/konjiam/">곤지암 렌탈샵 가격</a> <a href="/vivaldi/">비발디파크 렌탈샵 가격</a> <a href="/gangchon/">엘리시안 강촌 렌탈샵 가격</a> <a href="/oakvalley/">오크밸리 렌탈샵 가격</a> <a href="/welli/">웰리힐리 렌탈샵 가격</a> <a href="/phoenix/">휘닉스 렌탈샵 가격</a> <a href="/yongpyong/">모나용평 렌탈샵 가격</a> <a href="/alpensia/">알펜시아 렌탈샵 가격</a> <a href="/high1/">하이원 렌탈샵 가격</a> <a href="/o2/">오투 렌탈샵 가격</a> <a href="/muju/">무주 렌탈샵 가격</a> <a href="/eden/">에덴밸리 렌탈샵 가격</a> </p></div></noscript>
+<nav class="gut seo-links" aria-label="스키장별 가격"><a href="/jisan/">지산 렌탈샵 가격</a> <a href="/konjiam/">곤지암 렌탈샵 가격</a> <a href="/vivaldi/">비발디파크 렌탈샵 가격</a> <a href="/gangchon/">엘리시안 강촌 렌탈샵 가격</a> <a href="/oakvalley/">오크밸리 렌탈샵 가격</a> <a href="/welli/">웰리힐리 렌탈샵 가격</a> <a href="/phoenix/">휘닉스 렌탈샵 가격</a> <a href="/yongpyong/">모나용평 렌탈샵 가격</a> <a href="/alpensia/">알펜시아 렌탈샵 가격</a> <a href="/high1/">하이원 렌탈샵 가격</a> <a href="/o2/">오투 렌탈샵 가격</a> <a href="/muju/">무주 렌탈샵 가격</a> <a href="/eden/">에덴밸리 렌탈샵 가격</a> </nav>
+<script src="/data.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

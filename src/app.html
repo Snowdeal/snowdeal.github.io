@@ -1,0 +1,441 @@
+<title>스노우딜</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 모바일 앱형: 상단바(로고+스키장 선택) → 얼리버드 배너 → 스키장 원형 그리드 → 필터 알약 → 카드 → 하단 탭바. 설원 하늘색. */
+:root{
+  --bg:#e6f3fc; --card:#ffffff; --fg:#14222e; --muted:#687c8d; --line:#d9e8f3; --soft:#f3f9fe;
+  --p:#0e7ccf; --p-dk:#0a64a8; --p-bg:#dceffc; --p-fg:#ffffff;
+  --red:#e8466b; --sun:#fff3c4; --sun-fg:#7a5a00; --ok:#0f9d77;
+  --font:"Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.45}
+.app{max-width:480px;margin:0 auto;background:var(--card);min-height:100vh;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+
+.bar{display:flex;align-items:center;gap:10px;padding-block:12px}
+.logo{font-weight:900;font-size:20px;color:var(--p);letter-spacing:-.03em;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.logo i{width:18px;height:18px;border-radius:50% 50% 50% 0;background:var(--p);transform:rotate(-45deg);display:inline-block;position:relative}
+.logo i::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--card)}
+.bar select{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:16px;font-weight:700;color:var(--fg);padding:6px 0}
+
+.banner{margin-block:2px 14px;border-radius:14px;background:linear-gradient(135deg,#bfe3fb 0%,#e9f6ff 70%);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;width:100%;text-align:left;color:var(--fg)}
+.banner b{display:block;font-size:20px;font-weight:900;color:var(--p-dk);letter-spacing:-.02em;line-height:1.2}
+.banner span{display:inline-block;margin-top:8px;background:var(--sun);color:var(--sun-fg);font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px}
+.banner em{font-style:normal;flex:none;width:64px;height:64px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:900;color:var(--red);font-size:15px;line-height:1.1;text-align:center}
+
+h2{font-size:16px;font-weight:900;margin:0 0 10px;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px 4px;margin-bottom:16px}
+.rz{background:none;border:0;padding:0;display:grid;justify-items:center;gap:5px;color:var(--fg);font-size:12px;min-width:0}
+.rz .dot{width:52px;height:52px;border-radius:50%;background:var(--p-bg);display:grid;place-items:center;font-weight:900;font-size:15px;color:var(--p-dk);position:relative}
+.rz[aria-pressed="true"] .dot{background:var(--p);color:var(--p-fg)}
+.rz .n{position:absolute;top:-3px;right:-5px;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:999px;padding:1px 5px}
+.rz.none .dot{background:var(--soft);color:var(--muted)}
+.rz span.l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+.sep{height:8px;background:var(--soft)}
+.cond{padding-block:14px;display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field>label{font-size:12px;font-weight:700;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;padding:7px 13px;font-size:13px;white-space:nowrap}
+.chip[aria-pressed="true"]{border-color:var(--p);color:var(--p);background:#eef7fe;font-weight:700}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:40px}
+.stepper button{width:40px;height:100%;border:0;background:var(--soft);font-size:18px;color:var(--p)}
+.stepper output{flex:1;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:40px}
+.seg button{flex:1;border:0;background:var(--card);color:var(--muted);font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--p);color:var(--p-fg);font-weight:700}
+
+.pills{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.summary{font-size:12px;color:var(--muted);margin:0 0 8px}
+.list{display:grid;gap:10px;padding-bottom:8px}
+.card{border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px}
+.card.best{border-color:var(--p);box-shadow:0 0 0 1px var(--p) inset}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.tag{font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px;background:var(--p-bg);color:var(--p-dk)}
+.tag.best{background:var(--p);color:var(--p-fg)}
+.tag.eb{background:var(--sun);color:var(--sun-fg)}
+.tag.off{background:var(--soft);color:var(--muted)}
+.tag.old{background:#fde9ee;color:var(--red)}
+.card h3{margin:0;font-size:16px;font-weight:700;line-height:1.3}
+.card .sub{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.spec{background:var(--soft);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px;margin:0}
+.spec dt{color:var(--muted)}.spec dd{margin:0}
+.price-row{display:flex;justify-content:space-between;align-items:end;gap:10px}
+.normal{font-size:12px;color:var(--muted)}
+.normal s{margin-right:4px}.normal b{color:var(--red)}
+.sale{font-size:21px;font-weight:900;color:var(--fg);font-variant-numeric:tabular-nums;line-height:1.2}
+.sale small{font-size:12px;font-weight:500;color:var(--muted);margin-left:4px}
+.total{font-size:12px;margin-top:2px}
+.btn{background:var(--p);color:var(--p-fg);border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}
+.foot{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:8px;user-select:text}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+
+.tw{overflow-x:auto;margin-bottom:14px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-size:11px;color:var(--muted);font-weight:700}
+.off-h{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 4px}
+.off-h h3{margin:0;font-size:15px}.off-h span{font-size:11px;color:var(--muted)}
+.pending{font-size:13px;color:var(--muted);background:var(--soft);border-radius:10px;padding:12px}
+.note{font-size:12px;color:var(--muted);line-height:1.55;padding-block:12px 20px}
+.pane{padding-block:14px}
+.crumb{background:none;border:0;color:var(--p);font-weight:700;font-size:14px;padding:0 0 10px}
+.rrow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;color:var(--fg)}
+.rrow.top{border-color:var(--p);box-shadow:0 0 0 1px var(--p) inset}
+.rrow .nm{font-size:16px;font-weight:700}
+.rrow .sb{font-size:12px;color:var(--muted);margin-top:2px}
+.rrow .pr{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rrow .pr b{font-size:17px;font-weight:900;display:block}
+.rrow .pr span{font-size:11px;color:var(--muted)}
+.rrow.na .pr b{font-size:13px;font-weight:500;color:var(--muted)}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rep{background:none;border:0;color:var(--p);font-size:12px;text-decoration:underline;padding:0;white-space:nowrap}
+.dir{margin-top:14px}
+.dir h4{margin:0 0 6px;font-size:13px}
+.dir li{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.dir ul{list-style:none;margin:0;padding:0}
+.dir li p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.dir a{color:var(--p);font-size:12px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));width:min(440px,calc(100% - 32px));background:#14222e;color:#fff;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;z-index:9;user-select:text;white-space:pre-wrap}
+.sh-item{padding:10px 0;border-bottom:1px solid var(--line);display:grid;gap:2px}
+.sh-item .t{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+.sh-item .t span{font-variant-numeric:tabular-nums;white-space:nowrap}
+.sh-item .t span.na{color:var(--muted);font-weight:400}
+.sh-item p{margin:0;font-size:12px;color:var(--muted)}
+.sh-item a{color:var(--p);font-size:12px}
+
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+.nav button{flex:1;border:0;background:none;padding:9px 0 8px;font-size:11px;color:var(--muted);display:grid;justify-items:center;gap:3px}
+.nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-selected="true"]{color:var(--p);font-weight:700}
+a.logo{text-decoration:none}
+.seo-links{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;padding-block:8px 16px;max-width:480px;margin:0 auto}
+.seo-links a{color:var(--muted)}
+body>.seo-links{background:var(--card);padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.app:not(.page){min-height:0;padding-bottom:8px}
+.page main{padding-bottom:24px}
+.page h1{font-size:22px;font-weight:900;margin:6px 0 8px;letter-spacing:-.02em;text-wrap:balance}
+.page h2{margin:24px 0 8px}
+.page .lead{color:var(--muted);font-size:13px;margin:0 0 12px}
+.page .btn{display:inline-block}
+.page td a,.page li a,.page p a{color:var(--p)}
+.page .btn{color:var(--p-fg)}
+.page td:first-child{white-space:normal;min-width:96px}
+.page th,.page td{padding:8px 5px;font-size:12px}
+.notes{margin:0;padding-left:18px;font-size:12px;color:var(--muted);line-height:1.6}
+</style>
+
+<div class="app">
+  <div class="bar gut">
+    <div class="logo"><i></i>스노우딜</div>
+    <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
+  </div>
+
+  <section id="v-home">
+    <div class="gut">
+      <button class="banner" id="ebBtn">
+        <div><b>얼리버드<br>지금 살 수 있는 특가</b><span>곤지암 12/6까지 · 개장~폐장 사용</span></div>
+        <em>최대<br>36%</em>
+      </button>
+      <h2>어느 스키장으로 가세요?</h2>
+      <div class="grid" id="grid"></div>
+    </div>
+    <div class="sep"></div>
+    <div class="gut cond">
+      <div class="row">
+        <div class="field"><label>인원</label>
+          <div class="stepper"><button id="minus" aria-label="인원 줄이기">−</button><output id="people">2명</output><button id="plus" aria-label="인원 늘리기">+</button></div></div>
+        <div class="field"><label>요일</label>
+          <div class="seg" id="day"><button aria-pressed="true" data-v="wd">주중</button><button aria-pressed="false" data-v="we">주말·공휴일</button></div></div>
+      </div>
+      <div class="field"><label>이동</label>
+        <div class="seg" id="sh"><button aria-pressed="true" data-v="car">자차 · 따로 이동</button><button aria-pressed="false" data-v="bus">서울 셔틀 왕복 포함</button></div></div>
+      <div class="field"><label>필요한 범위</label>
+        <div class="chips" id="scope">
+          <button class="chip" aria-pressed="false" data-v="lift">리프트만</button>
+          <button class="chip" aria-pressed="true" data-v="gear">리프트 + 장비</button>
+          <button class="chip" aria-pressed="false" data-v="wear">리프트 + 장비 + 의류</button>
+        </div></div>
+      <div class="field"><label>이용 시간</label>
+        <div class="chips" id="hours">
+          <button class="chip" aria-pressed="true" data-v="any">상관없음</button>
+          <button class="chip" aria-pressed="false" data-v="s">2~3시간</button>
+          <button class="chip" aria-pressed="false" data-v="m">4시간</button>
+          <button class="chip" aria-pressed="false" data-v="l">5~6시간</button>
+          <button class="chip" aria-pressed="false" data-v="f">7시간 이상</button>
+        </div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="gut">
+      <div class="pills" id="pills">
+        <button class="chip" id="sortBtn">↕ 총액 낮은 순</button>
+        <button class="chip" id="resetBtn">↺ 초기화</button>
+        <button class="chip" id="shareBtn">↗ 조건 공유</button>
+        <button class="chip" aria-pressed="false" id="ebOnly">얼리버드만</button>
+        <button class="chip" aria-pressed="false" id="newOnly">26/27 가격만</button>
+        <button class="chip" aria-pressed="true" id="offShow">리조트 공식가 포함</button>
+      </div>
+      <button class="crumb" id="crumb" hidden>‹ 전체 스키장 비교로</button>
+      <p class="summary" id="count"></p>
+      <div class="list" id="list"></div>
+      <div class="dir" id="dir"></div>
+      <p class="note">2026년 11월 10일 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 확인된 3곳(곤지암·비발디파크·하이원)만 총액에 더해지며, 지난 시즌 또는 예시 요금이라 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
+    </div>
+  </section>
+
+  <section id="v-official" class="gut pane" hidden>
+    <h2>리조트 공식 리프트 요금</h2>
+    <div id="official"></div>
+    <h2 style="margin-top:22px">서울 출발 셔틀버스</h2>
+    <div id="shuttle"></div>
+    <p class="note">개장일: 휘닉스 11월 27일 목표(날씨에 따라 변동), 곤지암 12월 중, 오투 시즌권 사용 시작 12월 5일. 나머지는 미발표입니다.</p>
+  </section>
+
+  <section id="v-report" class="gut pane" hidden>
+    <h2>가격 제보 · 렌탈샵 등록</h2>
+    <p class="pending">가격이 바뀌었거나 빠진 렌탈샵이 있으면 알려 주세요. 렌탈샵 사장님은 26/27 가격표를 보내 주시면 무료로 등록해 드립니다. 각 가격 카드의 "가격이 달라요"를 누르면 제보 내용이 복사됩니다. 접수 창구는 준비 중입니다.</p>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+  <nav class="nav">
+    <button aria-selected="true" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>최저가</button>
+    <button aria-selected="false" data-v="official"><svg viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 3-4 5 8z"/></svg>요금·셔틀</button>
+    <button aria-selected="false" data-v="report"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>제보</button>
+  </nav>
+</div>
+
+<script>
+const RESORTS=[["지산","지산"],["곤지암","곤지"],["비발디파크","비발"],["엘리시안 강촌","강촌"],["오크밸리","오크"],["웰리힐리","웰리"],["휘닉스","휘닉"],["모나용평","용평"],["알펜시아","알펜"],["하이원","하이"],["오투","오투"],["무주","무주"],["에덴밸리","에덴"]];
+
+// 레코드: [샵, 스키장, 범위(lift/gear/wear), 시간(0=미표기), 주중, 주말, 옵션]
+const S={
+  snow:{tel:"031-637-2207",url:"https://snowland.co.kr/",season:"?"},
+  boss:{tel:"031-631-5520",url:"https://bossrental.shop/bbs/_a_price.php",season:"?"},
+  ari:{tel:"031-638-1243",url:"https://www.arirangski.co.kr/price/price.php",season:"?"},
+  nol:{url:"https://www.fnnews.com/news/202611031709440562",season:"26/27",eb:true},
+  good:{tel:"031-762-7375",url:"https://gonjiam.co.kr/",season:"25/26"},
+  ganji:{tel:"031-769-9375",url:"https://ganjiboarder.com/",season:"25/26"},
+  yoon:{tel:"033-434-5666",url:"https://www.boardyoon.com/",season:"25/26"},
+  gb:{url:"https://gbteamkorea.com/price_info",season:"26/27"},
+  kon:{url:"https://kr.trip.com/blog/konjiam-ski-resort-guide/",season:"26/27",off:true},
+  h1:{url:"https://www.high1.com/ski/contents.do?key=750",season:"26/27",off:true},
+  sereno:{url:"https://serenoskishop.com/sub/rental/lift.php",season:"25/26"},
+  mentor:{tel:"063-324-7922",url:"https://mentorski.com/%EB%A6%AC%ED%94%84%ED%8A%B8%ED%95%A0%EC%9D%B8",season:"26/27"},
+  star:{url:"https://gcstar.kr/",season:"25/26"},
+};
+const R=(shop,resort,scope,h,wd,we,k,o={})=>({shop,resort,scope,h,wd,we,...S[k],...o});
+const DATA=[
+ // 지산
+ R("스노우랜드","지산","gear",0,58700,58700,"snow",{nwd:100000,nwe:100000,note:"리프트+장비렌탈. 시간·요일 구분 미표기"}),
+ R("스노우랜드","지산","wear",0,84000,84000,"snow",{nwd:156000,nwe:156000,note:"올인원 할인패키지. 시간·요일 구분 미표기"}),
+ R("보스렌탈샵","지산","wear",4,86000,86000,"boss",{from:true,note:"알뜰 실속 패키지 A (고급장비+고급의류)"}),
+ R("보스렌탈샵","지산","wear",6,99000,99000,"boss",{from:true,note:"신상의류 패키지 C"}),
+ R("아리랑스키","지산","lift",2,48750,61500,"ari",{nwd:65000,nwe:82000,note:"장비 렌탈 고객 리프트 30% 할인가"}),
+ R("아리랑스키","지산","lift",4,56250,69000,"ari",{nwd:75000,nwe:92000,note:"장비 렌탈 고객 리프트 30% 할인가"}),
+ R("아리랑스키","지산","lift",6,59250,67900,"ari",{nwd:79000,nwe:97000,note:"장비 렌탈 고객 리프트 30% 할인가"}),
+ // 곤지암
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","lift",2,44000,54000,"nol",{from:true,nwd:69000,nwe:83000,note:"11/4~12/6 판매, 수량 소진 시 조기 종료"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","gear",2,56000,67000,"nol",{from:true,note:"리프트+렌털 패키지. 11/4~12/6 판매"}),
+ R("곤지암리조트 공식","곤지암","lift",2,69000,83000,"kon"),
+ R("곤지암리조트 공식","곤지암","lift",4,81000,96000,"kon"),
+ R("곤지암리조트 공식","곤지암","lift",6,87000,105000,"kon"),
+ R("곤지암리조트 공식","곤지암","gear",6,123000,144000,"kon",{note:"리프트 6시간 + 풀세트 렌탈 6시간 합산"}),
+ R("장비좋은집","곤지암","lift",2,54000,65000,"good",{nwd:69000,nwe:83000}),
+ R("장비좋은집","곤지암","lift",4,61000,72000,"good",{nwd:81000,nwe:96000}),
+ R("장비좋은집","곤지암","lift",6,65000,79000,"good",{nwd:87000,nwe:105000}),
+ R("장비좋은집","곤지암","gear",2,74000,85000,"good",{wa:20000,note:"무료 픽업"}),
+ R("장비좋은집","곤지암","gear",4,81000,92000,"good",{wa:20000,note:"무료 픽업"}),
+ R("장비좋은집","곤지암","gear",6,95000,109000,"good",{wa:30000,nwd:123000,nwe:144000,note:"무료 픽업"}),
+ R("간지보더","곤지암","lift",2,54000,65000,"ganji",{nwd:69000,nwe:83000}),
+ R("간지보더","곤지암","lift",4,61000,72000,"ganji",{nwd:81000,nwe:96000}),
+ R("간지보더","곤지암","lift",6,65000,79000,"ganji",{nwd:87000,nwe:105000}),
+ R("간지보더","곤지암","gear",2,74000,85000,"ganji",{wa:20000,note:"스키장 픽업"}),
+ R("간지보더","곤지암","gear",4,81000,92000,"ganji",{wa:20000,note:"스키장 픽업"}),
+ R("간지보더","곤지암","gear",6,90000,104000,"ganji",{wa:30000,nwd:123000,nwe:144000,note:"스키장 픽업"}),
+ // 비발디파크
+ R("보드윤","비발디파크","gear",4,54000,54000,"yoon",{from:true}),
+ R("보드윤","비발디파크","gear",5,61000,61000,"yoon",{from:true}),
+ R("보드윤","비발디파크","gear",6,63000,63000,"yoon",{from:true}),
+ R("보드윤","비발디파크","wear",4,69000,69000,"yoon",{from:true}),
+ R("보드윤","비발디파크","wear",5,81000,81000,"yoon",{from:true}),
+ R("보드윤","비발디파크","wear",6,83000,83000,"yoon",{from:true}),
+ R("국가대표","비발디파크","lift",4,45000,50000,"gb"),
+ R("국가대표","비발디파크","lift",5,50000,53000,"gb"),
+ R("국가대표","비발디파크","lift",6,55000,57000,"gb"),
+ R("국가대표","비발디파크","lift",7,58000,60000,"gb"),
+ R("국가대표","비발디파크","gear",4,65000,70000,"gb",{wa:20000,note:"리프트+장비 개별가 합산. 5만원 이상 무료 픽업"}),
+ R("국가대표","비발디파크","gear",5,75000,78000,"gb",{wa:25000,note:"리프트+장비 개별가 합산. 5만원 이상 무료 픽업"}),
+ R("국가대표","비발디파크","gear",6,85000,87000,"gb",{wa:30000,note:"리프트+장비 개별가 합산. 5만원 이상 무료 픽업"}),
+ R("국가대표","비발디파크","gear",7,88000,90000,"gb",{wa:30000,note:"리프트+장비 개별가 합산. 5만원 이상 무료 픽업"}),
+ // 하이원
+ R("하이원 공식","하이원","lift",3,66000,66000,"h1"),
+ R("하이원 공식","하이원","lift",4,73000,73000,"h1"),
+ R("하이원 공식","하이원","lift",7,88000,88000,"h1"),
+ R("하이원 공식","하이원","gear",4,101000,101000,"h1",{note:"리프트 4시간 + 보드 렌탈 4시간 합산"}),
+ R("하이원 공식","하이원","gear",7,126000,126000,"h1",{note:"리프트 7시간 + 보드 렌탈 7시간 합산"}),
+ R("쎄레노 스키샵","하이원","lift",3,40000,40000,"sereno",{nwd:62000,nwe:62000,note:"성수기 가격. 준성수기는 주중 31,000원"}),
+ R("쎄레노 스키샵","하이원","lift",4,44000,44000,"sereno",{nwd:68000,nwe:68000,note:"성수기 가격. 준성수기는 주중 34,000원"}),
+ R("쎄레노 스키샵","하이원","lift",5,48000,48000,"sereno",{nwd:74000,nwe:74000,note:"성수기 가격. 준성수기는 주중 37,000원"}),
+ R("쎄레노 스키샵","하이원","lift",7,53000,53000,"sereno",{nwd:82000,nwe:82000,note:"성수기 가격. 준성수기는 주중 41,000원"}),
+ R("쎄레노 스키샵","하이원","gear",3,52000,52000,"sereno",{wa:12000,note:"성수기 리프트 + 장비 개별가 합산"}),
+ R("쎄레노 스키샵","하이원","gear",4,56000,56000,"sereno",{wa:12000,note:"성수기 리프트 + 장비 개별가 합산"}),
+ R("쎄레노 스키샵","하이원","gear",5,65000,65000,"sereno",{wa:12000,note:"성수기 리프트 + 장비 개별가 합산"}),
+ R("쎄레노 스키샵","하이원","gear",7,70000,70000,"sereno",{wa:12000,note:"성수기 리프트 + 장비 개별가 합산"}),
+ // 무주
+ R("멘토렌탈샵","무주","lift",3,44000,54000,"mentor",{nwd:60000,nwe:74000,note:"성수기 기준. 렌탈·강습 예약 시에만 구매 가능"}),
+ R("멘토렌탈샵","무주","lift",4,51000,61000,"mentor",{nwd:70000,nwe:84000,note:"성수기 기준. 렌탈·강습 예약 시에만 구매 가능"}),
+ R("멘토렌탈샵","무주","lift",6,58000,69000,"mentor",{nwd:80000,nwe:94000,note:"성수기 기준. 렌탈·강습 예약 시에만 구매 가능"}),
+ R("멘토렌탈샵","무주","wear",3,79000,79000,"mentor",{from:true,note:"알뜰 실속 패키지 A (고급장비+고급의류)"}),
+ R("멘토렌탈샵","무주","wear",6,98000,98000,"mentor",{from:true,note:"신상 점프슈트 패키지 C"}),
+ // 엘리시안 강촌
+ R("스타렌탈샵","엘리시안 강촌","wear",5,43000,48000,"star",{from:true,note:"야간(18~03시) 야심PKG 33,000/38,000원 + 기본의류 필수 10,000원. 부가세 별도 표기, 12/27 이후 적용"}),
+];
+const SHUTTLE={
+ "곤지암":{rt:38000,ow:20000,from:"잠실역 4번 출구",st:"리조트 공식 유료 픽업 셔틀. 26/27 요금은 재공지 전",url:"https://m.konjiamresort.co.kr/ski/pickupService.dev"},
+ "비발디파크":{rt:20000,ow:10000,from:"홍대입구·동대문·건대입구·사당·종합운동장·천호",st:"예약 안내에 나온 예시 요금(편도 10,000원×2). 날짜별 확인 필요",url:"https://www.kgosu.com/2026/11/blog-post_828.html"},
+ "하이원":{rt:48000,ow:24000,from:"잠실",st:"25/26 기준. 비공식 안내 글의 답변에서 확인한 금액",url:"https://traveltourtrip.com/travel-info/travel-transport/high1-shuttlebus-guide/"},
+ "지산":{rt:null,from:"종합운동장·시청",st:"26/27 유료 운영 확정. 요금은 미공개",url:"https://www.jisanresort.co.kr/w/reservation/ticket/info.asp"},
+ "웰리힐리":{rt:null,from:"홍대입구·신촌·명동·동대문·종합운동장",st:"11/27~3/1 매일 운행. 요금 미표시",url:"https://www.trazy.com/ko/experience/detail/welli-hilli-shuttle-bus-service-from-seoul"},
+ "엘리시안 강촌":{rt:null,from:"홍대입구·남산·동대문·강남·잠실",st:"무료 셔틀로 소개된 적 있으나 26/27은 미확인",url:"https://www.trazy.com/ko/experience/detail/elysian-gangchon-ski-resort-shuttle-bus"},
+ "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
+};
+const REPORT_URL=""; // 오픈채팅·구글폼 주소가 정해지면 여기에
+const CHECKED="11월 10일 확인";
+const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};
+// 가격표를 숫자로 공개하지 않았거나 읽지 못한 샵
+const DIR={
+ "지산":[["세븐스키","가격표를 읽지 못했어요","https://7ski.kr/"]],
+ "엘리시안 강촌":[["월드스키","게시된 요금표가 오래돼 제외","https://www.gwski.co.kr/"],["강촌와우","가격 미확인","https://www.gangcheonwow.com/"]],
+ "오크밸리":[["퍼스트클럽","사이트를 읽지 못했어요","http://oak.thefirstclub.co.kr/"]],
+ "웰리힐리":[["용성레포츠","사이트를 읽지 못했어요","https://www.ysleports.co.kr/"]],
+ "모나용평":[["용평스키존","리프트 할인율 35~40%로 안내. 금액표는 미공개","https://www.yp-skizone.com/"],["화이트스포츠","리프트권 현장 판매로 안내. 금액표는 미공개","https://white-sports.co.kr/"]],
+ "알펜시아":[["용평스키존","알펜시아 리프트 할인율 45~50%로 안내. 금액표는 미공개","https://www.yp-skizone.com/"]],
+ "하이원":[["하이원렌탈샵(hi-one)","사이트를 읽지 못했어요","http://www.hi-one.kr/"]],
+ "무주":[["무주스키월드","가격 미확인","https://www.mujuskiworld.com/"],["조이스키","가격 미확인","https://joyski.com/"]],
+ "에덴밸리":[["간지택스키","리프트 할인율 주중 최대 40%, 주말 최대 30%로 안내. 금액표는 미공개","https://www.ganzitag.com/"]],
+ "휘닉스":[],"오투":[],
+};
+const OFFICIAL=[
+ {r:"곤지암",s:"26/27 · 공식 홈페이지 게시가",rows:[["2시간",69000,83000],["4시간",81000,96000],["6시간",87000,105000]]},
+ {r:"하이원",s:"공식 홈페이지 · 주중/주말 동일 표기",rows:[["3시간",66000,66000],["4시간",73000,73000],["7시간",88000,88000],["종일",111000,111000]]},
+ {r:"지산",s:"렌탈샵 게시 정상가 · 시즌 미확인(공식 홈페이지 리뉴얼 중)",rows:[["2시간",65000,82000],["3시간",69000,87000],["4시간",75000,92000],["6시간",79000,97000]]},
+ {r:"무주",s:"26/27 · 렌탈샵 게시 정상가(성수기)",rows:[["3시간",60000,74000],["4시간",70000,84000],["6시간",80000,94000]]},
+];
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const won=n=>Math.round(n).toLocaleString("ko-KR")+"원";
+const init=()=>({resort:"all",people:2,day:"wd",scope:"gear",hours:"any",sort:"total",sh:"car",eb:false,nw:false,off:true});
+let st=init();
+const bucket=h=>h===0?"x":h<=3?"s":h===4?"m":h<=6?"l":"f";
+const SCOPE={lift:"리프트만",gear:"리프트 + 장비",wear:"리프트 + 장비 + 의류"};
+
+RESORTS.forEach(([n])=>{const o=document.createElement("option");o.value=n;o.textContent=n;$("#resort").appendChild(o)});
+$("#grid").innerHTML=RESORTS.map(([n,a])=>{const c=new Set(DATA.filter(d=>d.resort===n&&!d.off).map(d=>d.shop)).size;
+  return `<button class="rz${c?"":" none"}" data-r="${n}" aria-pressed="false"><span class="dot">${a}${c?`<span class="n">${c}</span>`:""}</span><span class="l">${n.replace("엘리시안 ","")}</span></button>`}).join("");
+
+function rows(res=st.resort){
+  let out=[];
+  DATA.forEach(d=>{
+    if(res!=="all"&&d.resort!==res) return;
+    if(st.hours!=="any"&&bucket(d.h)!==st.hours) return;
+    if(st.eb&&!d.eb) return; if(st.nw&&d.season!=="26/27") return; if(!st.off&&d.off) return;
+    let per=d[st.day],normal=st.day==="wd"?d.nwd:d.nwe,added=false;
+    if(d.scope!==st.scope){ if(st.scope==="wear"&&d.scope==="gear"&&d.wa){per+=d.wa;normal=null;added=true}else return; }
+    const base=per,bus=st.sh==="bus",sh=SHUTTLE[d.resort],shAdd=bus&&sh&&sh.rt?sh.rt:0,shUnknown=bus&&!shAdd;
+    if(shAdd){per+=shAdd;normal=null}
+    out.push({...d,per,base,shAdd,shUnknown,normal,added,total:per*st.people});
+  });
+  out.sort((a,b)=>(a.shUnknown-b.shUnknown)||(st.sort==="total"?a.total-b.total||a.h-b.h:b.h-a.h||a.total-b.total));
+  return out;
+}
+function render(){
+  $("#people").textContent=st.people+"명"; $("#resort").value=st.resort;
+  $$("#grid .rz").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===st.resort));
+  [["day","day"],["scope","scope"],["hours","hours"],["sh","sh"]].forEach(([id,k])=>$$("#"+id+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===st[k])));
+  $("#ebOnly").setAttribute("aria-pressed",st.eb);$("#newOnly").setAttribute("aria-pressed",st.nw);$("#offShow").setAttribute("aria-pressed",st.off);
+  $("#sortBtn").textContent=st.sort==="total"?"↕ 총액 낮은 순":"↕ 이용시간 긴 순";
+  const cond=`${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}`;
+  $("#crumb").hidden=st.resort==="all"; $("#dir").innerHTML=dirHtml(st.resort);
+  if(st.resort==="all"){summary(cond);return}
+  const r=rows(),known=r.filter(x=>!x.shUnknown),min=known.length?Math.min(...known.map(x=>x.total)):-1; cur=r;
+  $("#count").textContent=`${st.resort==="all"?"전국":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""} — ${r.length}건`;
+  if(!r.length){const has=DATA.some(d=>d.resort===st.resort);
+    $("#list").innerHTML=`<div class="empty">${st.resort!=="all"&&!has?st.resort+" 가격은 아직 조사 중이에요.":"조건에 맞는 가격이 없어요. 이용 시간을 \"상관없음\"으로 바꿔 보세요."}</div>`;return;}
+  $("#list").innerHTML=r.map((d,i)=>{const pct=d.normal&&d.normal>d.per?Math.round((1-d.per/d.normal)*100):0;return `
+   <article class="card${d.total===min&&!d.shUnknown?" best":""}">
+     <div><div class="tags">${d.total===min&&!d.shUnknown?'<span class="tag best">내 조건 최저가</span>':""}<span class="tag">${d.resort}</span>${d.eb?'<span class="tag eb">얼리버드</span>':""}${d.off?'<span class="tag off">리조트 공식가</span>':""}${d.season==="25/26"?'<span class="tag old">25/26 가격</span>':d.season==="?"?'<span class="tag off">시즌 미표기</span>':""}</div>
+       <h3>${d.shop}</h3>${d.note?`<p class="sub">${d.note}</p>`:""}</div>
+     <dl class="spec"><dt>리프트</dt><dd>${d.h?d.h+"시간권":"시간 미표기"}</dd><dt>범위</dt><dd>${SCOPE[st.scope]}${d.added?` (의류 +${won(d.wa)} 포함)`:""}</dd>${d.h?`<dt>시간당</dt><dd>약 ${won(Math.round(d.base/d.h/100)*100)}</dd>`:""}${st.sh==="bus"?`<dt>셔틀</dt><dd>${d.shAdd?`왕복 +${won(d.shAdd)} 포함 (${SHUTTLE[d.resort].from})`:"요금 미확인. 총액에 빠져 있어요"}</dd>`:""}</dl>
+     <div class="price-row"><div>
+       ${pct?`<div class="normal"><s>${won(d.normal)}</s><b>${pct}%</b></div>`:""}
+       <div class="sale">${won(d.per)}${d.from?"~":""}<small>1인</small></div>
+       <div class="total">${st.people}명 총 <b>${won(d.total)}${d.from?"~":""}</b></div></div>
+       <a class="btn" href="${d.url}" target="_blank" rel="noopener">${d.off||d.eb?"출처 보기":"샵 홈페이지"}</a></div>
+     <div class="foot"><span>${d.tel?"전화 "+d.tel+" · ":""}${CHECKED}</span><button class="rep" data-i="${i}">가격이 달라요</button></div>
+   </article>`}).join("");
+}
+let cur=[];
+function best(n){const r=rows(n);if(!r.length)return null;const k=r.filter(x=>!x.shUnknown);const pool=k.length?k:r;return {d:pool.reduce((a,b)=>b.total<a.total?b:a),n:new Set(r.map(x=>x.shop)).size,unk:!k.length}}
+function summary(cond){
+  const list=RESORTS.map(([n])=>({n,b:best(n),has:DATA.some(d=>d.resort===n)}));
+  list.sort((a,b)=>(!a.b-!b.b)||((a.b&&a.b.unk)-(b.b&&b.b.unk))||(a.b?a.b.d.total-b.b.d.total:b.has-a.has));
+  const priced=list.filter(x=>x.b).length;
+  $("#count").textContent=`전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${cond}`;
+  $("#list").innerHTML=list.map((x,i)=>{const b=x.b;
+    if(!b){const dn=(DIR[x.n]||[]).length;return `<button class="rrow na" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${x.has?"이 조건에 맞는 가격이 없어요":dn?`가격표 미공개 · 렌탈샵 ${dn}곳 안내`:"조사 중"}</div></div><div class="pr"><b>${x.has?"조건 변경":"가격 조사 중"}</b></div></button>`}
+    const d=b.d;return `<button class="rrow${i===0&&!b.unk?" top":""}" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${d.shop} · ${d.h?d.h+"시간권":"시간 미표기"}${d.season==="25/26"?" · 25/26 가격":""}${d.eb?" · 얼리버드":""}${b.unk?" · 셔틀 요금 미확인":""}</div></div><div class="pr"><b>${won(d.per)}${d.from?"~":""}</b><span>1인 최저 · ${b.n}곳 ›</span></div></button>`}).join("");
+}
+function dirHtml(n){const a=DIR[n];if(n==="all"||!a||!a.length)return "";
+  return `<h4>가격표를 확인하지 못한 ${n} 렌탈샵</h4><ul>${a.map(x=>`<li><b>${x[0]}</b><p>${x[1]}</p><a href="${x[2]}" target="_blank" rel="noopener">홈페이지</a></li>`).join("")}</ul>`}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,5000)}
+function copy(text,ok){const done=()=>toast(ok),fail=()=>toast(text);try{navigator.clipboard.writeText(text).then(done,fail)}catch(e){fail()}}
+const enc=()=>["q",st.resort==="all"?"all":SLUG[st.resort],"p"+st.people,st.day,st.scope,"h"+st.hours,st.sh].join("-");
+function dec(){const a=location.hash.slice(1).split("-");if(a[0]!=="q"||a.length!==7)return;
+  const rn=a[1]==="all"?"all":Object.keys(SLUG).find(k=>SLUG[k]===a[1]);const pp=parseInt(a[2].slice(1));
+  if(!rn||!(pp>=1&&pp<=20)||!["wd","we"].includes(a[3])||!SCOPE[a[4]]||!["any","s","m","l","f"].includes(a[5].slice(1))||!["car","bus"].includes(a[6]))return;
+  st={...init(),resort:rn,people:pp,day:a[3],scope:a[4],hours:a[5].slice(1),sh:a[6]}}
+function renderOfficial(){
+  const done=OFFICIAL.map(o=>o.r);
+  $("#official").innerHTML=OFFICIAL.map(o=>`<div class="off-h"><h3>${o.r}</h3><span>${o.s}</span></div><div class="tw"><table><tr><th>권종</th><th>주중</th><th>주말</th></tr>${o.rows.map(x=>`<tr><td>${x[0]}</td><td>${won(x[1])}</td><td>${won(x[2])}</td></tr>`).join("")}</table></div>`).join("")
+   +`<div class="pending">조사 중: ${RESORTS.map(r=>r[0]).filter(n=>!done.includes(n)).join(", ")}. 26/27 요금을 아직 공지하지 않았거나 확인하지 못한 곳입니다.</div>`;
+}
+const set=(k,v)=>{st[k]=v;render()};
+$("#grid").addEventListener("click",e=>{const b=e.target.closest(".rz");if(b)set("resort",st.resort===b.dataset.r?"all":b.dataset.r)});
+$("#resort").addEventListener("change",e=>set("resort",e.target.value));
+["day","scope","hours","sh"].forEach(id=>$("#"+id).addEventListener("click",e=>{const b=e.target.closest("button");if(b)set(id,b.dataset.v)}));
+$("#minus").addEventListener("click",()=>set("people",Math.max(1,st.people-1)));
+$("#plus").addEventListener("click",()=>set("people",Math.min(20,st.people+1)));
+$("#sortBtn").addEventListener("click",()=>set("sort",st.sort==="total"?"hours":"total"));
+$("#resetBtn").addEventListener("click",()=>{st=init();render()});
+$("#ebOnly").addEventListener("click",()=>set("eb",!st.eb));
+$("#newOnly").addEventListener("click",()=>set("nw",!st.nw));
+$("#offShow").addEventListener("click",()=>set("off",!st.off));
+$("#ebBtn").addEventListener("click",()=>{st={...init(),eb:true,hours:"any"};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
+$$(".nav button").forEach(b=>b.addEventListener("click",()=>{
+  $$(".nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["home","official","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0);
+}));
+$("#shuttle").innerHTML=RESORTS.map(([n])=>{const s=SHUTTLE[n];return `<div class="sh-item"><div class="t">${n}${s&&s.rt?`<span>왕복 ${won(s.rt)}</span>`:`<span class="na">${s?"요금 미확인":"조사 중"}</span>`}</div>${s?`${s.from?`<p>탑승: ${s.from}</p>`:""}<p>${s.st}</p><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a>`:""}</div>`}).join("");
+$("#list").addEventListener("click",e=>{
+  const rr=e.target.closest(".rrow");if(rr){st.resort=rr.dataset.r;render();$("#pills").scrollIntoView({block:"start"});return}
+  const rp=e.target.closest(".rep");if(rp){const d=cur[+rp.dataset.i];
+    copy(`[가격 제보] ${d.shop} / ${d.resort} / ${d.h?d.h+"시간":"시간 미표기"} · ${SCOPE[st.scope]} / ${st.day==="wd"?"주중":"주말"} 표시가 ${won(d.base)} → 실제 가격: `,REPORT_URL?"제보 내용이 복사됐어요. 제보 창구에 붙여 넣어 주세요.":"제보 내용이 복사됐어요. 접수 창구는 준비 중이에요.");
+    if(REPORT_URL)window.open(REPORT_URL,"_blank")}});
+$("#crumb").addEventListener("click",()=>set("resort","all"));
+$("#shareBtn").addEventListener("click",()=>{location.hash=enc();
+  const hosted=/github\.io$|\.kr$|\.com$/.test(location.hostname)&&!/claude/.test(location.hostname);
+  const b=st.resort==="all"?null:best(st.resort);
+  const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
+  copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
+window.addEventListener("hashchange",()=>{const k=enc();dec();if(enc()!==k)render()});
+dec();render();renderOfficial();
+</script>
