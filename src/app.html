@@ -192,6 +192,58 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .contact{display:grid;gap:10px;justify-items:start}
 .contact p{margin:0;font-size:14px;line-height:1.6}
 .page .bar .logo{color:#fff}
+.wm{display:flex;align-items:center;font-size:27px;letter-spacing:0;line-height:1}
+.wm svg{width:.78em;height:.78em;color:var(--sun);margin:0 .04em .02em}
+.wm em{font-style:normal;color:var(--sun);margin-left:.22em;letter-spacing:.06em}
+
+/* ── PC 화면: 왼쪽에 조건, 오른쪽에 결과 ── */
+@media (min-width:960px){
+  body{font-size:15px}
+  .app,.app:not(.page){max-width:1160px;position:relative;padding-bottom:40px;min-height:0;box-shadow:0 0 0 1px var(--line)}
+  .gut{padding-left:36px;padding-right:36px}
+  .bar{padding-block:18px 14px;gap:22px}
+  .wm{font-size:32px}
+  .bar select{flex:none;width:auto;min-width:150px;font-size:17px}
+  .nav{position:absolute;top:14px;right:36px;left:auto;bottom:auto;transform:none;width:auto;max-width:none;background:none;border:0;padding:0;gap:6px}
+  .nav button{flex:none;display:block;padding:9px 16px;border-radius:999px;font-size:15px;font-weight:700;color:rgba(255,255,255,.88)}
+  .nav button svg{display:none}
+  .nav button[aria-selected="true"]{background:#fff;color:var(--navy)}
+  #v-home{display:grid;grid-template-columns:330px minmax(0,1fr);column-gap:32px;align-items:start;padding:0 36px}
+  #v-home>*{min-width:0}
+  #v-home>.gut{padding-left:0;padding-right:0}
+  #v-home>.hero{grid-column:1/-1;margin:0 -36px 26px;padding:14px 36px 40px;border-radius:0 0 34px 34px;display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:36px;align-items:center}
+  .hero h1{font-size:58px;margin:10px 0}
+  .banner{padding:22px}
+  .banner b{font-size:26px}
+  .banner em{width:84px;height:84px;font-size:21px}
+  #v-home>.hero+.gut{grid-column:1/-1}
+  .quick{flex-wrap:wrap;overflow:visible}
+  .quick button{font-size:14px;padding:10px 18px}
+  .grid{grid-template-columns:repeat(13,minmax(0,1fr));margin-bottom:26px}
+  .sep{display:none}
+  #v-home>.cond{position:sticky;top:16px;border:1px solid var(--line);border-radius:20px;padding:20px}
+  .pills{flex-wrap:wrap;overflow:visible;padding-top:0}
+  .cond .row{grid-template-columns:118px minmax(0,1fr)}
+  .seg button{white-space:nowrap;font-size:13px;padding:0 4px}
+  .list{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+  .list>.empty{grid-column:1/-1}
+  .rrow{padding:18px}
+  .rrow .nm{font-size:18px}
+  .partner{grid-template-columns:1fr auto;align-items:center;column-gap:24px;padding:24px 28px}
+  .partner b,.partner p{grid-column:1}
+  .partner>a{grid-column:2;grid-row:1/span 2;margin:0}
+  .partner .mail{grid-column:1/-1}
+  .pane{padding-block:28px}
+  #official{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px}
+  #official .pending{grid-column:1/-1}
+  #shuttle{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px}
+  .contact{max-width:640px}
+  .toast{bottom:28px}
+  body>.seo-links{max-width:1160px;padding:18px 36px 40px}
+  .page main{max-width:860px;margin:0 auto;padding-top:14px}
+  .page h1{font-size:38px}
+  .page th,.page td{font-size:14px;padding:10px 12px}
+}
 #splash{position:fixed;inset:0;z-index:99;background:linear-gradient(160deg,#4cc2ff 0%,#1287e0 55%,#0a64c8 100%);color:#fff;display:grid;place-content:center;justify-items:center;font-family:var(--display);line-height:1;transition:opacity .4s}
 #splash.out{opacity:0}
 .sp-w{font-size:min(23vw,104px);display:flex;align-items:center}
@@ -205,7 +257,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
   <div id="splash" hidden aria-hidden="true"><div class="sp-w">SN<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0-10V10M-8.66-5L8.66 5M-8.66 5L8.66-5" stroke-width="3"/><path d="M-3.2-8.2L0-5.4 3.2-8.2M-3.2 8.2L0 5.4 3.2 8.2M-8.7-1.3L-6.3-3.3-9.3-4.9M8.7 1.3L6.3 3.3 9.3 4.9M-8.7 1.3L-6.3 3.3-9.3 4.9M8.7-1.3L6.3-3.3 9.3-4.9" stroke-width="2.1"/></svg>W</div><div class="sp-d">DEAL</div><p>스키장 리프트·렌탈 최저가</p></div>
   <script>(function(){var s=document.getElementById("splash"),on=false;try{on=(matchMedia("(display-mode: standalone)").matches&&!sessionStorage.getItem("sd"))||/[?&]splash=1/.test(location.search);sessionStorage.setItem("sd","1")}catch(e){}if(!on)return;s.hidden=false;setTimeout(function(){s.classList.add("out");setTimeout(function(){s.hidden=true},450)},1200)})()</script>
   <div class="bar gut">
-    <a class="logo" href="/"><img src="/icon-192.png" alt="" width="32" height="32">스노우딜</a>
+    <a class="logo" href="/" aria-label="스노우딜 홈"><span class="wm">SN<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0-10V10M-8.66-5L8.66 5M-8.66 5L8.66-5" stroke-width="3"/><path d="M-3.2-8.2L0-5.4 3.2-8.2M-3.2 8.2L0 5.4 3.2 8.2M-8.7-1.3L-6.3-3.3-9.3-4.9M8.7 1.3L6.3 3.3 9.3 4.9M-8.7 1.3L-6.3 3.3-9.3 4.9M8.7-1.3L6.3-3.3 9.3-4.9" stroke-width="2.1"/></svg>W<em>DEAL</em></span></a>
     <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
   </div>
 
