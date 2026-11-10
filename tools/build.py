@@ -108,7 +108,7 @@ for n, _ in D["RESORTS"]:
             f'<li><a href="{html.escape(x[2])}" rel="noopener nofollow" target="_blank">{html.escape(x[0])}</a>: {html.escape(x[1])}</li>' for x in dr) + "</ul>\n"
     others = " ".join(f'<a href="/{D["SLUG"][m]}/">{m}</a>' for m, _ in D["RESORTS"] if m != n)
     h += f'<h2>다른 스키장 가격</h2>\n<p class="seo-links">{others}</p>\n'
-    h += f'<p class="note">{TODAY_KO} 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 옮겼으며, "~"는 최저 시작가입니다. 예약 전 해당 샵에 반드시 확인하세요. 가격 제보와 렌탈샵 등록 문의는 <a href="https://open.kakao.com/o/sglgUtWi" rel="noopener" target="_blank">카카오톡 오픈채팅</a>으로 보내 주세요.</p>\n</main></div>\n</body>\n</html>\n'
+    h += f'<p class="note">{TODAY_KO} 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 옮겼으며, "~"는 최저 시작가입니다. 예약 전 해당 샵에 반드시 확인하세요. 가격 제보와 렌탈샵 등록 문의는 <a href="https://open.kakao.com/o/sglgUtWi" rel="noopener" target="_blank">카카오톡 오픈채팅</a>이나 이메일(<a href="mailto:apap1685@gmail.com">apap1685@gmail.com</a>)로 보내 주세요.</p>\n</main></div>\n</body>\n</html>\n'
     (ROOT / slug).mkdir(exist_ok=True); (ROOT / slug / "index.html").write_text(fin(h), encoding="utf-8")
     urls.append(f"/{slug}/")
 

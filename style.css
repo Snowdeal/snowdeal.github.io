@@ -184,6 +184,9 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .partner b{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.2}
 .partner p{margin:0;font-size:13px;color:rgba(255,255,255,.86)}
 .partner a,.cta{justify-self:start;margin-top:4px;background:var(--sun);color:var(--sun-fg);font-weight:800;font-size:14px;border-radius:999px;padding:10px 16px;text-decoration:none;display:inline-block}
+.partner .mail{font-size:13px;user-select:text}
+.partner .mail a{background:none;color:#fff;padding:0;margin:0;font-weight:700;text-decoration:underline;font-size:13px;border-radius:0}
+.contact p a{color:var(--p);user-select:text}
 .contact{display:grid;gap:10px;justify-items:start}
 .contact p{margin:0;font-size:14px;line-height:1.6}
 .page .bar .logo{color:#fff}
