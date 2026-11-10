@@ -139,7 +139,7 @@ async function joinInit(){
   if(J.ready){joinRender();return}
   $("#jList").innerHTML='<div class="empty">모집글을 불러오는 중이에요.</div>';
   try{J.store=DEMO?demoStore():await fbStore();J.ready=true;await joinLoad()}
-  catch(e){$("#jList").innerHTML='<div class="empty">모집글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}
+  catch(e){$("#jList").innerHTML='<div class="empty">모집글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.<br><small style="opacity:.6">'+esc((e&&(e.code||e.name)||"error")+" · "+String(e&&e.message||e&&e.type||"").slice(0,140))+'</small></div>'}
 }
 async function joinLoad(){J.posts=await J.store.list();joinRender()}
 function joinRender(){
