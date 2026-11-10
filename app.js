@@ -97,7 +97,7 @@ $("#offShow").addEventListener("click",()=>set("off",!st.off));
 $("#ebBtn").addEventListener("click",()=>{st={...init(),eb:true,hours:"any"};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
 $$(".nav button").forEach(b=>b.addEventListener("click",()=>{
   $$(".nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
-  ["home","official","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0);
+  ["home","official","join","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0); if(b.dataset.v==="join")joinInit();
 }));
 $("#shuttle").innerHTML=RESORTS.map(([n])=>{const s=SHUTTLE[n];return `<div class="sh-item"><div class="t">${n}${s&&s.rt?`<span>왕복 ${won(s.rt)}</span>`:`<span class="na">${s?"요금 미확인":"조사 중"}</span>`}</div>${s?`${s.from?`<p>탑승: ${s.from}</p>`:""}<p>${s.st}</p><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a>`:""}</div>`}).join("");
 $("#list").addEventListener("click",e=>{
@@ -113,6 +113,69 @@ $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
   copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
 window.addEventListener("hashchange",()=>{const k=enc();dec();if(enc()!==k)render()});
+/* ── 동행 구하기 ── */
+const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DEMO=/[?&]demo=1/.test(location.search);
+const J={ready:false,posts:[],uid:null,store:null};
+const jMine=()=>{try{return JSON.parse(localStorage.getItem("jRep")||"[]")}catch(e){return []}};
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+async function fbStore(){
+  const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
+  await loadScript(b+"firebase-app-compat.js");await loadScript(b+"firebase-auth-compat.js");await loadScript(b+"firebase-firestore-compat.js");
+  firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid;
+  const col=firebase.firestore().collection("joins"),inc=firebase.firestore.FieldValue.increment(1);
+  return {
+    list:async()=>(await col.where("date",">=",today()).orderBy("date").limit(200).get()).docs.map(d=>({id:d.id,...d.data()})),
+    add:p=>col.add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),
+    del:id=>col.doc(id).delete(),
+    report:id=>col.doc(id).update({reports:inc}),
+  };
+}
+function demoStore(){J.uid="me";let n=3;const d=k=>{const t=new Date(Date.now()+k*864e5);return t.toISOString().slice(0,10)};
+  const a=[{id:"1",resort:"곤지암",date:d(9),have:2,want:4,from:"강남",memo:"주간권 끊고 같이 타실 분 구해요. 보드 2년차입니다.",link:"https://open.kakao.com/o/example1",nick:"곤지암보더",uid:"x",reports:0},
+           {id:"2",resort:"하이원",date:d(16),have:1,want:4,from:"수원, 자차 카풀",memo:"1박 2일로 가요. 초보 환영!",link:"https://open.kakao.com/o/example2",nick:"눈사람",uid:"me",reports:0}];
+  return {list:async()=>a.slice(),add:async p=>{a.push({...p,id:String(n++),uid:"me",reports:0})},del:async id=>{a.splice(a.findIndex(x=>x.id===id),1)},report:async id=>{a.find(x=>x.id===id).reports++}}}
+async function joinInit(){
+  if(J.ready){joinRender();return}
+  $("#jList").innerHTML='<div class="empty">모집글을 불러오는 중이에요.</div>';
+  try{J.store=DEMO?demoStore():await fbStore();J.ready=true;await joinLoad()}
+  catch(e){$("#jList").innerHTML='<div class="empty">모집글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}
+}
+async function joinLoad(){J.posts=await J.store.list();joinRender()}
+function joinRender(){
+  const r=$("#jResort").value,hid=jMine();
+  const a=J.posts.filter(p=>(r==="all"||p.resort===r)&&(p.reports||0)<3&&!hid.includes(p.id)).sort((x,y)=>x.date<y.date?-1:1);
+  $("#jCount").textContent=a.length?`모집 중 ${a.length}건 · 가는 날 빠른 순`:"";
+  if(!a.length){$("#jList").innerHTML=`<div class="empty">${r==="all"?"아직 모집글이 없어요.":esc(r)+" 모집글이 아직 없어요."}<br>첫 글을 올려 보세요.</div>`;return}
+  $("#jList").innerHTML=a.map(p=>{const dt=new Date(p.date+"T00:00:00"),wd="일월화수목금토"[dt.getDay()],need=Math.max(0,p.want-p.have);
+    return `<article class="jcard"><div><div class="tags"><span class="tag">${esc(p.resort)}</span><span class="tag off">${dt.getMonth()+1}월 ${dt.getDate()}일 (${wd})</span></div>
+      <h3>${esc(p.nick)}<span class="jbadge">${need?need+"명 더 구해요":"모집 완료"}</span></h3>
+      <div class="jm">지금 ${p.have}명 · 총 ${p.want}명 목표${p.from?" · "+esc(p.from)+" 출발":""}</div></div>
+      ${p.memo?`<div class="jmemo">${esc(p.memo)}</div>`:""}
+      <div class="jact"><a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener nofollow">오픈채팅 참여</a><button class="btn ghost" data-a="price" data-id="${esc(p.id)}">${p.want}명 최저가 보기</button>
+      ${p.uid===J.uid?`<button class="rep" data-a="del" data-id="${esc(p.id)}">내 글 삭제</button>`:`<button class="rep" data-a="rep" data-id="${esc(p.id)}">신고</button>`}</div></article>`}).join("");
+}
+function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").textContent="";$("#jfDate").min=today();if($("#jResort").value!=="all")$("#jfResort").value=$("#jResort").value}}
+RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
+if(FB||DEMO)$("#navJoin").hidden=false;
+$("#jResort").addEventListener("change",joinRender);
+$("#jNew").addEventListener("click",()=>joinForm(true));
+$("#jfCancel").addEventListener("click",()=>joinForm(false));
+$("#jf").addEventListener("click",e=>{if(e.target.id==="jf")joinForm(false)});
+$("#jForm").addEventListener("submit",async e=>{e.preventDefault();const g=id=>$("#"+id).value.trim(),err=m=>{$("#jfErr").textContent=m};
+  const p={resort:g("jfResort"),date:g("jfDate"),have:+g("jfHave"),want:+g("jfWant"),from:g("jfFrom"),memo:g("jfMemo"),link:g("jfLink"),nick:g("jfNick")};
+  if(!SLUG[p.resort])return err("스키장을 골라 주세요.");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(p.date)||p.date<today())return err("가는 날을 오늘 이후로 골라 주세요.");
+  if(!(p.have>=1&&p.have<=20&&p.want>=2&&p.want<=20&&p.want>=p.have))return err("인원을 확인해 주세요. 총 인원은 지금 인원보다 같거나 많아야 해요.");
+  if(!/^https:\/\/open\.kakao\.com\/[A-Za-z0-9/_-]+$/.test(p.link))return err("카카오톡 오픈채팅 링크(https://open.kakao.com/...)를 넣어 주세요.");
+  if(!p.nick)return err("닉네임을 넣어 주세요.");
+  if(/01[016789][-.\s]?\d{3,4}[-.\s]?\d{4}/.test(p.from+" "+p.memo+" "+p.nick))return err("전화번호는 올릴 수 없어요. 연락은 오픈채팅으로 해 주세요.");
+  if(!$("#jfOk").checked)return err("만 19세 이상 확인에 체크해 주세요.");
+  try{await J.store.add(p);joinForm(false);$("#jForm").reset();toast("모집글을 올렸어요.");await joinLoad()}catch(x){err("올리지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
+$("#jList").addEventListener("click",async e=>{const b=e.target.closest("[data-a]");if(!b)return;const p=J.posts.find(x=>x.id===b.dataset.id);if(!p)return;
+  if(b.dataset.a==="price"){st={...init(),resort:p.resort,people:p.want,day:[0,6].includes(new Date(p.date+"T00:00:00").getDay())?"we":"wd"};$$(".nav button")[0].click();render();return}
+  if(b.dataset.a==="del"){if(b.dataset.sure){try{await J.store.del(p.id);toast("글을 삭제했어요.");await joinLoad()}catch(x){toast("삭제하지 못했어요.")}}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 삭제"}return}
+  if(b.dataset.a==="rep"){if(b.dataset.sure){try{await J.store.report(p.id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),p.id]))}catch(x){}toast("신고했어요. 이 글은 내 화면에서 가려집니다.");await joinLoad()}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 신고"}}});
 $("#ntBtn").addEventListener("click",openNotice);
 $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));

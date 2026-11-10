@@ -92,6 +92,8 @@ const SHUTTLE={
  "엘리시안 강촌":{rt:null,from:"홍대입구·남산·동대문·강남·잠실",st:"무료 셔틀로 소개된 적 있으나 26/27은 미확인",url:"https://www.trazy.com/ko/experience/detail/elysian-gangchon-ski-resort-shuttle-bus"},
  "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
 };
+// Firebase 설정값. null이면 동행 탭이 숨겨집니다.
+const FB=null;
 const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
 const CHECKED="11월 10일 확인";
 const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};

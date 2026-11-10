@@ -262,6 +262,28 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .nt-b button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;padding:12px;font-weight:700}
 .nt-b button.on{background:var(--p);border-color:var(--p);color:var(--p-fg)}
 @media (min-width:960px){#v-home>.hero{row-gap:0}.hero h1{grid-column:1;grid-row:1}.hero .live{grid-column:1;grid-row:2;justify-self:start}.hero .banner{grid-column:2;grid-row:1/span 2}.nt{place-items:center}.nt-box{border-radius:26px;width:560px}.live{width:auto;display:inline-flex;margin-bottom:0}.hero h1{margin-bottom:16px}}
+.jlead{margin:-4px 0 14px;font-size:14px;color:var(--muted);line-height:1.55}
+.jbar{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.jbar select{flex:1;min-width:0;font:inherit;font-size:14px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.jbar .cta{margin:0;border:0;white-space:nowrap}
+.jcard{border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;gap:8px}
+.jcard h3{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em}
+.jcard .jm{font-size:13px;color:var(--muted)}
+.jcard .jmemo{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.jcard .jact{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+.jcard .jact .btn{padding:9px 14px}
+.jcard .jact .ghost{background:var(--card);color:var(--p);box-shadow:inset 0 0 0 1px var(--p)}
+.jcard .jact .rep{margin-left:auto}
+.jbadge{display:inline-block;background:var(--sun);color:var(--sun-fg);font-weight:800;font-size:12px;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}
+.safe{margin-top:18px;border-radius:18px;background:var(--soft);padding:14px 16px;font-size:13px;line-height:1.6}
+.safe ul{margin:6px 0 0;padding-left:18px;color:var(--muted)}
+.jform{display:grid;gap:12px}
+.jform label{display:grid;gap:5px;font-size:12px;font-weight:700;color:var(--muted)}
+.jform input:not([type=checkbox]),.jform select,.jform textarea{font:inherit;font-size:15px;font-weight:400;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+.jform .chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--fg);font-weight:500}
+.jform .chk input{width:18px;height:18px;flex:none}
+.jerr{margin:0;color:var(--red);font-size:13px;min-height:1em}
+@media (min-width:960px){#jList{grid-template-columns:repeat(2,minmax(0,1fr))}.jbar{max-width:560px}}
 #splash{position:fixed;inset:0;z-index:99;background:linear-gradient(160deg,#4cc2ff 0%,#1287e0 55%,#0a64c8 100%);color:#fff;display:grid;place-content:center;justify-items:center;font-family:var(--display);line-height:1;transition:opacity .4s}
 #splash.out{opacity:0}
 .sp-w{font-size:min(23vw,104px);display:flex;align-items:center}
@@ -351,6 +373,15 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
     <p class="note">개장일: 휘닉스 11월 27일 목표(날씨에 따라 변동), 곤지암 12월 중, 오투 시즌권 사용 시작 12월 5일. 나머지는 미발표입니다.</p>
   </section>
 
+  <section id="v-join" class="gut pane" hidden>
+    <h2>같이 갈 사람 구하기</h2>
+    <p class="jlead">인원이 모이면 단체 조건으로 더 싸게 갈 수 있어요. 스키장과 날짜가 맞는 글을 찾거나 직접 모집해 보세요.</p>
+    <div class="jbar"><select id="jResort" aria-label="스키장 고르기"><option value="all">전체 스키장</option></select><button class="cta" id="jNew">모집글 쓰기</button></div>
+    <p class="summary" id="jCount"></p>
+    <div class="list" id="jList"></div>
+    <div class="safe"><b>안전하게 만나요</b><ul><li>연락은 카카오톡 오픈채팅으로만 하고, 전화번호나 계좌는 올리지 마세요.</li><li>리프트권·숙소 비용을 먼저 보내 달라는 요청은 거절하세요.</li><li>처음 만날 때는 스키장 매표소처럼 사람이 많은 곳에서 만나세요.</li><li>불쾌한 글은 "신고"를 눌러 주세요. 신고가 쌓이면 자동으로 가려집니다.</li></ul></div>
+  </section>
+
   <section id="v-report" class="gut pane" hidden>
     <h2>가격 제보 · 렌탈샵 등록</h2>
     <div class="contact">
@@ -362,6 +393,21 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
   </section>
 
   <div class="toast" id="toast" hidden></div>
+  <div class="nt" id="jf" hidden role="dialog" aria-modal="true" aria-labelledby="jfT">
+    <form class="nt-box jform" id="jForm" novalidate>
+      <h3 id="jfT">동행 모집글 쓰기</h3>
+      <label>스키장<select id="jfResort" required></select></label>
+      <label>가는 날<input type="date" id="jfDate" required></label>
+      <div class="row"><label>지금 인원<input type="number" id="jfHave" min="1" max="20" value="1" inputmode="numeric" required></label><label>모으려는 총 인원<input type="number" id="jfWant" min="2" max="20" value="4" inputmode="numeric" required></label></div>
+      <label>출발 지역<input type="text" id="jfFrom" maxlength="20" placeholder="예: 강남, 수원, 자차 카풀 가능"></label>
+      <label>한마디<textarea id="jfMemo" maxlength="120" rows="3" placeholder="예: 보드 2년차예요. 주간권 끊고 같이 타실 분!"></textarea></label>
+      <label>오픈채팅 링크<input type="url" id="jfLink" required placeholder="https://open.kakao.com/o/..."></label>
+      <label>닉네임<input type="text" id="jfNick" maxlength="12" required placeholder="예: 곤지암보더"></label>
+      <label class="chk"><input type="checkbox" id="jfOk"> 만 19세 이상이며, 안전 수칙을 확인했어요</label>
+      <p class="jerr" id="jfErr" role="alert"></p>
+      <div class="nt-b"><button type="button" id="jfCancel">취소</button><button type="submit" class="on">올리기</button></div>
+    </form>
+  </div>
   <div class="nt" id="nt" hidden role="dialog" aria-modal="true" aria-labelledby="ntT">
     <div class="nt-box">
       <h3 id="ntT">26/27 시즌 개장 일정</h3>
@@ -374,6 +420,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
   <nav class="nav">
     <button aria-selected="true" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>최저가</button>
     <button aria-selected="false" data-v="official"><svg viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 3-4 5 8z"/></svg>요금·셔틀</button>
+    <button aria-selected="false" data-v="join" id="navJoin" hidden><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.700 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.200c3 .200 5 2.400 5 5.300"/></svg>동행</button>
     <button aria-selected="false" data-v="report"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>제보</button>
   </nav>
 </div>
@@ -473,6 +520,8 @@ const SHUTTLE={
  "엘리시안 강촌":{rt:null,from:"홍대입구·남산·동대문·강남·잠실",st:"무료 셔틀로 소개된 적 있으나 26/27은 미확인",url:"https://www.trazy.com/ko/experience/detail/elysian-gangchon-ski-resort-shuttle-bus"},
  "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
 };
+// Firebase 설정값. null이면 동행 탭이 숨겨집니다.
+const FB=null;
 const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
 const CHECKED="11월 10일 확인";
 const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};
@@ -612,7 +661,7 @@ $("#offShow").addEventListener("click",()=>set("off",!st.off));
 $("#ebBtn").addEventListener("click",()=>{st={...init(),eb:true,hours:"any"};render();$("#pills").scrollIntoView({behavior:"smooth",block:"start"})});
 $$(".nav button").forEach(b=>b.addEventListener("click",()=>{
   $$(".nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
-  ["home","official","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0);
+  ["home","official","join","report"].forEach(v=>$("#v-"+v).hidden=v!==b.dataset.v); window.scrollTo(0,0); if(b.dataset.v==="join")joinInit();
 }));
 $("#shuttle").innerHTML=RESORTS.map(([n])=>{const s=SHUTTLE[n];return `<div class="sh-item"><div class="t">${n}${s&&s.rt?`<span>왕복 ${won(s.rt)}</span>`:`<span class="na">${s?"요금 미확인":"조사 중"}</span>`}</div>${s?`${s.from?`<p>탑승: ${s.from}</p>`:""}<p>${s.st}</p><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a>`:""}</div>`}).join("");
 $("#list").addEventListener("click",e=>{
@@ -628,6 +677,69 @@ $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
   copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
 window.addEventListener("hashchange",()=>{const k=enc();dec();if(enc()!==k)render()});
+/* ── 동행 구하기 ── */
+const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DEMO=/[?&]demo=1/.test(location.search);
+const J={ready:false,posts:[],uid:null,store:null};
+const jMine=()=>{try{return JSON.parse(localStorage.getItem("jRep")||"[]")}catch(e){return []}};
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+async function fbStore(){
+  const v="10.12.2",b="https://www.gstatic.com/firebasejs/"+v+"/";
+  await loadScript(b+"firebase-app-compat.js");await loadScript(b+"firebase-auth-compat.js");await loadScript(b+"firebase-firestore-compat.js");
+  firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid;
+  const col=firebase.firestore().collection("joins"),inc=firebase.firestore.FieldValue.increment(1);
+  return {
+    list:async()=>(await col.where("date",">=",today()).orderBy("date").limit(200).get()).docs.map(d=>({id:d.id,...d.data()})),
+    add:p=>col.add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),
+    del:id=>col.doc(id).delete(),
+    report:id=>col.doc(id).update({reports:inc}),
+  };
+}
+function demoStore(){J.uid="me";let n=3;const d=k=>{const t=new Date(Date.now()+k*864e5);return t.toISOString().slice(0,10)};
+  const a=[{id:"1",resort:"곤지암",date:d(9),have:2,want:4,from:"강남",memo:"주간권 끊고 같이 타실 분 구해요. 보드 2년차입니다.",link:"https://open.kakao.com/o/example1",nick:"곤지암보더",uid:"x",reports:0},
+           {id:"2",resort:"하이원",date:d(16),have:1,want:4,from:"수원, 자차 카풀",memo:"1박 2일로 가요. 초보 환영!",link:"https://open.kakao.com/o/example2",nick:"눈사람",uid:"me",reports:0}];
+  return {list:async()=>a.slice(),add:async p=>{a.push({...p,id:String(n++),uid:"me",reports:0})},del:async id=>{a.splice(a.findIndex(x=>x.id===id),1)},report:async id=>{a.find(x=>x.id===id).reports++}}}
+async function joinInit(){
+  if(J.ready){joinRender();return}
+  $("#jList").innerHTML='<div class="empty">모집글을 불러오는 중이에요.</div>';
+  try{J.store=DEMO?demoStore():await fbStore();J.ready=true;await joinLoad()}
+  catch(e){$("#jList").innerHTML='<div class="empty">모집글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}
+}
+async function joinLoad(){J.posts=await J.store.list();joinRender()}
+function joinRender(){
+  const r=$("#jResort").value,hid=jMine();
+  const a=J.posts.filter(p=>(r==="all"||p.resort===r)&&(p.reports||0)<3&&!hid.includes(p.id)).sort((x,y)=>x.date<y.date?-1:1);
+  $("#jCount").textContent=a.length?`모집 중 ${a.length}건 · 가는 날 빠른 순`:"";
+  if(!a.length){$("#jList").innerHTML=`<div class="empty">${r==="all"?"아직 모집글이 없어요.":esc(r)+" 모집글이 아직 없어요."}<br>첫 글을 올려 보세요.</div>`;return}
+  $("#jList").innerHTML=a.map(p=>{const dt=new Date(p.date+"T00:00:00"),wd="일월화수목금토"[dt.getDay()],need=Math.max(0,p.want-p.have);
+    return `<article class="jcard"><div><div class="tags"><span class="tag">${esc(p.resort)}</span><span class="tag off">${dt.getMonth()+1}월 ${dt.getDate()}일 (${wd})</span></div>
+      <h3>${esc(p.nick)}<span class="jbadge">${need?need+"명 더 구해요":"모집 완료"}</span></h3>
+      <div class="jm">지금 ${p.have}명 · 총 ${p.want}명 목표${p.from?" · "+esc(p.from)+" 출발":""}</div></div>
+      ${p.memo?`<div class="jmemo">${esc(p.memo)}</div>`:""}
+      <div class="jact"><a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener nofollow">오픈채팅 참여</a><button class="btn ghost" data-a="price" data-id="${esc(p.id)}">${p.want}명 최저가 보기</button>
+      ${p.uid===J.uid?`<button class="rep" data-a="del" data-id="${esc(p.id)}">내 글 삭제</button>`:`<button class="rep" data-a="rep" data-id="${esc(p.id)}">신고</button>`}</div></article>`}).join("");
+}
+function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").textContent="";$("#jfDate").min=today();if($("#jResort").value!=="all")$("#jfResort").value=$("#jResort").value}}
+RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
+if(FB||DEMO)$("#navJoin").hidden=false;
+$("#jResort").addEventListener("change",joinRender);
+$("#jNew").addEventListener("click",()=>joinForm(true));
+$("#jfCancel").addEventListener("click",()=>joinForm(false));
+$("#jf").addEventListener("click",e=>{if(e.target.id==="jf")joinForm(false)});
+$("#jForm").addEventListener("submit",async e=>{e.preventDefault();const g=id=>$("#"+id).value.trim(),err=m=>{$("#jfErr").textContent=m};
+  const p={resort:g("jfResort"),date:g("jfDate"),have:+g("jfHave"),want:+g("jfWant"),from:g("jfFrom"),memo:g("jfMemo"),link:g("jfLink"),nick:g("jfNick")};
+  if(!SLUG[p.resort])return err("스키장을 골라 주세요.");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(p.date)||p.date<today())return err("가는 날을 오늘 이후로 골라 주세요.");
+  if(!(p.have>=1&&p.have<=20&&p.want>=2&&p.want<=20&&p.want>=p.have))return err("인원을 확인해 주세요. 총 인원은 지금 인원보다 같거나 많아야 해요.");
+  if(!/^https:\/\/open\.kakao\.com\/[A-Za-z0-9/_-]+$/.test(p.link))return err("카카오톡 오픈채팅 링크(https://open.kakao.com/...)를 넣어 주세요.");
+  if(!p.nick)return err("닉네임을 넣어 주세요.");
+  if(/01[016789][-.\s]?\d{3,4}[-.\s]?\d{4}/.test(p.from+" "+p.memo+" "+p.nick))return err("전화번호는 올릴 수 없어요. 연락은 오픈채팅으로 해 주세요.");
+  if(!$("#jfOk").checked)return err("만 19세 이상 확인에 체크해 주세요.");
+  try{await J.store.add(p);joinForm(false);$("#jForm").reset();toast("모집글을 올렸어요.");await joinLoad()}catch(x){err("올리지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
+$("#jList").addEventListener("click",async e=>{const b=e.target.closest("[data-a]");if(!b)return;const p=J.posts.find(x=>x.id===b.dataset.id);if(!p)return;
+  if(b.dataset.a==="price"){st={...init(),resort:p.resort,people:p.want,day:[0,6].includes(new Date(p.date+"T00:00:00").getDay())?"we":"wd"};$$(".nav button")[0].click();render();return}
+  if(b.dataset.a==="del"){if(b.dataset.sure){try{await J.store.del(p.id);toast("글을 삭제했어요.");await joinLoad()}catch(x){toast("삭제하지 못했어요.")}}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 삭제"}return}
+  if(b.dataset.a==="rep"){if(b.dataset.sure){try{await J.store.report(p.id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),p.id]))}catch(x){}toast("신고했어요. 이 글은 내 화면에서 가려집니다.");await joinLoad()}else{b.dataset.sure="1";b.textContent="한 번 더 누르면 신고"}}});
 $("#ntBtn").addEventListener("click",openNotice);
 $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));

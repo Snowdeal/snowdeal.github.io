@@ -104,6 +104,15 @@
     <p class="note">개장일: 휘닉스 11월 27일 목표(날씨에 따라 변동), 곤지암 12월 중, 오투 시즌권 사용 시작 12월 5일. 나머지는 미발표입니다.</p>
   </section>
 
+  <section id="v-join" class="gut pane" hidden>
+    <h2>같이 갈 사람 구하기</h2>
+    <p class="jlead">인원이 모이면 단체 조건으로 더 싸게 갈 수 있어요. 스키장과 날짜가 맞는 글을 찾거나 직접 모집해 보세요.</p>
+    <div class="jbar"><select id="jResort" aria-label="스키장 고르기"><option value="all">전체 스키장</option></select><button class="cta" id="jNew">모집글 쓰기</button></div>
+    <p class="summary" id="jCount"></p>
+    <div class="list" id="jList"></div>
+    <div class="safe"><b>안전하게 만나요</b><ul><li>연락은 카카오톡 오픈채팅으로만 하고, 전화번호나 계좌는 올리지 마세요.</li><li>리프트권·숙소 비용을 먼저 보내 달라는 요청은 거절하세요.</li><li>처음 만날 때는 스키장 매표소처럼 사람이 많은 곳에서 만나세요.</li><li>불쾌한 글은 "신고"를 눌러 주세요. 신고가 쌓이면 자동으로 가려집니다.</li></ul></div>
+  </section>
+
   <section id="v-report" class="gut pane" hidden>
     <h2>가격 제보 · 렌탈샵 등록</h2>
     <div class="contact">
@@ -115,6 +124,21 @@
   </section>
 
   <div class="toast" id="toast" hidden></div>
+  <div class="nt" id="jf" hidden role="dialog" aria-modal="true" aria-labelledby="jfT">
+    <form class="nt-box jform" id="jForm" novalidate>
+      <h3 id="jfT">동행 모집글 쓰기</h3>
+      <label>스키장<select id="jfResort" required></select></label>
+      <label>가는 날<input type="date" id="jfDate" required></label>
+      <div class="row"><label>지금 인원<input type="number" id="jfHave" min="1" max="20" value="1" inputmode="numeric" required></label><label>모으려는 총 인원<input type="number" id="jfWant" min="2" max="20" value="4" inputmode="numeric" required></label></div>
+      <label>출발 지역<input type="text" id="jfFrom" maxlength="20" placeholder="예: 강남, 수원, 자차 카풀 가능"></label>
+      <label>한마디<textarea id="jfMemo" maxlength="120" rows="3" placeholder="예: 보드 2년차예요. 주간권 끊고 같이 타실 분!"></textarea></label>
+      <label>오픈채팅 링크<input type="url" id="jfLink" required placeholder="https://open.kakao.com/o/..."></label>
+      <label>닉네임<input type="text" id="jfNick" maxlength="12" required placeholder="예: 곤지암보더"></label>
+      <label class="chk"><input type="checkbox" id="jfOk"> 만 19세 이상이며, 안전 수칙을 확인했어요</label>
+      <p class="jerr" id="jfErr" role="alert"></p>
+      <div class="nt-b"><button type="button" id="jfCancel">취소</button><button type="submit" class="on">올리기</button></div>
+    </form>
+  </div>
   <div class="nt" id="nt" hidden role="dialog" aria-modal="true" aria-labelledby="ntT">
     <div class="nt-box">
       <h3 id="ntT">26/27 시즌 개장 일정</h3>
@@ -127,6 +151,7 @@
   <nav class="nav">
     <button aria-selected="true" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>최저가</button>
     <button aria-selected="false" data-v="official"><svg viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 3-4 5 8z"/></svg>요금·셔틀</button>
+    <button aria-selected="false" data-v="join" id="navJoin" hidden><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.700 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.200c3 .200 5 2.400 5 5.300"/></svg>동행</button>
     <button aria-selected="false" data-v="report"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>제보</button>
   </nav>
 </div>

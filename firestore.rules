@@ -1,0 +1,27 @@
+rules_version = '2';
+// 스노우딜 동행 게시판 보안 규칙. Firebase 콘솔 > Firestore Database > 규칙 에 그대로 붙여 넣습니다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /joins/{id} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['resort','date','have','want','from','memo','link','nick','uid','reports','created'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.reports == 0
+        && request.resource.data.created == request.time
+        && request.resource.data.resort is string && request.resource.data.resort.size() <= 12
+        && request.resource.data.date is string && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.have is int && request.resource.data.have >= 1 && request.resource.data.have <= 20
+        && request.resource.data.want is int && request.resource.data.want >= 2 && request.resource.data.want <= 20
+        && request.resource.data.from is string && request.resource.data.from.size() <= 20
+        && request.resource.data.memo is string && request.resource.data.memo.size() <= 120
+        && request.resource.data.nick is string && request.resource.data.nick.size() >= 1 && request.resource.data.nick.size() <= 12
+        && request.resource.data.link is string && request.resource.data.link.matches('^https://open[.]kakao[.]com/[A-Za-z0-9/_-]+$');
+      // 신고: 로그인한 누구나 reports만 1 올릴 수 있음
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reports'])
+        && request.resource.data.reports == resource.data.reports + 1;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+  }
+}
