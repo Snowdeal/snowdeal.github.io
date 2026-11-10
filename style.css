@@ -4,7 +4,8 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
   --bg:#e6f3fc; --card:#ffffff; --fg:#14222e; --muted:#687c8d; --line:#d9e8f3; --soft:#f3f9fe;
   --p:#0e7ccf; --p-dk:#0a64a8; --p-bg:#dceffc; --p-fg:#ffffff;
   --red:#e8466b; --sun:#fff3c4; --sun-fg:#7a5a00; --ok:#0f9d77;
-  --font:"Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --display:"Black Han Sans","Pretendard Variable",Pretendard,"Apple SD Gothic Neo",sans-serif;
   --ban:linear-gradient(135deg,#bfe3fb 0%,#e9f6ff 70%); --on:#eef7fe; --old:#fde9ee;
   color-scheme:light;
 }
@@ -19,24 +20,24 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
   --red:#ff7592; --sun:#3d3312; --sun-fg:#f3d573; --ok:#3fcfa6;
   --ban:linear-gradient(135deg,#143f5c 0%,#16283a 70%); --on:#143246; --old:#3b1a24; color-scheme:dark }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.45}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px;line-height:1.45;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
 .app{max-width:480px;margin:0 auto;background:var(--card);min-height:100vh;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 .gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 button{font:inherit;cursor:pointer}
 button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--p);outline-offset:2px}
 
 .bar{display:flex;align-items:center;gap:10px;padding-block:12px}
-.logo{font-weight:900;font-size:20px;color:var(--p);letter-spacing:-.03em;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.logo{font-family:var(--display);font-weight:400;font-size:23px;color:var(--p);letter-spacing:-.03em;display:flex;align-items:center;gap:5px;white-space:nowrap}
 .logo i{width:18px;height:18px;border-radius:50% 50% 50% 0;background:var(--p);transform:rotate(-45deg);display:inline-block;position:relative}
 .logo i::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--card)}
 .bar select{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:16px;font-weight:700;color:var(--fg);padding:6px 0}
 
 .banner{margin-block:2px 14px;border-radius:14px;background:var(--ban);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;width:100%;text-align:left;color:var(--fg)}
-.banner b{display:block;font-size:20px;font-weight:900;color:var(--p-dk);letter-spacing:-.02em;line-height:1.2}
+.banner b{display:block;font-family:var(--display);font-size:23px;font-weight:400;color:var(--p-dk);letter-spacing:-.02em;line-height:1.2}
 .banner span{display:inline-block;margin-top:8px;background:var(--sun);color:var(--sun-fg);font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px}
 .banner em{font-style:normal;flex:none;width:64px;height:64px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:900;color:var(--red);font-size:15px;line-height:1.1;text-align:center}
 
-h2{font-size:16px;font-weight:900;margin:0 0 10px;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:800;margin:0 0 12px;letter-spacing:-.03em}
 .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px 4px;margin-bottom:16px}
 .rz{background:none;border:0;padding:0;display:grid;justify-items:center;gap:5px;color:var(--fg);font-size:12px;min-width:0}
 .rz .dot{width:52px;height:52px;border-radius:50%;background:var(--p-bg);display:grid;place-items:center;font-weight:900;font-size:15px;color:var(--p-dk);position:relative}
@@ -131,7 +132,7 @@ a.logo{text-decoration:none}
 body>.seo-links{background:var(--card);padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .app:not(.page){min-height:0;padding-bottom:8px}
 .page main{padding-bottom:24px}
-.page h1{font-size:22px;font-weight:900;margin:6px 0 8px;letter-spacing:-.02em;text-wrap:balance}
+.page h1{font-family:var(--display);font-size:26px;font-weight:400;margin:6px 0 8px;letter-spacing:-.02em;text-wrap:balance}
 .page h2{margin:24px 0 8px}
 .page .lead{color:var(--muted);font-size:13px;margin:0 0 12px}
 .page .btn{display:inline-block}
