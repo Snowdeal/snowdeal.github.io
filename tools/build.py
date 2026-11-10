@@ -33,6 +33,7 @@ def head(title, desc, path):
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{BASE}{path}">
 <meta property="og:image" content="{BASE}/og.png">
+<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e7ccf">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon-192.png">
