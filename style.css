@@ -190,6 +190,8 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .contact{display:grid;gap:10px;justify-items:start}
 .contact p{margin:0;font-size:14px;line-height:1.6}
 .page .bar .logo{color:#fff}
+.wm,.sp-w,.sp-d{text-shadow:0 .05em 0 #0a56b0,0 .1em .14em rgba(6,50,110,.3)}
+.wm svg,.sp-w svg{filter:drop-shadow(0 .05em 0 #0a56b0) drop-shadow(0 .09em .07em rgba(6,50,110,.28))}
 .wm{display:flex;align-items:center;font-size:27px;letter-spacing:0;line-height:1}
 .wm svg{width:.78em;height:.78em;color:var(--sun);margin:0 .04em .02em}
 .wm em{font-style:normal;color:var(--sun);margin-left:.22em;letter-spacing:.06em}
