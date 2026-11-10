@@ -259,7 +259,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .nt-box{padding-bottom:0!important}
 .nt-b button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;padding:12px;font-weight:700}
 .nt-b button.on{background:var(--p);border-color:var(--p);color:var(--p-fg)}
-@media (min-width:960px){.nt{place-items:center}.nt-box{border-radius:26px;width:560px}.live{width:auto;display:inline-flex;margin-bottom:0}.hero h1{margin-bottom:16px}}
+@media (min-width:960px){#v-home>.hero{row-gap:0}.hero h1{grid-column:1;grid-row:1}.hero .live{grid-column:1;grid-row:2;justify-self:start}.hero .banner{grid-column:2;grid-row:1/span 2}.nt{place-items:center}.nt-box{border-radius:26px;width:560px}.live{width:auto;display:inline-flex;margin-bottom:0}.hero h1{margin-bottom:16px}}
 #splash{position:fixed;inset:0;z-index:99;background:linear-gradient(160deg,#4cc2ff 0%,#1287e0 55%,#0a64c8 100%);color:#fff;display:grid;place-content:center;justify-items:center;font-family:var(--display);line-height:1;transition:opacity .4s}
 #splash.out{opacity:0}
 .sp-w{font-size:min(23vw,104px);display:flex;align-items:center}
