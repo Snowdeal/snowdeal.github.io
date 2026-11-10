@@ -36,7 +36,7 @@ function render(){
   const r=rows(),known=r.filter(x=>!x.shUnknown),min=known.length?Math.min(...known.map(x=>x.total)):-1; cur=r;
   $("#count").textContent=`${st.resort==="all"?"전국":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""} — ${r.length}건`;
   if(!r.length){const has=DATA.some(d=>d.resort===st.resort);
-    $("#list").innerHTML=`<div class="empty">${st.resort!=="all"&&!has?st.resort+" 가격은 아직 조사 중이에요.":"조건에 맞는 가격이 없어요. 이용 시간을 \"상관없음\"으로 바꿔 보세요."}</div>`;return;}
+    $("#list").innerHTML=`<div class="empty">${st.resort!=="all"&&!has?st.resort+"은(는) 26/27 요금 공개 전이에요. "+openTxt(st.resort)+".":"조건에 맞는 가격이 없어요. 이용 시간을 \"상관없음\"으로 바꿔 보세요."}</div>`;return;}
   $("#list").innerHTML=r.map((d,i)=>{const pct=d.normal&&d.normal>d.per?Math.round((1-d.per/d.normal)*100):0;return `
    <article class="card${d.total===min&&!d.shUnknown?" best":""}">
      <div><div class="tags">${d.total===min&&!d.shUnknown?'<span class="tag best">내 조건 최저가</span>':""}<span class="tag">${d.resort}</span>${d.eb?'<span class="tag eb">얼리버드</span>':""}${d.off?'<span class="tag off">리조트 공식가</span>':""}${d.season==="25/26"?'<span class="tag old">25/26 가격</span>':d.season==="?"?'<span class="tag off">시즌 미표기</span>':""}</div>
@@ -51,6 +51,14 @@ function render(){
    </article>`}).join("");
 }
 let cur=[];
+const openTxt=n=>{const o=OPEN[n]||{};return o.d?"개장 "+o.d:o.last?"작년 개장 "+o.last:"개장일 미발표"};
+function priceState(n){const r=DATA.filter(d=>d.resort===n);if(r.some(d=>d.season==="26/27"))return ['<span class="ok">26/27 공개</span>',0];if(r.length)return ['<span class="wait">작년 가격만</span>',1];return ['<span class="wait">공개 대기</span>',2]}
+function renderNotice(){const rows=Object.keys(OPEN).map(n=>{const o=OPEN[n];return `<tr><td>${n}</td><td>${o.d?o.d+`<small>${o.src}</small>`:'미발표'}</td><td>${o.last||"-"}</td><td>${priceState(n)[0]}</td></tr>`}).join("");
+  $("#ntTable").innerHTML="<tr><th>스키장</th><th>26/27 개장</th><th>작년 개장</th><th>요금</th></tr>"+rows;
+  $(".nt-f").textContent=OPEN_CHECKED+" 확인. 개장일은 기온과 제설 상황에 따라 바뀌니 방문 전 리조트 공지를 확인하세요."}
+const today=()=>new Date().toISOString().slice(0,10);
+function openNotice(){$("#nt").hidden=false}
+function closeNotice(day){$("#nt").hidden=true;if(day){try{localStorage.setItem("ntDay",today())}catch(e){}}}
 function best(n){const r=rows(n);if(!r.length)return null;const k=r.filter(x=>!x.shUnknown);const pool=k.length?k:r;return {d:pool.reduce((a,b)=>b.total<a.total?b:a),n:new Set(r.map(x=>x.shop)).size,unk:!k.length}}
 function summary(cond){
   const list=RESORTS.map(([n])=>({n,b:best(n),has:DATA.some(d=>d.resort===n)}));
@@ -58,7 +66,7 @@ function summary(cond){
   const priced=list.filter(x=>x.b).length;
   $("#count").textContent=`전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${cond}`;
   $("#list").innerHTML=list.map((x,i)=>{const b=x.b;
-    if(!b){const dn=(DIR[x.n]||[]).length;return `<button class="rrow na" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${x.has?"이 조건에 맞는 가격이 없어요":dn?`가격표 미공개 · 렌탈샵 ${dn}곳 안내`:"조사 중"}</div></div><div class="pr"><b>${x.has?"조건 변경":"가격 조사 중"}</b></div></button>`}
+    if(!b){const dn=(DIR[x.n]||[]).length;return `<button class="rrow na" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${x.has?"이 조건에 맞는 가격이 없어요":openTxt(x.n)+" · 요금 공개 대기"}</div></div><div class="pr"><b>${x.has?"조건 변경":"공개 대기"}</b></div></button>`}
     const d=b.d;return `<button class="rrow${i===0&&!b.unk?" top":""}" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${d.shop} · ${d.h?d.h+"시간권":"시간 미표기"}${d.season==="25/26"?" · 25/26 가격":""}${d.eb?" · 얼리버드":""}${b.unk?" · 셔틀 요금 미확인":""}</div></div><div class="pr"><b>${won(d.per)}${d.from?"~":""}</b><span>1인 최저 · ${b.n}곳 ›</span></div></button>`}).join("");
 }
 function dirHtml(n){const a=DIR[n];if(n==="all"||!a||!a.length)return "";
@@ -105,4 +113,11 @@ $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
   copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
 window.addEventListener("hashchange",()=>{const k=enc();dec();if(enc()!==k)render()});
-dec();render();renderOfficial();
+$("#ntBtn").addEventListener("click",openNotice);
+$("#ntClose").addEventListener("click",()=>closeNotice(false));
+$("#ntDay").addEventListener("click",()=>closeNotice(true));
+$("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
+dec();render();renderOfficial();renderNotice();
+(function(){let seen=false;try{seen=localStorage.getItem("ntDay")===today()||sessionStorage.getItem("ntS")==="1";sessionStorage.setItem("ntS","1")}catch(e){}
+  if(seen||location.hash)return;setTimeout(openNotice,$("#splash").hidden?600:1900)})();

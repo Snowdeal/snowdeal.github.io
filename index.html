@@ -35,6 +35,7 @@
   <section id="v-home">
     <div class="hero gut">
       <h1>스키장 리프트·렌탈<br><em>최저가</em> 한눈에</h1>
+      <button class="live" id="ntBtn"><i></i>26/27 요금, 공개되는 대로 바로 업데이트 중<span>개장 일정 ›</span></button>
       <button class="banner" id="ebBtn">
         <div><b>얼리버드 특가</b><span>곤지암 12/6까지 · 개장~폐장 사용</span></div>
         <em>최대<br>36%</em>
@@ -114,6 +115,15 @@
   </section>
 
   <div class="toast" id="toast" hidden></div>
+  <div class="nt" id="nt" hidden role="dialog" aria-modal="true" aria-labelledby="ntT">
+    <div class="nt-box">
+      <h3 id="ntT">26/27 시즌 개장 일정</h3>
+      <p>스키장과 렌탈샵이 새 시즌 요금을 공개하는 대로 바로 올리고 있어요. 아직 공개 전인 곳은 개장 일정부터 확인하세요.</p>
+      <div class="tw"><table id="ntTable"></table></div>
+      <p class="nt-f"></p>
+      <div class="nt-b"><button id="ntDay">오늘 하루 보지 않기</button><button id="ntClose" class="on">닫기</button></div>
+    </div>
+  </div>
   <nav class="nav">
     <button aria-selected="true" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>최저가</button>
     <button aria-selected="false" data-v="official"><svg viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 3-4 5 8z"/></svg>요금·셔틀</button>

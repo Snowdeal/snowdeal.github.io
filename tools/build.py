@@ -15,7 +15,7 @@ data_js, app_js = "\n".join(js[:cut]), "\n".join(js[cut:])
 (ROOT / "style.css").write_text(
     "body{margin:0}img{max-width:100%}[hidden]{display:none!important}\n" + style + "\n", encoding="utf-8")
 D = json.loads(subprocess.check_output(["node", "-e",
-    data_js + ";console.log(JSON.stringify({RESORTS,DATA,SHUTTLE,DIR,OFFICIAL,SLUG}))"]))
+    data_js + ";console.log(JSON.stringify({RESORTS,DATA,SHUTTLE,DIR,OFFICIAL,SLUG,OPEN}))"]))
 
 def head(title, desc, path):
     e = html.escape
@@ -74,7 +74,7 @@ for n, _ in D["RESORTS"]:
         desc = f"{n} 스키장 렌탈샵 {len(shops)}곳의 리프트권·장비 렌탈 패키지 가격표." + (
             f" 리프트+장비 주중 최저 {won(low['wd'])}{'~' if low.get('from') else ''}." if low else "") + f" {TODAY_KO} 확인."
     else:
-        desc = f"{n} 스키장 렌탈샵·리프트권 가격을 조사하고 있습니다. 확인된 렌탈샵 정보와 셔틀 안내."
+        desc = f"{n} 스키장 26/27 시즌 개장 일정과 렌탈샵·리프트권 요금 안내. 요금은 공개되는 대로 업데이트합니다."
     h = head(title, desc, f"/{slug}/")
     h += f'<div class="app page"><div class="bar gut"><a class="logo" href="/" aria-label="스노우딜 홈"><span class="wm">SN<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M0-10V10M-8.66-5L8.66 5M-8.66 5L8.66-5" stroke-width="3"/><path d="M-3.2-8.2L0-5.4 3.2-8.2M-3.2 8.2L0 5.4 3.2 8.2M-8.7-1.3L-6.3-3.3-9.3-4.9M8.7 1.3L6.3 3.3 9.3 4.9M-8.7 1.3L-6.3 3.3-9.3 4.9M8.7-1.3L6.3-3.3 9.3-4.9" stroke-width="2.1"/></svg>W<em>DEAL</em></span></a></div>\n<main class="gut">\n'
     h += f'<h1>{n} 렌탈샵 가격 비교</h1>\n<p class="lead">{html.escape(desc)}</p>\n'
@@ -93,7 +93,9 @@ for n, _ in D["RESORTS"]:
         notes = sorted({f'{d["shop"]}: {d["note"]}' for d in rs if d.get("note")})
         if notes: h += '<ul class="notes">' + "".join(f"<li>{html.escape(x)}</li>" for x in notes) + "</ul>\n"
     if not rows:
-        h += f'<p class="pending">{n} 스키장은 렌탈샵들이 가격표를 숫자로 공개하지 않아 아직 조사 중입니다. 가격표를 알고 계시면 제보해 주세요.</p>\n'
+        h += f'<p class="pending">{n} 스키장과 렌탈샵의 26/27 시즌 요금은 아직 공개 전입니다. 공개되는 대로 이 페이지에 바로 올립니다.</p>\n'
+    op = D["OPEN"].get(n) or {}
+    h += f'<h2>{n} 26/27 개장 일정</h2>\n<p>' + (f'{op["d"]} ({op["src"]}). ' if op.get("d") else "26/27 개장일은 아직 발표되지 않았습니다. ") + (f'지난 시즌에는 {op["last"]}에 개장했습니다. ' if op.get("last") else "") + "개장일은 기온과 제설 상황에 따라 바뀔 수 있습니다.</p>\n"
     o = next((o for o in D["OFFICIAL"] if o["r"] == n), None)
     if o:
         h += f'<h2>{n} 리프트권 정상가</h2>\n<p class="lead">{html.escape(o["s"])}</p>\n<div class="tw"><table><tr><th>권종</th><th>주중</th><th>주말</th></tr>\n'
