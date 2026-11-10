@@ -282,6 +282,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .jform input:not([type=checkbox]),.jform select,.jform textarea{font:inherit;font-size:15px;font-weight:400;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
 .jform .chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--fg);font-weight:500}
 .jform .chk input{width:18px;height:18px;flex:none}
+.jpriv{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
 .jerr{margin:0;color:var(--red);font-size:13px;min-height:1em}
 @media (min-width:960px){#jList{grid-template-columns:repeat(2,minmax(0,1fr))}.jbar{max-width:560px}}
 #splash{position:fixed;inset:0;z-index:99;background:linear-gradient(160deg,#4cc2ff 0%,#1287e0 55%,#0a64c8 100%);color:#fff;display:grid;place-content:center;justify-items:center;font-family:var(--display);line-height:1;transition:opacity .4s}
@@ -404,6 +405,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
       <label>오픈채팅 링크<input type="url" id="jfLink" required placeholder="https://open.kakao.com/o/..."></label>
       <label>닉네임<input type="text" id="jfNick" maxlength="12" required placeholder="예: 곤지암보더"></label>
       <label class="chk"><input type="checkbox" id="jfOk"> 만 19세 이상이며, 안전 수칙을 확인했어요</label>
+      <p class="jpriv">올린 글의 닉네임·오픈채팅 링크·내용은 누구나 볼 수 있고, 가는 날이 지나면 목록에서 사라져요. 내 글은 언제든 삭제할 수 있어요. 문의 apap1685@gmail.com</p>
       <p class="jerr" id="jfErr" role="alert"></p>
       <div class="nt-b"><button type="button" id="jfCancel">취소</button><button type="submit" class="on">올리기</button></div>
     </form>
@@ -521,7 +523,7 @@ const SHUTTLE={
  "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
 };
 // Firebase 설정값. null이면 동행 탭이 숨겨집니다.
-const FB=null;
+const FB={apiKey:"AIzaSyBz4lHynwKkVHtfbNmbo0TpH3IRost79wQ",authDomain:"snowdeal-2f46a.firebaseapp.com",projectId:"snowdeal-2f46a",storageBucket:"snowdeal-2f46a.firebasestorage.app",messagingSenderId:"763259120331",appId:"1:763259120331:web:5b7ebc2fa0adac068d894e"};
 const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
 const CHECKED="11월 10일 확인";
 const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};

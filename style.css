@@ -280,6 +280,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .jform input:not([type=checkbox]),.jform select,.jform textarea{font:inherit;font-size:15px;font-weight:400;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
 .jform .chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--fg);font-weight:500}
 .jform .chk input{width:18px;height:18px;flex:none}
+.jpriv{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
 .jerr{margin:0;color:var(--red);font-size:13px;min-height:1em}
 @media (min-width:960px){#jList{grid-template-columns:repeat(2,minmax(0,1fr))}.jbar{max-width:560px}}
 #splash{position:fixed;inset:0;z-index:99;background:linear-gradient(160deg,#4cc2ff 0%,#1287e0 55%,#0a64c8 100%);color:#fff;display:grid;place-content:center;justify-items:center;font-family:var(--display);line-height:1;transition:opacity .4s}

@@ -93,7 +93,7 @@ const SHUTTLE={
  "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
 };
 // Firebase 설정값. null이면 동행 탭이 숨겨집니다.
-const FB=null;
+const FB={apiKey:"AIzaSyBz4lHynwKkVHtfbNmbo0TpH3IRost79wQ",authDomain:"snowdeal-2f46a.firebaseapp.com",projectId:"snowdeal-2f46a",storageBucket:"snowdeal-2f46a.firebasestorage.app",messagingSenderId:"763259120331",appId:"1:763259120331:web:5b7ebc2fa0adac068d894e"};
 const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
 const CHECKED="11월 10일 확인";
 const SLUG={"지산":"jisan","곤지암":"konjiam","비발디파크":"vivaldi","엘리시안 강촌":"gangchon","오크밸리":"oakvalley","웰리힐리":"welli","휘닉스":"phoenix","모나용평":"yongpyong","알펜시아":"alpensia","하이원":"high1","오투":"o2","무주":"muju","에덴밸리":"eden"};
