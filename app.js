@@ -86,7 +86,7 @@ function renderOfficial(){
 }
 const set=(k,v)=>{st[k]=v;render()};
 $("#grid").addEventListener("click",e=>{const b=e.target.closest(".rz");if(b)set("resort",st.resort===b.dataset.r?"all":b.dataset.r)});
-$("#resort").addEventListener("change",e=>set("resort",e.target.value));
+$("#resort").addEventListener("change",e=>{st.resort=e.target.value;if(view==="main"&&st.resort!=="all")go("guide");render()});
 ["day","scope","hours","sh"].forEach(id=>$("#"+id).addEventListener("click",e=>{const b=e.target.closest("button");if(b)set(id,b.dataset.v)}));
 $("#minus").addEventListener("click",()=>set("people",Math.max(1,st.people-1)));
 $("#plus").addEventListener("click",()=>set("people",Math.min(20,st.people+1)));
@@ -137,7 +137,7 @@ async function joinInit(){
   try{J.store=DEMO?demoStore():await fbStore();J.ready=true;await joinLoad()}
   catch(e){$("#jList").innerHTML='<div class="empty">모집글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}
 }
-async function joinLoad(){J.posts=await J.store.list();joinRender()}
+async function joinLoad(){M.at=0;J.posts=await J.store.list();joinRender()}
 function joinRender(){
   const r=$("#jResort").value,hid=jMine();
   const a=J.posts.filter(p=>(r==="all"||p.resort===r)&&(p.reports||0)<3&&!hid.includes(p.id)).sort((x,y)=>x.date<y.date?-1:1);
@@ -155,12 +155,13 @@ function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").tex
 RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
 if(FB||DEMO)$("#navJoin").hidden=false;
 /* ── 스키장 허브 ── */
-let view="guide";
-const VIEWS={guide:["guide"],home:["home"],talk:["talk"],join:["join"],more:["official","report"]};
+let view="main";
+const VIEWS={main:["main"],guide:["guide"],home:["home"],talk:["talk"],join:["join"],more:["official","report"],official:["official"],report:["report"]};
 const LIVE=FB||DEMO;
 function go(v,keep){view=v;$$(".nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
-  ["guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
-  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide()}
+  ["main","guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
+  if(v==="main"&&location.hash){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide();if(v==="main")renderMain()}
 function syncHub(){if(view==="guide")renderGuide();if(view==="talk")talkSync()}
 function renderGuide(){
   const n=st.resort,h=$("#gHero"),b=$("#gBody"),want=n==="all"?"":"#g-"+SLUG[n];
@@ -201,13 +202,13 @@ function fbReady(){return fbP||(fbP=(async()=>{if(DEMO){J.uid="me";return}
   if(!firebase.apps.length)firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid})().catch(e=>{fbP=null;throw e}))}
 function talkStore(){
   if(DEMO){const m={"곤지암":[{id:"t1",nick:"곤지암보더",text:"토요일 9시 도착했는데 리프트 대기 15분쯤이었어요.",uid:"x",reports:0,ts:Date.now()-72e5},{id:"t2",nick:"눈사람",text:"셔틀은 잠실에서 탔고 앉아서 갔습니다.",uid:"me",reports:0,ts:Date.now()-864e5*2}]};let n=3;const g=r=>m[r]||(m[r]=[]);
-    return {list:async r=>g(r).slice().sort((x,y)=>y.ts-x.ts),add:async(r,p)=>{g(r).push({...p,id:"t"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(r,id)=>{const a=g(r);a.splice(a.findIndex(x=>x.id===id),1)},report:async(r,id)=>{g(r).find(x=>x.id===id).reports++}}}
+    return {list:async(r,k=100)=>g(r).slice().sort((x,y)=>y.ts-x.ts).slice(0,k),add:async(r,p)=>{g(r).push({...p,id:"t"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(r,id)=>{const a=g(r);a.splice(a.findIndex(x=>x.id===id),1)},report:async(r,id)=>{g(r).find(x=>x.id===id).reports++}}}
   const db=firebase.firestore(),col=r=>db.collection("talk").doc(SLUG[r]).collection("posts"),inc=firebase.firestore.FieldValue.increment(1);
-  return {list:async r=>(await col(r).orderBy("created","desc").limit(100).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
+  return {list:async(r,k=100)=>(await col(r).orderBy("created","desc").limit(k).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
     add:(r,p)=>col(r).add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),del:(r,id)=>col(r).doc(id).delete(),report:(r,id)=>col(r).doc(id).update({reports:inc})}}
 const ago=ts=>{const m=Math.floor((Date.now()-ts)/6e4);if(m<1)return "방금";if(m<60)return m+"분 전";if(m<1440)return Math.floor(m/60)+"시간 전";const d=new Date(ts);return (d.getMonth()+1)+"월 "+d.getDate()+"일"};
 async function talkSync(force){
-  const r=st.resort!=="all"?st.resort:(T.resort||RESORTS[0][0]);$("#tkResort").value=r;$("#tkT").textContent=r+" 톡";
+  const r=st.resort!=="all"?st.resort:(T.resort||FOCUS);$("#tkResort").value=r;if(force)M.at=0;$("#tkT").textContent=r+" 톡";
   if(T.resort===r&&T.loaded&&!force){talkRender();return}
   T.resort=r;T.loaded=false;$("#tkCount").textContent="";$("#tkList").innerHTML='<div class="empty">글을 불러오는 중이에요.</div>';
   try{await fbReady();T.store=T.store||talkStore();const a=await T.store.list(r);if(T.resort!==r)return;T.posts=a;T.loaded=true;talkRender()}
@@ -255,6 +256,44 @@ $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));
 $("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
-route();render();renderOfficial();renderNotice();
-(function(){let seen=false;try{seen=localStorage.getItem("ntDay")===today()||sessionStorage.getItem("ntS")==="1";sessionStorage.setItem("ntS","1")}catch(e){}
-  if(seen||location.hash)return;setTimeout(openNotice,$("#splash").hidden?600:1900)})();
+/* ── 홈: 개장 임박 · 이야기 · 동행 · 특가. FOCUS는 먼저 채우는 스키장, SY는 시즌 시작 연도 ── */
+const FOCUS="곤지암",SY=2026;
+const M={posts:null,joins:null,at:0};
+function dday(n){const m=/(\d+)월 (\d+)일/.exec((OPEN[n]||{}).d||"");if(!m)return null;
+  const t=new Date(+m[1]>=7?SY:SY+1,+m[1]-1,+m[2]),now=new Date();now.setHours(0,0,0,0);const k=Math.round((t-now)/864e5);return k<0?null:k}
+function renderMain(){
+  $("#mHero").innerHTML=`<h1>스키·보드 타는<br>사람들의 <em>스노우딜</em></h1><p class="hsub">스키장 소식, 다녀온 이야기, 같이 갈 사람, 특가까지 한곳에 모았어요.</p><div class="hact">${LIVE?`<button class="on" data-t="${FOCUS}">이야기 남기기</button><button data-go="join">동행 구하기</button>`:""}<button data-go="home">특가 보기</button></div>`;
+  const op=Object.keys(OPEN).filter(n=>OPEN[n].d).map((n,i)=>({n,i,k:dday(n)})).sort((a,b)=>(a.k===null)-(b.k===null)||(a.k-b.k)||(a.i-b.i));
+  const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b>${x.k===null?o.d:x.k?"D-"+x.k:"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
+  const talk=LIVE?`<div class="msec"><div class="mh"><h2>지금 올라온 이야기</h2><button data-t="${FOCUS}">톡 가기 ›</button></div><div id="mTalk"><div class="empty">이야기를 불러오는 중이에요.</div></div><div class="gask"><b>${FOCUS} 다녀오셨어요?</b><p>설질, 리프트 대기, 주차, 셔틀. 한 줄이면 충분해요. 다음에 가는 사람에게 큰 도움이 됩니다.</p><button data-t="${FOCUS}">${FOCUS} 톡에 한 줄 남기기</button></div></div>`:"";
+  const join=LIVE?`<div class="msec"><div class="mh"><h2>같이 갈 사람</h2><button data-go="join">전체 보기 ›</button></div><div id="mJoin" class="msec"></div></div>`:"";
+  const eb=DATA.filter(d=>d.eb),ebR=[...new Set(eb.map(d=>d.resort))],ebMin=eb.length?Math.min(...eb.map(d=>Math.min(d.wd,d.we))):0,
+    ebPct=Math.max(0,...eb.map(d=>Math.max(d.nwd?1-d.wd/d.nwd:0,d.nwe?1-d.we/d.nwe:0))),priced=RESORTS.filter(([n])=>DATA.some(d=>d.resort===n)).length;
+  const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${won(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
+  const chips=`<div class="mfull"><h2>스키장 바로가기</h2><div class="mchips">${[FOCUS,...RESORTS.map(r=>r[0]).filter(n=>n!==FOCUS)].map(n=>`<button class="chip" data-r="${n}">${n}</button>`).join("")}</div><div class="mlinks"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div></div>`;
+  $("#mBody").innerHTML=opens+`<div>${talk}${join}</div><div>${deals}</div>`+chips;
+  mainLoad();
+}
+function mainFeed(){const hid=jMine(),ok=p=>(p.reports||0)<3&&!hid.includes(p.id),t=$("#mTalk"),j=$("#mJoin");
+  if(t){const a=(M.posts||[]).filter(ok).slice(0,6);
+    t.innerHTML=a.length?a.map(p=>`<button class="tk mt" data-t="${esc(p.resort)}"><div class="h"><span class="tag">${esc(p.resort)}</span><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span></div><p>${esc(p.text)}</p></button>`).join(""):`<div class="empty">아직 올라온 이야기가 없어요.<br>첫 글을 남겨 보세요.</div>`}
+  if(j){const a=(M.joins||[]).filter(ok).sort((x,y)=>x.date<y.date?-1:1).slice(0,2);
+    j.innerHTML=a.length?a.map(p=>{const dt=new Date(p.date+"T00:00:00"),need=Math.max(0,p.want-p.have);
+      return `<button class="rrow" data-go="join"><div><div class="nm">${esc(p.resort)} · ${dt.getMonth()+1}월 ${dt.getDate()}일 (${"일월화수목금토"[dt.getDay()]})</div><div class="sb">${esc(p.nick)}${p.from?" · "+esc(p.from)+" 출발":""}</div></div><div class="pr"><b>${need?need+"명 구해요":"모집 완료"}</b></div></button>`}).join("")
+      :`<button class="rrow na" data-go="join"><div><div class="nm">아직 모집글이 없어요</div><div class="sb">스키장과 날짜를 올리고 같이 갈 사람을 찾아보세요</div></div><div class="pr"><b>글쓰기 ›</b></div></button>`}}
+async function mainLoad(){if(!LIVE)return;if(M.posts&&Date.now()-M.at<60000){mainFeed();return}
+  try{await fbReady();T.store=T.store||talkStore();J.store=J.store||(DEMO?demoStore():await fbStore());
+    const [ps,js]=await Promise.all([Promise.all(RESORTS.map(([r])=>T.store.list(r,3).then(a=>a.map(p=>({...p,resort:r})),()=>[]))),
+      J.store.list().then(a=>{J.posts=a;J.ready=true;return a},()=>[])]);
+    M.posts=ps.flat().sort((x,y)=>y.ts-x.ts);M.joins=js;M.at=Date.now();mainFeed()}
+  catch(e){const t=$("#mTalk"),j=$("#mJoin");if(t)t.innerHTML='<div class="empty">이야기를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>';if(j)j.innerHTML=""}}
+$("#v-main").addEventListener("click",e=>{const b=e.target.closest("[data-r],[data-t],[data-a]");if(!b)return;
+  if(b.dataset.r){try{history.pushState(null,"","#g-"+SLUG[b.dataset.r])}catch(x){}st.resort=b.dataset.r;go("guide");render();return}
+  if(b.dataset.t){st.resort=b.dataset.t;render();go("talk");return}
+  if(b.dataset.a==="nt")openNotice();else if(b.dataset.a==="eb"){st={...init(),eb:true};go("home");render()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b)go(b.dataset.go)});
+$("#chkDate").textContent=CHECKED.replace(" 확인","");
+(function(){const k=RESORTS.map(r=>r[0]).filter(n=>SHUTTLE[n]&&SHUTTLE[n].rt),o=Object.keys(OPEN).filter(n=>OPEN[n].d);
+  $("#shKnown").textContent=`확인된 ${k.length}곳(${k.join("·")})`;
+  $("#offNote").textContent=`개장일(${OPEN_CHECKED} 확인): ${o.map(n=>n+" "+OPEN[n].d).join(", ")}. 나머지는 미발표이고, 기온과 제설 상황에 따라 바뀔 수 있습니다.`})();
+route();render();renderOfficial();renderNotice();if(view==="main")renderMain();

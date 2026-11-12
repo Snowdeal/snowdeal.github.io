@@ -56,8 +56,8 @@ SC = {"lift": "리프트권만", "gear": "리프트 + 장비 렌탈", "wear": "�
 
 # 메인
 names = ", ".join(r[0] for r in D["RESORTS"][:6])
-idx = head("스노우딜 | 스키장 정보·리프트 렌탈 최저가·동행",
-           f"{names} 등 전국 스키장의 슬로프·셔틀·주차 가이드와 렌탈샵·리프트권 최저가, 같이 갈 사람 구하기까지 한곳에 모았습니다. {TODAY_KO} 확인.", "/")
+idx = head("스노우딜 | 스키·보드 커뮤니티 · 스키장 정보 · 동행 · 최저가",
+           f"{names} 등 전국 스키장의 개장 소식과 다녀온 사람들의 이야기, 같이 갈 사람 구하기, 슬로프·셔틀·주차 가이드, 렌탈샵·리프트권 최저가를 한곳에 모았습니다. {TODAY_KO} 확인.", "/")
 links = "".join(f'<a href="/{D["SLUG"][n]}/">{n} 스키장 정보·가격</a> ' for n, _ in D["RESORTS"])
 idx += body + f'\n<noscript><div class="gut"><h1>전국 스키장 정보와 렌탈샵·리프트권 최저가</h1><p>{links}</p></div></noscript>\n'
 idx += f'<nav class="gut seo-links" aria-label="스키장별 정보">{links}</nav>\n<script src="/data.js"></script>\n<script src="/app.js"></script>\n</body>\n</html>\n'

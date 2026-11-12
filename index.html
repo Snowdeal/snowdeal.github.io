@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>스노우딜 | 스키장 정보·리프트 렌탈 최저가·동행</title>
-<meta name="description" content="지산, 곤지암, 비발디파크, 엘리시안 강촌, 오크밸리, 웰리힐리 등 전국 스키장의 슬로프·셔틀·주차 가이드와 렌탈샵·리프트권 최저가, 같이 갈 사람 구하기까지 한곳에 모았습니다. 2026년 11월 12일 확인.">
+<title>스노우딜 | 스키·보드 커뮤니티 · 스키장 정보 · 동행 · 최저가</title>
+<meta name="description" content="지산, 곤지암, 비발디파크, 엘리시안 강촌, 오크밸리, 웰리힐리 등 전국 스키장의 개장 소식과 다녀온 사람들의 이야기, 같이 갈 사람 구하기, 슬로프·셔틀·주차 가이드, 렌탈샵·리프트권 최저가를 한곳에 모았습니다. 2026년 11월 12일 확인.">
 <link rel="canonical" href="https://snowdeal.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="스노우딜">
-<meta property="og:title" content="스노우딜 | 스키장 정보·리프트 렌탈 최저가·동행">
-<meta property="og:description" content="지산, 곤지암, 비발디파크, 엘리시안 강촌, 오크밸리, 웰리힐리 등 전국 스키장의 슬로프·셔틀·주차 가이드와 렌탈샵·리프트권 최저가, 같이 갈 사람 구하기까지 한곳에 모았습니다. 2026년 11월 12일 확인.">
+<meta property="og:title" content="스노우딜 | 스키·보드 커뮤니티 · 스키장 정보 · 동행 · 최저가">
+<meta property="og:description" content="지산, 곤지암, 비발디파크, 엘리시안 강촌, 오크밸리, 웰리힐리 등 전국 스키장의 개장 소식과 다녀온 사람들의 이야기, 같이 갈 사람 구하기, 슬로프·셔틀·주차 가이드, 렌탈샵·리프트권 최저가를 한곳에 모았습니다. 2026년 11월 12일 확인.">
 <meta property="og:url" content="https://snowdeal.github.io/">
 <meta property="og:image" content="https://snowdeal.github.io/og.png">
 <meta name="naver-site-verification" content="d333804e6ecbe52e15f939a35f0522378cf165fb">
@@ -32,7 +32,12 @@
     <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
   </div>
 
-  <section id="v-guide">
+  <section id="v-main">
+    <div class="hero gut" id="mHero"></div>
+    <div class="gut" id="mBody"></div>
+  </section>
+
+  <section id="v-guide" hidden>
     <div class="hero gut" id="gHero"></div>
     <div class="gut" id="gBody"></div>
   </section>
@@ -97,7 +102,8 @@
       <div class="list" id="list"></div>
       <div class="dir" id="dir"></div>
       <div class="partner"><b>렌탈샵 사장님이신가요?</b><p>26/27 시즌 가격표를 보내 주시면 무료로 등록해 드려요. 가격이 바뀌었을 때도 알려 주시면 바로 고칩니다.</p><a href="https://open.kakao.com/o/sglgUtWi" target="_blank" rel="noopener">오픈채팅으로 문의하기</a><p class="mail">이메일 <a href="mailto:apap1685@gmail.com">apap1685@gmail.com</a></p></div>
-      <p class="note">2026년 11월 10일 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 확인된 3곳(곤지암·비발디파크·하이원)만 총액에 더해지며, 지난 시즌 또는 예시 요금이라 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
+      <div class="mlinks" style="margin:16px 0 0"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div>
+      <p class="note"><span id="chkDate"></span> 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 <span id="shKnown"></span>만 총액에 더해지며, 지난 시즌 요금이거나 시즌 표기가 없는 곳도 있어 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
     </div>
   </section>
 
@@ -106,7 +112,7 @@
     <div id="official"></div>
     <h2 style="margin-top:22px">서울 출발 셔틀버스</h2>
     <div id="shuttle"></div>
-    <p class="note">개장일: 휘닉스 11월 27일 목표(날씨에 따라 변동), 곤지암 12월 중, 오투 시즌권 사용 시작 12월 5일. 나머지는 미발표입니다.</p>
+    <p class="note" id="offNote"></p>
   </section>
 
   <section id="v-join" class="gut pane" hidden>
@@ -169,11 +175,11 @@
     </div>
   </div>
   <nav class="nav">
-    <button aria-selected="true" data-v="guide"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>스키장</button>
-    <button aria-selected="false" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.500" cy="8.500" r="1.300"/></svg>최저가</button>
+    <button aria-selected="true" data-v="main"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>홈</button>
+    <button aria-selected="false" data-v="guide"><svg viewBox="0 0 24 24"><path d="M2 20l7-12 4 6 2.500-3.500L22 20z"/></svg>스키장</button>
     <button aria-selected="false" data-v="talk" id="navTalk" hidden><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>톡</button>
     <button aria-selected="false" data-v="join" id="navJoin" hidden><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.700 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.200c3 .200 5 2.400 5 5.300"/></svg>동행</button>
-    <button aria-selected="false" data-v="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.400"/><circle cx="12" cy="12" r="1.400"/><circle cx="19" cy="12" r="1.400"/></svg>더보기</button>
+    <button aria-selected="false" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.500" cy="8.500" r="1.300"/></svg>특가</button>
   </nav>
 </div>
 

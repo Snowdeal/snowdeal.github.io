@@ -336,7 +336,10 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .tk p{margin:0;font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .page .gsec ul{font-size:13px}
 @media (min-width:960px){
-  #v-guide>.hero{display:block;margin:0 0 26px;padding:14px 36px 36px;border-radius:0 0 34px 34px}
+  #v-guide>.hero,#v-main>.hero{display:block;margin:0 0 26px;padding:14px 36px 36px;border-radius:0 0 34px 34px}
+  #mBody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px;align-items:start}
+  #mBody>.mfull{grid-column:1/-1}
+  .opens{flex-wrap:wrap;overflow:visible}
   #v-guide>.hero .live{margin-top:6px}
   .hub{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
   .facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
@@ -345,6 +348,25 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
   #tkList{grid-template-columns:minmax(0,1fr)}
   #v-talk{max-width:760px}
 }
+/* ── 홈: 개장 임박 · 이야기 · 동행 · 특가 ── */
+.mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.mh button{flex:none;border:0;background:none;color:var(--p);font-size:13px;font-weight:700;padding:0}
+.opens{display:flex;gap:8px;overflow-x:auto;margin:0 0 24px;scrollbar-width:none}
+.opens::-webkit-scrollbar{display:none}
+.opens button{flex:none;min-width:108px;text-align:left;border:1px solid var(--line);background:var(--soft);color:var(--fg);border-radius:16px;padding:12px;display:grid;gap:1px;align-content:start}
+.opens span{font-size:13px;font-weight:800}
+.opens b{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.2;color:var(--p-dk);white-space:nowrap}
+.opens small{font-size:11px;color:var(--muted);white-space:nowrap}
+.msec{display:grid;gap:8px;margin-bottom:24px;min-width:0}
+.msec h2{margin-bottom:4px}
+.msec .gask{margin:4px 0 0}
+#mJoin{margin:0}
+.mt{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--fg);font:inherit}
+.mt .h .tag{color:var(--p-dk);font-size:11px}
+.mt p{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.mlinks{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 22px}
+.mlinks button{border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;padding:0}
 </style>
 
 <div class="app">
@@ -355,7 +377,12 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
     <select id="resort" aria-label="스키장 선택"><option value="all">전국 스키장</option></select>
   </div>
 
-  <section id="v-guide">
+  <section id="v-main">
+    <div class="hero gut" id="mHero"></div>
+    <div class="gut" id="mBody"></div>
+  </section>
+
+  <section id="v-guide" hidden>
     <div class="hero gut" id="gHero"></div>
     <div class="gut" id="gBody"></div>
   </section>
@@ -420,7 +447,8 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
       <div class="list" id="list"></div>
       <div class="dir" id="dir"></div>
       <div class="partner"><b>렌탈샵 사장님이신가요?</b><p>26/27 시즌 가격표를 보내 주시면 무료로 등록해 드려요. 가격이 바뀌었을 때도 알려 주시면 바로 고칩니다.</p><a href="https://open.kakao.com/o/sglgUtWi" target="_blank" rel="noopener">오픈채팅으로 문의하기</a><p class="mail">이메일 <a href="mailto:apap1685@gmail.com">apap1685@gmail.com</a></p></div>
-      <p class="note">2026년 11월 10일 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 확인된 3곳(곤지암·비발디파크·하이원)만 총액에 더해지며, 지난 시즌 또는 예시 요금이라 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
+      <div class="mlinks" style="margin:16px 0 0"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div>
+      <p class="note"><span id="chkDate"></span> 조사 기준입니다. 각 렌탈샵·리조트 홈페이지와 보도자료에 공개된 가격을 그대로 옮겼고, 25/26 시즌 가격표가 아직 남아 있는 곳은 "25/26 가격" 표시를 달았습니다. "~"가 붙은 가격은 최저 시작가입니다. 셔틀 요금은 <span id="shKnown"></span>만 총액에 더해지며, 지난 시즌 요금이거나 시즌 표기가 없는 곳도 있어 바뀔 수 있습니다. 예약 전 반드시 해당 샵에 확인하세요.</p>
     </div>
   </section>
 
@@ -429,7 +457,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
     <div id="official"></div>
     <h2 style="margin-top:22px">서울 출발 셔틀버스</h2>
     <div id="shuttle"></div>
-    <p class="note">개장일: 휘닉스 11월 27일 목표(날씨에 따라 변동), 곤지암 12월 중, 오투 시즌권 사용 시작 12월 5일. 나머지는 미발표입니다.</p>
+    <p class="note" id="offNote"></p>
   </section>
 
   <section id="v-join" class="gut pane" hidden>
@@ -492,11 +520,11 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
     </div>
   </div>
   <nav class="nav">
-    <button aria-selected="true" data-v="guide"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>스키장</button>
-    <button aria-selected="false" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.500" cy="8.500" r="1.300"/></svg>최저가</button>
+    <button aria-selected="true" data-v="main"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>홈</button>
+    <button aria-selected="false" data-v="guide"><svg viewBox="0 0 24 24"><path d="M2 20l7-12 4 6 2.500-3.500L22 20z"/></svg>스키장</button>
     <button aria-selected="false" data-v="talk" id="navTalk" hidden><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>톡</button>
     <button aria-selected="false" data-v="join" id="navJoin" hidden><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.700 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.200c3 .200 5 2.400 5 5.300"/></svg>동행</button>
-    <button aria-selected="false" data-v="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.400"/><circle cx="12" cy="12" r="1.400"/><circle cx="19" cy="12" r="1.400"/></svg>더보기</button>
+    <button aria-selected="false" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.500" cy="8.500" r="1.300"/></svg>특가</button>
   </nav>
 </div>
 
@@ -773,7 +801,7 @@ function renderOfficial(){
 }
 const set=(k,v)=>{st[k]=v;render()};
 $("#grid").addEventListener("click",e=>{const b=e.target.closest(".rz");if(b)set("resort",st.resort===b.dataset.r?"all":b.dataset.r)});
-$("#resort").addEventListener("change",e=>set("resort",e.target.value));
+$("#resort").addEventListener("change",e=>{st.resort=e.target.value;if(view==="main"&&st.resort!=="all")go("guide");render()});
 ["day","scope","hours","sh"].forEach(id=>$("#"+id).addEventListener("click",e=>{const b=e.target.closest("button");if(b)set(id,b.dataset.v)}));
 $("#minus").addEventListener("click",()=>set("people",Math.max(1,st.people-1)));
 $("#plus").addEventListener("click",()=>set("people",Math.min(20,st.people+1)));
@@ -824,7 +852,7 @@ async function joinInit(){
   try{J.store=DEMO?demoStore():await fbStore();J.ready=true;await joinLoad()}
   catch(e){$("#jList").innerHTML='<div class="empty">모집글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}
 }
-async function joinLoad(){J.posts=await J.store.list();joinRender()}
+async function joinLoad(){M.at=0;J.posts=await J.store.list();joinRender()}
 function joinRender(){
   const r=$("#jResort").value,hid=jMine();
   const a=J.posts.filter(p=>(r==="all"||p.resort===r)&&(p.reports||0)<3&&!hid.includes(p.id)).sort((x,y)=>x.date<y.date?-1:1);
@@ -842,12 +870,13 @@ function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").tex
 RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
 if(FB||DEMO)$("#navJoin").hidden=false;
 /* ── 스키장 허브 ── */
-let view="guide";
-const VIEWS={guide:["guide"],home:["home"],talk:["talk"],join:["join"],more:["official","report"]};
+let view="main";
+const VIEWS={main:["main"],guide:["guide"],home:["home"],talk:["talk"],join:["join"],more:["official","report"],official:["official"],report:["report"]};
 const LIVE=FB||DEMO;
 function go(v,keep){view=v;$$(".nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
-  ["guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
-  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide()}
+  ["main","guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
+  if(v==="main"&&location.hash){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide();if(v==="main")renderMain()}
 function syncHub(){if(view==="guide")renderGuide();if(view==="talk")talkSync()}
 function renderGuide(){
   const n=st.resort,h=$("#gHero"),b=$("#gBody"),want=n==="all"?"":"#g-"+SLUG[n];
@@ -888,13 +917,13 @@ function fbReady(){return fbP||(fbP=(async()=>{if(DEMO){J.uid="me";return}
   if(!firebase.apps.length)firebase.initializeApp(FB);const cred=await firebase.auth().signInAnonymously();J.uid=cred.user.uid})().catch(e=>{fbP=null;throw e}))}
 function talkStore(){
   if(DEMO){const m={"곤지암":[{id:"t1",nick:"곤지암보더",text:"토요일 9시 도착했는데 리프트 대기 15분쯤이었어요.",uid:"x",reports:0,ts:Date.now()-72e5},{id:"t2",nick:"눈사람",text:"셔틀은 잠실에서 탔고 앉아서 갔습니다.",uid:"me",reports:0,ts:Date.now()-864e5*2}]};let n=3;const g=r=>m[r]||(m[r]=[]);
-    return {list:async r=>g(r).slice().sort((x,y)=>y.ts-x.ts),add:async(r,p)=>{g(r).push({...p,id:"t"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(r,id)=>{const a=g(r);a.splice(a.findIndex(x=>x.id===id),1)},report:async(r,id)=>{g(r).find(x=>x.id===id).reports++}}}
+    return {list:async(r,k=100)=>g(r).slice().sort((x,y)=>y.ts-x.ts).slice(0,k),add:async(r,p)=>{g(r).push({...p,id:"t"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(r,id)=>{const a=g(r);a.splice(a.findIndex(x=>x.id===id),1)},report:async(r,id)=>{g(r).find(x=>x.id===id).reports++}}}
   const db=firebase.firestore(),col=r=>db.collection("talk").doc(SLUG[r]).collection("posts"),inc=firebase.firestore.FieldValue.increment(1);
-  return {list:async r=>(await col(r).orderBy("created","desc").limit(100).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
+  return {list:async(r,k=100)=>(await col(r).orderBy("created","desc").limit(k).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
     add:(r,p)=>col(r).add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),del:(r,id)=>col(r).doc(id).delete(),report:(r,id)=>col(r).doc(id).update({reports:inc})}}
 const ago=ts=>{const m=Math.floor((Date.now()-ts)/6e4);if(m<1)return "방금";if(m<60)return m+"분 전";if(m<1440)return Math.floor(m/60)+"시간 전";const d=new Date(ts);return (d.getMonth()+1)+"월 "+d.getDate()+"일"};
 async function talkSync(force){
-  const r=st.resort!=="all"?st.resort:(T.resort||RESORTS[0][0]);$("#tkResort").value=r;$("#tkT").textContent=r+" 톡";
+  const r=st.resort!=="all"?st.resort:(T.resort||FOCUS);$("#tkResort").value=r;if(force)M.at=0;$("#tkT").textContent=r+" 톡";
   if(T.resort===r&&T.loaded&&!force){talkRender();return}
   T.resort=r;T.loaded=false;$("#tkCount").textContent="";$("#tkList").innerHTML='<div class="empty">글을 불러오는 중이에요.</div>';
   try{await fbReady();T.store=T.store||talkStore();const a=await T.store.list(r);if(T.resort!==r)return;T.posts=a;T.loaded=true;talkRender()}
@@ -942,7 +971,45 @@ $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));
 $("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
-route();render();renderOfficial();renderNotice();
-(function(){let seen=false;try{seen=localStorage.getItem("ntDay")===today()||sessionStorage.getItem("ntS")==="1";sessionStorage.setItem("ntS","1")}catch(e){}
-  if(seen||location.hash)return;setTimeout(openNotice,$("#splash").hidden?600:1900)})();
+/* ── 홈: 개장 임박 · 이야기 · 동행 · 특가. FOCUS는 먼저 채우는 스키장, SY는 시즌 시작 연도 ── */
+const FOCUS="곤지암",SY=2026;
+const M={posts:null,joins:null,at:0};
+function dday(n){const m=/(\d+)월 (\d+)일/.exec((OPEN[n]||{}).d||"");if(!m)return null;
+  const t=new Date(+m[1]>=7?SY:SY+1,+m[1]-1,+m[2]),now=new Date();now.setHours(0,0,0,0);const k=Math.round((t-now)/864e5);return k<0?null:k}
+function renderMain(){
+  $("#mHero").innerHTML=`<h1>스키·보드 타는<br>사람들의 <em>스노우딜</em></h1><p class="hsub">스키장 소식, 다녀온 이야기, 같이 갈 사람, 특가까지 한곳에 모았어요.</p><div class="hact">${LIVE?`<button class="on" data-t="${FOCUS}">이야기 남기기</button><button data-go="join">동행 구하기</button>`:""}<button data-go="home">특가 보기</button></div>`;
+  const op=Object.keys(OPEN).filter(n=>OPEN[n].d).map((n,i)=>({n,i,k:dday(n)})).sort((a,b)=>(a.k===null)-(b.k===null)||(a.k-b.k)||(a.i-b.i));
+  const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b>${x.k===null?o.d:x.k?"D-"+x.k:"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
+  const talk=LIVE?`<div class="msec"><div class="mh"><h2>지금 올라온 이야기</h2><button data-t="${FOCUS}">톡 가기 ›</button></div><div id="mTalk"><div class="empty">이야기를 불러오는 중이에요.</div></div><div class="gask"><b>${FOCUS} 다녀오셨어요?</b><p>설질, 리프트 대기, 주차, 셔틀. 한 줄이면 충분해요. 다음에 가는 사람에게 큰 도움이 됩니다.</p><button data-t="${FOCUS}">${FOCUS} 톡에 한 줄 남기기</button></div></div>`:"";
+  const join=LIVE?`<div class="msec"><div class="mh"><h2>같이 갈 사람</h2><button data-go="join">전체 보기 ›</button></div><div id="mJoin" class="msec"></div></div>`:"";
+  const eb=DATA.filter(d=>d.eb),ebR=[...new Set(eb.map(d=>d.resort))],ebMin=eb.length?Math.min(...eb.map(d=>Math.min(d.wd,d.we))):0,
+    ebPct=Math.max(0,...eb.map(d=>Math.max(d.nwd?1-d.wd/d.nwd:0,d.nwe?1-d.we/d.nwe:0))),priced=RESORTS.filter(([n])=>DATA.some(d=>d.resort===n)).length;
+  const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${won(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
+  const chips=`<div class="mfull"><h2>스키장 바로가기</h2><div class="mchips">${[FOCUS,...RESORTS.map(r=>r[0]).filter(n=>n!==FOCUS)].map(n=>`<button class="chip" data-r="${n}">${n}</button>`).join("")}</div><div class="mlinks"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div></div>`;
+  $("#mBody").innerHTML=opens+`<div>${talk}${join}</div><div>${deals}</div>`+chips;
+  mainLoad();
+}
+function mainFeed(){const hid=jMine(),ok=p=>(p.reports||0)<3&&!hid.includes(p.id),t=$("#mTalk"),j=$("#mJoin");
+  if(t){const a=(M.posts||[]).filter(ok).slice(0,6);
+    t.innerHTML=a.length?a.map(p=>`<button class="tk mt" data-t="${esc(p.resort)}"><div class="h"><span class="tag">${esc(p.resort)}</span><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span></div><p>${esc(p.text)}</p></button>`).join(""):`<div class="empty">아직 올라온 이야기가 없어요.<br>첫 글을 남겨 보세요.</div>`}
+  if(j){const a=(M.joins||[]).filter(ok).sort((x,y)=>x.date<y.date?-1:1).slice(0,2);
+    j.innerHTML=a.length?a.map(p=>{const dt=new Date(p.date+"T00:00:00"),need=Math.max(0,p.want-p.have);
+      return `<button class="rrow" data-go="join"><div><div class="nm">${esc(p.resort)} · ${dt.getMonth()+1}월 ${dt.getDate()}일 (${"일월화수목금토"[dt.getDay()]})</div><div class="sb">${esc(p.nick)}${p.from?" · "+esc(p.from)+" 출발":""}</div></div><div class="pr"><b>${need?need+"명 구해요":"모집 완료"}</b></div></button>`}).join("")
+      :`<button class="rrow na" data-go="join"><div><div class="nm">아직 모집글이 없어요</div><div class="sb">스키장과 날짜를 올리고 같이 갈 사람을 찾아보세요</div></div><div class="pr"><b>글쓰기 ›</b></div></button>`}}
+async function mainLoad(){if(!LIVE)return;if(M.posts&&Date.now()-M.at<60000){mainFeed();return}
+  try{await fbReady();T.store=T.store||talkStore();J.store=J.store||(DEMO?demoStore():await fbStore());
+    const [ps,js]=await Promise.all([Promise.all(RESORTS.map(([r])=>T.store.list(r,3).then(a=>a.map(p=>({...p,resort:r})),()=>[]))),
+      J.store.list().then(a=>{J.posts=a;J.ready=true;return a},()=>[])]);
+    M.posts=ps.flat().sort((x,y)=>y.ts-x.ts);M.joins=js;M.at=Date.now();mainFeed()}
+  catch(e){const t=$("#mTalk"),j=$("#mJoin");if(t)t.innerHTML='<div class="empty">이야기를 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>';if(j)j.innerHTML=""}}
+$("#v-main").addEventListener("click",e=>{const b=e.target.closest("[data-r],[data-t],[data-a]");if(!b)return;
+  if(b.dataset.r){try{history.pushState(null,"","#g-"+SLUG[b.dataset.r])}catch(x){}st.resort=b.dataset.r;go("guide");render();return}
+  if(b.dataset.t){st.resort=b.dataset.t;render();go("talk");return}
+  if(b.dataset.a==="nt")openNotice();else if(b.dataset.a==="eb"){st={...init(),eb:true};go("home");render()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b)go(b.dataset.go)});
+$("#chkDate").textContent=CHECKED.replace(" 확인","");
+(function(){const k=RESORTS.map(r=>r[0]).filter(n=>SHUTTLE[n]&&SHUTTLE[n].rt),o=Object.keys(OPEN).filter(n=>OPEN[n].d);
+  $("#shKnown").textContent=`확인된 ${k.length}곳(${k.join("·")})`;
+  $("#offNote").textContent=`개장일(${OPEN_CHECKED} 확인): ${o.map(n=>n+" "+OPEN[n].d).join(", ")}. 나머지는 미발표이고, 기온과 제설 상황에 따라 바뀔 수 있습니다.`})();
+route();render();renderOfficial();renderNotice();if(view==="main")renderMain();
 </script>
