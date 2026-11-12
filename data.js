@@ -5,16 +5,17 @@ const S={
   snow:{tel:"031-637-2207",url:"https://snowland.co.kr/",season:"?"},
   boss:{tel:"031-631-5520",url:"https://bossrental.shop/bbs/_a_price.php",season:"?"},
   ari:{tel:"031-638-1243",url:"https://www.arirangski.co.kr/price/price.php",season:"?"},
-  nol:{url:"https://www.fnnews.com/news/202611031709440562",season:"26/27",eb:true},
+  nol:{url:"https://www.konjiamresort.co.kr/contact/noticeDetail.dev?idx=1712",season:"26/27",eb:true},
   good:{tel:"031-762-7375",url:"https://gonjiam.co.kr/",season:"25/26"},
   ganji:{tel:"031-769-9375",url:"https://ganjiboarder.com/",season:"25/26"},
   yoon:{tel:"033-434-5666",url:"https://www.boardyoon.com/",season:"25/26"},
   gb:{url:"https://gbteamkorea.com/price_info",season:"26/27"},
-  kon:{url:"https://kr.trip.com/blog/konjiam-ski-resort-guide/",season:"26/27",off:true},
+  kon:{url:"https://m.konjiamresort.co.kr/ski/skiInfo.dev",season:"26/27",off:true},
   h1:{url:"https://www.high1.com/ski/contents.do?key=750",season:"26/27",off:true},
   sereno:{url:"https://serenoskishop.com/sub/rental/lift.php",season:"25/26"},
   mentor:{tel:"063-324-7922",url:"https://mentorski.com/%EB%A6%AC%ED%94%84%ED%8A%B8%ED%95%A0%EC%9D%B8",season:"26/27"},
   star:{url:"https://gcstar.kr/",season:"25/26"},
+  ganzi:{tel:"055-363-0670",url:"https://www.ganzitag.com/services",season:"?"},
 };
 const R=(shop,resort,scope,h,wd,we,k,o={})=>({shop,resort,scope,h,wd,we,...S[k],...o});
 const DATA=[
@@ -27,8 +28,12 @@ const DATA=[
  R("아리랑스키","지산","lift",4,56250,69000,"ari",{nwd:75000,nwe:92000,note:"장비 렌탈 고객 리프트 30% 할인가"}),
  R("아리랑스키","지산","lift",6,59250,67900,"ari",{nwd:79000,nwe:97000,note:"장비 렌탈 고객 리프트 30% 할인가"}),
  // 곤지암
- R("곤지암리조트 얼리버드 (NOL)","곤지암","lift",2,44000,54000,"nol",{from:true,nwd:69000,nwe:83000,note:"11/4~12/6 판매, 수량 소진 시 조기 종료"}),
- R("곤지암리조트 얼리버드 (NOL)","곤지암","gear",2,56000,67000,"nol",{from:true,note:"리프트+렌털 패키지. 11/4~12/6 판매"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","lift",2,44000,54000,"nol",{nwd:69000,nwe:83000,note:"11/4~12/6 판매, 수량 소진 시 조기 종료"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","lift",4,52000,62000,"nol",{nwd:81000,nwe:96000,note:"11/4~12/6 판매, 수량 소진 시 조기 종료"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","lift",6,56000,68000,"nol",{nwd:87000,nwe:105000,note:"11/4~12/6 판매, 수량 소진 시 조기 종료"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","gear",2,56000,67000,"nol",{nwd:105000,nwe:122000,note:"리프트+장비렌탈 패키지. 11/4~12/6 판매, 수량 소진 시 조기 종료"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","gear",4,64000,75000,"nol",{nwd:117000,nwe:135000,note:"리프트+장비렌탈 패키지. 11/4~12/6 판매, 수량 소진 시 조기 종료"}),
+ R("곤지암리조트 얼리버드 (NOL)","곤지암","gear",6,68000,81000,"nol",{nwd:123000,nwe:144000,note:"리프트+장비렌탈 패키지. 11/4~12/6 판매, 수량 소진 시 조기 종료"}),
  R("곤지암리조트 공식","곤지암","lift",2,69000,83000,"kon"),
  R("곤지암리조트 공식","곤지암","lift",4,81000,96000,"kon"),
  R("곤지암리조트 공식","곤지암","lift",6,87000,105000,"kon"),
@@ -82,20 +87,27 @@ const DATA=[
  R("멘토렌탈샵","무주","wear",6,98000,98000,"mentor",{from:true,note:"신상 점프슈트 패키지 C"}),
  // 엘리시안 강촌
  R("스타렌탈샵","엘리시안 강촌","wear",5,43000,48000,"star",{from:true,note:"야간(18~03시) 야심PKG 33,000/38,000원 + 기본의류 필수 10,000원. 부가세 별도 표기, 12/27 이후 적용"}),
+ // 에덴밸리
+ R("간지택스키","에덴밸리","lift",4,30000,35000,"ganzi",{note:"4시간대권(오전·오후·저녁) 대인 할인가"}),
+ R("간지택스키","에덴밸리","lift",7,47000,55000,"ganzi",{note:"주간권(10:30~17:30) 대인 할인가"}),
+ R("간지택스키","에덴밸리","gear",4,50000,56000,"ganzi",{wa:10000,note:"반일권 리프트+장비 패키지. 의류는 일반 기준(고급 20,000원, 프리미엄 30,000원)"}),
+ R("간지택스키","에덴밸리","gear",5,53000,60000,"ganzi",{wa:10000,note:"5시간권 리프트+장비 패키지. 의류는 일반 기준(고급 20,000원, 프리미엄 30,000원)"}),
+ R("간지택스키","에덴밸리","gear",7,61000,70000,"ganzi",{wa:10000,note:"종일권 리프트+장비 패키지. 의류는 일반 기준(고급 20,000원, 프리미엄 30,000원)"}),
 ];
 const SHUTTLE={
  "곤지암":{rt:38000,ow:20000,from:"잠실역 4번 출구",st:"리조트 공식 유료 픽업 셔틀. 26/27 요금은 재공지 전",url:"https://m.konjiamresort.co.kr/ski/pickupService.dev"},
- "비발디파크":{rt:20000,ow:10000,from:"홍대입구·동대문·건대입구·사당·종합운동장·천호",st:"예약 안내에 나온 예시 요금(편도 10,000원×2). 날짜별 확인 필요",url:"https://www.kgosu.com/2026/11/blog-post_828.html"},
+ "비발디파크":{rt:20000,ow:10000,from:"홍대입구·동대문·건대입구·사당·종합운동장·천호",st:"26/27 셔틀 예약 페이지 기준 편도 대인 10,000원(서울·경기 일부), 소인 8,000원. 개장일~3/1 운행, 현장결제는 1,000원 추가",url:"https://vivabus.co.kr/sono"},
  "하이원":{rt:48000,ow:24000,from:"잠실",st:"25/26 기준. 비공식 안내 글의 답변에서 확인한 금액",url:"https://traveltourtrip.com/travel-info/travel-transport/high1-shuttlebus-guide/"},
  "지산":{rt:null,from:"종합운동장·시청",st:"26/27 유료 운영 확정. 요금은 미공개",url:"https://www.jisanresort.co.kr/w/reservation/ticket/info.asp"},
- "웰리힐리":{rt:null,from:"홍대입구·신촌·명동·동대문·종합운동장",st:"11/27~3/1 매일 운행. 요금 미표시",url:"https://www.trazy.com/ko/experience/detail/welli-hilli-shuttle-bus-service-from-seoul"},
+ "웰리힐리":{rt:36000,ow:18000,from:"홍대입구·신촌·명동·동대문·종합운동장",st:"KD투어 시간표 게시 요금. 시즌 표기가 없어 26/27 적용 여부는 미확인",url:"https://k-ski.rideus.net/page/wellihilli-timetable"},
+ "알펜시아":{rt:null,from:"명동역·종합운동장역",st:"공식 홈페이지 안내는 왕복 34,000원(편도 불가)이나 시즌 표기가 없어 26/27 적용 여부 미확인",url:"https://m.alpensia.com/guide/directions-public.do"},
  "엘리시안 강촌":{rt:null,from:"홍대입구·남산·동대문·강남·잠실",st:"무료 셔틀로 소개된 적 있으나 26/27은 미확인",url:"https://www.trazy.com/ko/experience/detail/elysian-gangchon-ski-resort-shuttle-bus"},
  "무주":{rt:null,from:"",st:"시외버스 안내만 확인(서울남부터미널→무주 약 2시간 30분)",url:"https://www.mdysresort.com/guide/way_search.asp"},
 };
 // Firebase 설정값. null이면 동행 탭이 숨겨집니다.
 const FB={apiKey:"AIzaSyBz4lHynwKkVHtfbNmbo0TpH3IRost79wQ",authDomain:"snowdeal-2f46a.firebaseapp.com",projectId:"snowdeal-2f46a",storageBucket:"snowdeal-2f46a.firebasestorage.app",messagingSenderId:"763259120331",appId:"1:763259120331:web:5b7ebc2fa0adac068d894e"};
 const REPORT_URL="https://open.kakao.com/o/sglgUtWi"; // 오픈채팅·구글폼 주소가 정해지면 여기에
-const CHECKED="11월 10일 확인";
+const CHECKED="11월 12일 확인";
 const REGION={"지산":"경기 이천","곤지암":"경기 광주","비발디파크":"강원 홍천","엘리시안 강촌":"강원 춘천","오크밸리":"강원 원주","웰리힐리":"강원 횡성","휘닉스":"강원 평창","모나용평":"강원 평창","알펜시아":"강원 평창","하이원":"강원 정선","오투":"강원 태백","무주":"전북 무주","에덴밸리":"경남 양산"};
 /* 스키장 가이드: 공개 자료로 쓴 초안. base=자료 기준 시즌, todo=직접 확인이 필요한 항목 */
 const GUIDE={
@@ -144,29 +156,28 @@ const DIR={
  "알펜시아":[["용평스키존","알펜시아 리프트 할인율 45~50%로 안내. 금액표는 미공개","https://www.yp-skizone.com/"]],
  "하이원":[["하이원렌탈샵(hi-one)","사이트를 읽지 못했어요","http://www.hi-one.kr/"]],
  "무주":[["무주스키월드","가격 미확인","https://www.mujuskiworld.com/"],["조이스키","가격 미확인","https://joyski.com/"]],
- "에덴밸리":[["간지택스키","리프트 할인율 주중 최대 40%, 주말 최대 30%로 안내. 금액표는 미공개","https://www.ganzitag.com/"]],
- "휘닉스":[],"오투":[],
+ "휘닉스":[],"오투":[],"에덴밸리":[],
 };
 // 개장 일정. d: 26/27 발표·보도 내용, src: 근거 종류, last: 25/26 실제 개장일
 const OPEN={
- "휘닉스":{d:"11월 27일 목표",src:"리조트 발표",last:"11월 21일"},
- "모나용평":{d:"11월 말 목표",src:"보도",last:"11월 21일"},
- "하이원":{d:"",last:"11월 28일"},
+ "휘닉스":{d:"11월 20일 목표",src:"보도",last:"11월 21일"},
+ "모나용평":{d:"11월 27일 예정",src:"보도",last:"11월 21일"},
+ "하이원":{d:"11월 27일 계획",src:"보도",last:"11월 28일"},
  "오투":{d:"12월 5일",src:"시즌권 사용 시작일",last:""},
- "비발디파크":{d:"",last:"12월 5일"},
+ "비발디파크":{d:"11월 말~12월 초",src:"보도",last:"12월 5일"},
  "웰리힐리":{d:"",last:"12월 5일"},
- "알펜시아":{d:"",last:"12월 5일"},
- "엘리시안 강촌":{d:"",last:"12월 초"},
+ "알펜시아":{d:"11월 28일 목표",src:"리조트 발표",last:"12월 5일"},
+ "엘리시안 강촌":{d:"12월 4일 목표",src:"보도",last:"12월 초"},
  "무주":{d:"",last:"12월 5일"},
  "곤지암":{d:"12월 중",src:"보도",last:"12월 초~중순"},
  "오크밸리":{d:"12월 11일",src:"시즌권 기준 일정",last:"12월 12일"},
  "지산":{d:"",last:"12월 12일"},
  "에덴밸리":{d:"",last:"12월 19일"},
 };
-const OPEN_CHECKED="11월 10일";
+const OPEN_CHECKED="11월 12일";
 const OFFICIAL=[
  {r:"곤지암",s:"26/27 · 공식 홈페이지 게시가",rows:[["2시간",69000,83000],["4시간",81000,96000],["6시간",87000,105000]]},
- {r:"하이원",s:"공식 홈페이지 · 주중/주말 동일 표기",rows:[["3시간",66000,66000],["4시간",73000,73000],["7시간",88000,88000],["종일",111000,111000]]},
+ {r:"하이원",s:"26/27 · 공식 홈페이지 · 주중/주말 동일 표기",rows:[["3시간",66000,66000],["4시간",73000,73000],["7시간",88000,88000],["종일",111000,111000]]},
  {r:"지산",s:"렌탈샵 게시 정상가 · 시즌 미확인(공식 홈페이지 리뉴얼 중)",rows:[["2시간",65000,82000],["3시간",69000,87000],["4시간",75000,92000],["6시간",79000,97000]]},
  {r:"무주",s:"26/27 · 렌탈샵 게시 정상가(성수기)",rows:[["3시간",60000,74000],["4시간",70000,84000],["6시간",80000,94000]]},
 ];
