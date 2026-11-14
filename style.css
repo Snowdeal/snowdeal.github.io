@@ -335,16 +335,12 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .page .gsec ul{font-size:13px}
 @media (min-width:960px){
   #v-guide>.hero,#v-main>.hero{display:block;margin:0 0 26px;padding:14px 36px 36px;border-radius:0 0 34px 34px}
-  #mBody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px;align-items:start}
-  #mBody>.mfull{grid-column:1/-1}
-  .opens{flex-wrap:wrap;overflow:visible}
   #v-guide>.hero .live{margin-top:6px}
   .hub{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
   .facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
   #gBody.one{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px;align-items:start}
   #gBody.one>.facts,#gBody.one>.gask,#gBody.one>.gsrc,#gBody.one>.wide{grid-column:1/-1}
   #tkList{grid-template-columns:minmax(0,1fr)}
-  #v-talk{max-width:760px}
 }
 /* ── 홈: 개장 임박 · 이야기 · 동행 · 특가 ── */
 .mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
@@ -365,3 +361,26 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
 .mchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
 .mlinks{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 22px}
 .mlinks button{border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;padding:0}
+/* ── 톡 옆 스키장 요약 ── */
+.tkside{display:grid;gap:12px;margin:18px 0 4px;min-width:0}
+.tkcard{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:16px;display:grid;gap:12px;min-width:0}
+.tkcard>b{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:-.01em}
+.tkcard .sub{margin:-6px 0 0;font-size:13px;color:var(--muted);line-height:1.5}
+.tkcard .facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+.tkcard .act{display:flex;flex-wrap:wrap;gap:8px}
+.tkcard .act button{border:1px solid var(--line);background:var(--soft);color:var(--fg);border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700}
+.tkside .gask{margin:0}
+/* ── PC 보정: 홈 2단 높이 자동 균형, 개장 임박 한 줄, 톡 2단 ── */
+@media (min-width:960px){
+  #mBody{column-count:2;column-gap:36px}
+  #mBody>*{break-inside:avoid}
+  #mBody>.mfull{column-span:all}
+  .opens{display:grid;grid-template-columns:repeat(var(--oc,9),minmax(0,1fr));overflow:visible}
+  .opens button{min-width:0}
+  .opens b.s{font-size:16px;line-height:1.2;white-space:normal;word-break:keep-all;margin:3px 0 2px}
+  .opens small{white-space:normal}
+  #v-talk{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:36px;align-items:start}
+  #v-talk>.tkmain{grid-column:1;grid-row:1;min-width:0}
+  #v-talk>.tkside{grid-column:2;grid-row:1/span 2;margin:0;position:sticky;top:20px}
+  #v-talk>.note{grid-column:1;grid-row:2}
+}
