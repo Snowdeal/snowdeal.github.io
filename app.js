@@ -25,7 +25,7 @@ function rows(res=st.resort){
   return out;
 }
 function render(){
-  syncHub();
+  syncHub();queueMicrotask(fx);
   $("#people").textContent=st.people+"명"; $("#resort").value=st.resort;
   $$("#grid .rz").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===st.resort));
   [["day","day"],["scope","scope"],["hours","hours"],["sh","sh"]].forEach(([id,k])=>$$("#"+id+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===st[k])));
@@ -68,7 +68,7 @@ function summary(cond){
   $("#count").textContent=`전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${cond}`;
   $("#list").innerHTML=list.map((x,i)=>{const b=x.b;
     if(!b){const dn=(DIR[x.n]||[]).length;return `<button class="rrow na" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${x.has?"이 조건에 맞는 가격이 없어요":openTxt(x.n)+" · 요금 공개 대기"}</div></div><div class="pr"><b>${x.has?"조건 변경":"공개 대기"}</b></div></button>`}
-    const d=b.d;return `<button class="rrow${i===0&&!b.unk?" top":""}" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${d.shop} · ${d.h?d.h+"시간권":"시간 미표기"}${d.season==="25/26"?" · 25/26 가격":""}${d.eb?" · 얼리버드":""}${b.unk?" · 셔틀 요금 미확인":""}</div></div><div class="pr"><b>${won(d.per)}${d.from?"~":""}</b><span>1인 최저 · ${b.n}곳 ›</span></div></button>`}).join("");
+    const d=b.d;return `<button class="rrow${i===0&&!b.unk?" top":""}" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${d.shop} · ${d.h?d.h+"시간권":"시간 미표기"}${d.season==="25/26"?" · 25/26 가격":""}${d.eb?" · 얼리버드":""}${b.unk?" · 셔틀 요금 미확인":""}</div></div><div class="pr"><b>${i<6?cu(d.per):won(d.per)}${d.from?"~":""}</b><span>1인 최저 · ${b.n}곳 ›</span></div></button>`}).join("");
 }
 function dirHtml(n){const a=DIR[n];if(n==="all"||!a||!a.length)return "";
   return `<h4>가격표를 확인하지 못한 ${n} 렌탈샵</h4><ul>${a.map(x=>`<li><b>${x[0]}</b><p>${x[1]}</p><a href="${x[2]}" target="_blank" rel="noopener">홈페이지</a></li>`).join("")}</ul>`}
@@ -161,7 +161,7 @@ const LIVE=FB||DEMO;
 function go(v,keep){view=v;$$(".nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
   ["main","guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
   if(v==="main"&&location.hash){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
-  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide();if(v==="main")renderMain()}
+  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide();if(v==="main")renderMain();queueMicrotask(fx)}
 function syncHub(){if(view==="guide")renderGuide();if(view==="talk")talkSync()}
 function renderGuide(){
   const n=st.resort,h=$("#gHero"),b=$("#gBody"),want=n==="all"?"":"#g-"+SLUG[n];
@@ -176,11 +176,12 @@ function renderGuide(){
   const g=GUIDE[n],bs=best(n),s=SHUTTLE[n],o=OPEN[n]||{};
   h.innerHTML=`<button class="back" data-a="all">‹ 전체 스키장</button><h1>${n}</h1><p class="hsub">${REGION[n]}${g&&g.from?" · "+g.from:""} · ${openTxt(n)}</p><div class="hact"><button class="on" data-a="home">최저가 보기</button>${LIVE?'<button data-a="talk">톡</button><button data-a="join">동행 구하기</button>':""}</div>`;
   const sec=x=>`<div class="gsec"><h3>${x.t}</h3>${x.tb?`<div class="tw"><table><tr>${x.tb.h.map(c=>`<th>${c}</th>`).join("")}</tr>${x.tb.r.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`:""}${x.li?`<ul>${x.li.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}</div>`;
-  const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${won(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
+  const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${cu(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
   const bus=`<div class="gsec"><h3>서울 출발 셔틀버스</h3>${s?`<ul><li>${s.rt?"왕복 "+won(s.rt):"요금 미확인"}${s.from?" · 탑승: "+s.from:""}</li><li>${s.st}</li></ul><p class="gsrc"><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a></p>`:`<p>아직 확인하지 못했어요.</p>`}</div>`;
   const ask=`<div class="gask"><b>${g?"아직 확인하지 못한 것":"가이드를 준비하고 있어요"}</b>${g?`<ul>${g.todo.map(c=>`<li>${c}</li>`).join("")}</ul>`:`<p>${n}은(는) 기본 정보만 먼저 올렸어요. 슬로프, 주차, 셔틀처럼 다녀온 사람만 아는 이야기를 기다리고 있어요.</p>`}${LIVE?`<p>아는 분은 ${n} 톡에 한 줄 남겨 주세요. 확인해서 가이드에 반영할게요.</p><button data-a="talk">${n} 톡에 남기기</button>`:""}</div>`;
+  const gn=nwList(n);
   b.className="gut one";
-  b.innerHTML=(g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`+g.secs.map(sec).join(""):`<div class="gsec"><h3>개장 일정</h3><ul><li>${o.d?"26/27 개장 "+o.d+" ("+o.src+")":"26/27 개장일은 아직 발표되지 않았어요."}</li>${o.last?`<li>지난 시즌에는 ${o.last}에 개장했어요.</li>`:""}</ul></div>`)
+  b.innerHTML=(gn.length?`<div class="gsec wide"><h3>${n} 소식</h3><div class="nwrow">${gn.map(nwCard).join("")}</div></div>`:"")+(g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`+g.secs.map(sec).join(""):`<div class="gsec"><h3>개장 일정</h3><ul><li>${o.d?"26/27 개장 "+o.d+" ("+o.src+")":"26/27 개장일은 아직 발표되지 않았어요."}</li>${o.last?`<li>지난 시즌에는 ${o.last}에 개장했어요.</li>`:""}</ul></div>`)
     +price+bus+ask+(g?`<p class="gsrc">${g.base}. 출처: ${g.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join(", ")}. 운영 내용은 시즌마다 바뀌니 방문 전 리조트 공지를 확인하세요.</p>`:"");
 }
 $("#v-guide").addEventListener("click",e=>{
@@ -189,6 +190,7 @@ $("#v-guide").addEventListener("click",e=>{
   const a=e.target.closest("[data-a]");if(!a)return;const k=a.dataset.a;
   if(k==="nt")openNotice();else if(k==="all"){try{history.pushState(null,"",location.pathname+location.search)}catch(x){}set("resort","all");window.scrollTo(0,0)}else go(k)});
 function route(){const a=location.hash.slice(1);
+  if(a.startsWith("n-")){const id=a.slice(2);try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}setTimeout(()=>openNews(id),0);return}
   if(a.startsWith("q-")){dec();go("home",true);render();return}
   const m=/^([gt])-([a-z0-9]+)$/.exec(a),rn=m&&Object.keys(SLUG).find(k=>SLUG[k]===m[2]);
   if(rn){st.resort=rn;go(m[1]==="t"&&LIVE?"talk":"guide",true);render();return}
@@ -209,7 +211,7 @@ function talkStore(){
 const ago=ts=>{const m=Math.floor((Date.now()-ts)/6e4);if(m<1)return "방금";if(m<60)return m+"분 전";if(m<1440)return Math.floor(m/60)+"시간 전";const d=new Date(ts);return (d.getMonth()+1)+"월 "+d.getDate()+"일"};
 const ASK=["주말 리프트 대기 시간","주차장이 차는 시간과 매표소까지 거리","셔틀버스 탑승 위치와 좌석 상황","초보가 타기 좋은 슬로프"];
 function talkSide(r){const g=GUIDE[r],bs=best(r);
-  $("#tkSide").innerHTML=`<div class="tkcard"><b>${r} 한눈에</b><p class="sub">${REGION[r]}${g&&g.from?" · "+g.from:""} · ${openTxt(r)}</p>${g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`:""}<button class="rrow${bs?"":" na"}" data-a="price"><div><div class="nm">${bs?"1인 최저 "+won(bs.d.per)+(bs.d.from?"~":""):"26/27 요금 공개 대기"}</div><div class="sb">${bs?`${bs.d.shop} · ${SCOPE[st.scope]} · ${st.people}명 ${st.day==="wd"?"주중":"주말"}`:"공개되는 대로 올려요"}</div></div><div class="pr"><span>${bs?bs.n+"곳 비교 ›":"특가 보기 ›"}</span></div></button><div class="act"><button data-a="guide">${g?"가이드 전체 보기":"기본 정보 보기"}</button>${LIVE?'<button data-go="join">동행 구하기</button>':""}</div></div><div class="gask"><b>이런 이야기를 기다려요</b><ul>${(g?g.todo:ASK).map(c=>`<li>${c}</li>`).join("")}</ul><p>아는 만큼 한 줄만 남겨 주세요. 확인해서 ${r} 가이드에 반영할게요.</p></div>`}
+  $("#tkSide").innerHTML=`<div class="tkcard"><b>${r} 한눈에</b><p class="sub">${REGION[r]}${g&&g.from?" · "+g.from:""} · ${openTxt(r)}</p>${g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`:""}<button class="rrow${bs?"":" na"}" data-a="price"><div><div class="nm">${bs?"1인 최저 "+cu(bs.d.per)+(bs.d.from?"~":""):"26/27 요금 공개 대기"}</div><div class="sb">${bs?`${bs.d.shop} · ${SCOPE[st.scope]} · ${st.people}명 ${st.day==="wd"?"주중":"주말"}`:"공개되는 대로 올려요"}</div></div><div class="pr"><span>${bs?bs.n+"곳 비교 ›":"특가 보기 ›"}</span></div></button><div class="act"><button data-a="guide">${g?"가이드 전체 보기":"기본 정보 보기"}</button>${LIVE?'<button data-go="join">동행 구하기</button>':""}</div></div><div class="gask"><b>이런 이야기를 기다려요</b><ul>${(g?g.todo:ASK).map(c=>`<li>${c}</li>`).join("")}</ul><p>아는 만큼 한 줄만 남겨 주세요. 확인해서 ${r} 가이드에 반영할게요.</p></div>`}
 $("#tkSide").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||!T.resort)return;const r=T.resort;
   if(b.dataset.a==="guide"){try{history.pushState(null,"","#g-"+SLUG[r])}catch(x){}st.resort=r;go("guide");render()}
   else if(b.dataset.a==="price"){st.resort=r;go("home");render()}});
@@ -262,6 +264,31 @@ $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));
 $("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
+/* ── 소식(속보) ── */
+const nwDate=d=>{const m=/^\d+-(\d+)-(\d+)$/.exec(d);return m?(+m[1])+"월 "+(+m[2])+"일":d};
+const nwLeft=x=>{if(!x.until)return null;const t=new Date(x.until+"T00:00:00"),n=new Date();n.setHours(0,0,0,0);return Math.round((t-n)/864e5)};
+const nwNew=x=>(Date.now()-new Date(x.d+"T00:00:00"))/864e5<3;
+const nwHead=h=>esc(h).replace(/\*(.+?)\*/g,"<em>$1</em>").replace("\n","<br>");
+const nwList=r=>NEWS.filter(x=>(!r||x.r===r)&&(nwLeft(x)===null||nwLeft(x)>=0)).sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0);
+const nwCard=x=>`<button class="nwc" data-nw="${x.id}"><span class="nwk">${nwNew(x)?"<i></i>":""}${x.k} · ${x.r}</span><b>${nwHead(x.h)}</b><span class="nws">${esc(x.s)}</span><span class="nwd">${nwDate(x.d)}${x.until?` · 마감 D-${nwLeft(x)}`:""} · 자세히 ›</span></button>`;
+function openNews(id){const x=NEWS.find(n=>n.id===id);if(!x)return;
+  $("#nwBox").innerHTML=`<span class="nwk in">${x.k} · ${x.r}</span><h3 id="nwT" class="nw-h">${esc(x.h).replace(/\*/g,"").replace("\n"," ")}</h3><p>${esc(x.s)}</p><ul class="nwl">${x.li.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><p class="nwf">${nwDate(x.d)} 확인 · 출처: <a href="${x.src[1]}" target="_blank" rel="noopener">${esc(x.src[0])}</a><br>리조트 발표와 보도를 요약한 글이에요. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p><div class="nt-b"><button data-a="share" data-id="${x.id}">공유</button>${x.eb?`<button data-a="eb" data-r="${x.r}">가격 비교</button>`:LIVE?`<button data-a="talk" data-r="${x.r}">${x.r} 톡</button>`:`<button data-a="guide" data-r="${x.r}">${x.r} 정보</button>`}<button class="on" data-a="close">닫기</button></div>`;
+  $("#nw").hidden=false}
+$("#nw").addEventListener("click",e=>{if(e.target.id==="nw"){$("#nw").hidden=true;return}const b=e.target.closest("[data-a]");if(!b)return;const k=b.dataset.a,r=b.dataset.r;
+  if(k==="share"){copy(location.origin+"/news/"+b.dataset.id+"/","소식 링크를 복사했어요. 카톡이나 커뮤니티에 붙여넣어 보세요.");return}
+  $("#nw").hidden=true;
+  if(k==="talk"){st.resort=r;render();go("talk")}else if(k==="guide"){try{history.pushState(null,"","#g-"+SLUG[r])}catch(x){}st.resort=r;go("guide");render()}else if(k==="eb"){st={...init(),resort:r,eb:true};go("home");render()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-nw]");if(b)openNews(b.dataset.nw)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#nw").hidden=true});
+/* ── 움직임: 숫자 카운트 업, 속보 카드 기울기 (동작 줄이기 설정이면 끔) ── */
+const MOTION=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+const cu=(n,sf="원",pf="")=>`<data value="${Math.round(n)}" data-cu="${Math.round(n)}" data-sf="${sf}" data-pf="${pf}">${pf}${Math.round(n).toLocaleString("ko-KR")}${sf}</data>`;
+function fx(){if(!MOTION)return;$$("[data-cu]:not([data-on])").forEach(el=>{el.dataset.on="1";if(el.offsetParent===null)return;
+  const to=+el.dataset.cu,pf=el.dataset.pf,sf=el.dataset.sf,from=to>60?Math.round(to*.55):0,t0=performance.now();
+  const f=t=>{const k=Math.min(1,(t-t0)/700),v=from+(to-from)*(1-Math.pow(1-k,3));el.textContent=pf+Math.round(v).toLocaleString("ko-KR")+sf;if(k<1&&el.isConnected)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+if(MOTION&&matchMedia("(hover:hover)").matches)document.addEventListener("pointermove",e=>{const c=e.target.closest?e.target.closest(".nwc"):null;
+  $$(".nwc.tilt").forEach(x=>{if(x!==c)x.classList.remove("tilt")});if(!c)return;const r=c.getBoundingClientRect();c.classList.add("tilt");
+  c.style.setProperty("--ry",(((e.clientX-r.left)/r.width-.5)*10).toFixed(1)+"deg");c.style.setProperty("--rx",((.5-(e.clientY-r.top)/r.height)*8).toFixed(1)+"deg")});
 /* ── 홈: 개장 임박 · 이야기 · 동행 · 특가. FOCUS는 먼저 채우는 스키장, SY는 시즌 시작 연도 ── */
 const FOCUS="곤지암",SY=2026;
 const M={posts:null,joins:null,at:0};
@@ -270,14 +297,15 @@ function dday(n){const m=/(\d+)월 (\d+)일/.exec((OPEN[n]||{}).d||"");if(!m)ret
 function renderMain(){
   $("#mHero").innerHTML=`<h1>스키·보드 타는<br>사람들의 <em>스노우딜</em></h1><p class="hsub">스키장 소식, 다녀온 이야기, 같이 갈 사람, 특가까지 한곳에 모았어요.</p><div class="hact">${LIVE?`<button class="on" data-t="${FOCUS}">이야기 남기기</button><button data-go="join">동행 구하기</button>`:""}<button data-go="home">특가 보기</button></div>`;
   const op=Object.keys(OPEN).filter(n=>OPEN[n].d).map((n,i)=>({n,i,k:dday(n)})).sort((a,b)=>(a.k===null)-(b.k===null)||(a.k-b.k)||(a.i-b.i));
-  const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens" style="--oc:${op.length<=9?op.length:Math.ceil(op.length/2)}">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b${x.k===null&&o.d.length>6?' class="s"':""}>${x.k===null?o.d.replace("~","~<wbr>"):x.k?"D-"+x.k:"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
+  const nws=nwList().slice(0,6),news=nws.length?`<div class="mfull"><div class="mh"><h2><i></i>속보</h2><a href="/news/">전체 소식 ›</a></div><div class="nwrow">${nws.map(nwCard).join("")}</div></div>`:"";
+  const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens" style="--oc:${op.length<=9?op.length:Math.ceil(op.length/2)}">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b${x.k===null&&o.d.length>6?' class="s"':""}>${x.k===null?o.d.replace("~","~<wbr>"):x.k?cu(x.k,"","D-"):"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
   const talk=LIVE?`<div class="msec"><div class="mh"><h2>지금 올라온 이야기</h2><button data-t="${FOCUS}">톡 가기 ›</button></div><div id="mTalk"><div class="empty">이야기를 불러오는 중이에요.</div></div><div class="gask"><b>${FOCUS} 다녀오셨어요?</b><p>설질, 리프트 대기, 주차, 셔틀. 한 줄이면 충분해요. 다음에 가는 사람에게 큰 도움이 됩니다.</p><button data-t="${FOCUS}">${FOCUS} 톡에 한 줄 남기기</button></div></div>`:"";
   const join=LIVE?`<div class="msec"><div class="mh"><h2>같이 갈 사람</h2><button data-go="join">전체 보기 ›</button></div><div id="mJoin" class="msec"></div></div>`:"";
   const eb=DATA.filter(d=>d.eb),ebR=[...new Set(eb.map(d=>d.resort))],ebMin=eb.length?Math.min(...eb.map(d=>Math.min(d.wd,d.we))):0,
     ebPct=Math.max(0,...eb.map(d=>Math.max(d.nwd?1-d.wd/d.nwd:0,d.nwe?1-d.we/d.nwe:0))),priced=RESORTS.filter(([n])=>DATA.some(d=>d.resort===n)).length;
-  const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${won(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
+  const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${cu(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
   const chips=`<div><h2>스키장 바로가기</h2><div class="mchips">${[FOCUS,...RESORTS.map(r=>r[0]).filter(n=>n!==FOCUS)].map(n=>`<button class="chip" data-r="${n}">${n}</button>`).join("")}</div><div class="mlinks"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div></div>`;
-  $("#mBody").innerHTML=opens+talk+join+deals+chips;
+  $("#mBody").innerHTML=news+opens+talk+join+deals+chips;queueMicrotask(fx);
   mainLoad();
 }
 function mainFeed(){const hid=jMine(),ok=p=>(p.reports||0)<3&&!hid.includes(p.id),t=$("#mTalk"),j=$("#mJoin");

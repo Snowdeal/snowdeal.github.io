@@ -386,6 +386,84 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
   #v-talk>.tkside{grid-column:2;grid-row:1/span 2;margin:0;position:sticky;top:20px}
   #v-talk>.note{grid-column:1;grid-row:2}
 }
+/* ── 깊이감: 카드 그림자 토큰 (밝은 화면·어두운 화면) ── */
+:root{--sh:0 12px 24px -18px rgba(10,60,120,.5),0 2px 6px -3px rgba(10,60,120,.14);--sh-up:0 20px 34px -18px rgba(10,60,120,.55),0 4px 10px -4px rgba(10,60,120,.18)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--sh:0 12px 24px -16px rgba(0,0,0,.7),0 2px 6px -3px rgba(0,0,0,.4);--sh-up:0 20px 34px -16px rgba(0,0,0,.8),0 4px 10px -4px rgba(0,0,0,.5)} }
+:root[data-theme="dark"]{--sh:0 12px 24px -16px rgba(0,0,0,.7),0 2px 6px -3px rgba(0,0,0,.4);--sh-up:0 20px 34px -16px rgba(0,0,0,.8),0 4px 10px -4px rgba(0,0,0,.5)}
+.hcard,.rrow,.tkcard,.opens button,.card,.facts div{box-shadow:var(--sh)}
+.rrow.top{box-shadow:0 16px 28px -16px rgba(10,100,200,.75)}
+.hcard,.rrow,.nwc,.opens button,.chip,.cta,.hact button,.gask button,.tkcard .act button{transition:transform .16s ease,box-shadow .2s ease}
+.hcard:active,.rrow:active,.nwc:active,.opens button:active,.chip:active,.cta:active,.hact button:active,.gask button:active,.tkcard .act button:active{transform:scale(.97)}
+@media (hover:hover){
+  .hcard:hover,.rrow:hover,.opens button:hover{transform:translateY(-3px);box-shadow:var(--sh-up)}
+  .rrow.top:hover{box-shadow:0 22px 34px -16px rgba(10,100,200,.8)}
+}
+/* ── 속보(소식) 카드 ── */
+.mh a{flex:none;color:var(--p);font-size:13px;font-weight:700;text-decoration:none}
+.mh h2 i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);margin:0 8px 2px 0;vertical-align:middle}
+.nwrow{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;padding:2px 16px 34px;margin:0 -16px -8px;scrollbar-width:none}
+.nwrow::-webkit-scrollbar{display:none}
+.nwc{position:relative;isolation:isolate;flex:none;width:min(80%,300px);min-height:196px;scroll-snap-align:start;text-align:left;border:0;border-radius:24px;padding:16px;color:#fff;display:flex;flex-direction:column;gap:8px;overflow:hidden;
+  background:linear-gradient(150deg,var(--g1),var(--g2));box-shadow:0 18px 30px -18px rgba(10,79,158,.8),inset 0 1px 0 rgba(255,255,255,.3)}
+.nwc:nth-child(3n+2){background:linear-gradient(150deg,var(--navy),var(--g2))}
+.nwc:nth-child(3n){background:linear-gradient(150deg,var(--g2),var(--navy))}
+.nwc::before{content:"";position:absolute;z-index:-1;right:-22%;top:-38%;width:74%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.26),transparent 66%)}
+.nwc::after{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:38%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.2),transparent);transform:translateX(-130%) skewX(-18deg)}
+.nwc b{font-family:var(--display);font-weight:400;font-size:27px;line-height:1.14;letter-spacing:-.01em;text-wrap:balance}
+.nwc b em,.nw-h em{font-style:normal;color:var(--sun)}
+.nwk{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;background:rgba(255,255,255,.2);border-radius:999px;padding:4px 10px}
+.nwk i{width:7px;height:7px;border-radius:50%;background:var(--sun)}
+.nwk.in{background:var(--p-bg);color:var(--p-dk);margin-bottom:8px}
+.nws{font-size:13px;line-height:1.45;color:rgba(255,255,255,.92)}
+.nwd{margin-top:auto;font-size:11px;font-weight:600;color:rgba(255,255,255,.8)}
+.nwl{margin:0 0 14px;padding-left:18px;font-size:14px;line-height:1.7}
+.nt-box>.nwf{font-size:12px}
+.nwf a{color:var(--p)}
+.nt-b button{white-space:nowrap}
+@media (min-width:960px){
+  .nwrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;overflow:visible;padding:2px 0 6px;margin:0 0 22px}
+  .nwc{width:auto;min-height:210px;padding:20px}
+  .nwc b{font-size:30px}
+  .nwc.tilt{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px);box-shadow:0 28px 40px -20px rgba(10,79,158,.85),inset 0 1px 0 rgba(255,255,255,.3)}
+}
+/* ── 움직임: 화면 전환, 글자 등장, 카드 순차 등장, 눈. 동작 줄이기 설정이면 전부 끔 ── */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes up{from{opacity:0;transform:translateY(16px)}}
+  @keyframes rise{from{clip-path:inset(0 0 100% 0);transform:translateY(34%)}to{clip-path:inset(-12% -4% -12% -4%);transform:none}}
+  @keyframes blurin{from{opacity:0;filter:blur(8px)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,225,77,.75)}70%,100%{box-shadow:0 0 0 9px rgba(255,225,77,0)}}
+  @keyframes pulsered{0%{box-shadow:0 0 0 0 rgba(232,70,107,.6)}70%,100%{box-shadow:0 0 0 9px rgba(232,70,107,0)}}
+  @keyframes sheen{0%,55%{transform:translateX(-130%) skewX(-18deg)}100%{transform:translateX(420%) skewX(-18deg)}}
+  @keyframes mark{to{background-size:100% 34%}}
+  @keyframes pop{40%{transform:translateY(-4px) scale(1.12)}}
+  @keyframes fall{to{transform:translateY(600px)}}
+  .app>section{animation:up .4s cubic-bezier(.2,.7,.2,1) backwards}
+  .hero h1{animation:rise .7s cubic-bezier(.2,.8,.2,1) backwards}
+  .hero h1 em{background:linear-gradient(rgba(255,255,255,.24),rgba(255,255,255,.24)) no-repeat 0 92%/0 34%;animation:mark .55s .6s ease-out forwards}
+  .hero .hsub,.hero .back{animation:up .5s .18s backwards}
+  .hero .hact,.hero .live,.hero .banner{animation:up .5s .3s backwards}
+  .nwrow>.nwc,.opens>button,.hub>.hcard,.facts>div,#list>*,#jList>*,#tkList>.tk,#mBody>div:not(.mfull){animation:up .42s cubic-bezier(.2,.7,.2,1) backwards}
+  .nwc b{animation:blurin .6s .15s backwards}
+  .nwc::after{animation:sheen 4.5s 1s ease-in-out infinite}
+  .nwk i,.live i{animation:pulse 1.8s ease-out infinite}
+  .mh h2 i{animation:pulsered 1.8s ease-out infinite}
+  .nav button[aria-selected="true"] svg{animation:pop .35s ease}
+  .hero{position:relative;isolation:isolate;overflow:hidden}
+  .hero::before,.hero::after{content:"";position:absolute;z-index:-1;left:0;right:0;top:-600px;bottom:0;pointer-events:none;background-repeat:repeat}
+  .hero::before{opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='600'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='169' cy='158' r='1.2' opacity='0.57'/%3E%3Ccircle cx='278' cy='100' r='1.2' opacity='0.58'/%3E%3Ccircle cx='263' cy='223' r='0.9' opacity='0.75'/%3E%3Ccircle cx='39' cy='250' r='1.0' opacity='0.74'/%3E%3Ccircle cx='293' cy='130' r='1.7' opacity='0.83'/%3E%3Ccircle cx='302' cy='67' r='1.4' opacity='0.73'/%3E%3Ccircle cx='117' cy='51' r='1.3' opacity='0.61'/%3E%3Ccircle cx='218' cy='151' r='1.3' opacity='0.81'/%3E%3Ccircle cx='290' cy='189' r='1.0' opacity='0.81'/%3E%3Ccircle cx='100' cy='385' r='1.0' opacity='0.87'/%3E%3Ccircle cx='292' cy='65' r='1.4' opacity='0.77'/%3E%3Ccircle cx='276' cy='441' r='1.5' opacity='0.76'/%3E%3Ccircle cx='236' cy='374' r='1.1' opacity='0.91'/%3E%3Ccircle cx='361' cy='253' r='1.0' opacity='0.69'/%3E%3Ccircle cx='257' cy='355' r='1.5' opacity='0.68'/%3E%3Ccircle cx='41' cy='124' r='1.3' opacity='0.62'/%3E%3Ccircle cx='179' cy='159' r='1.6' opacity='0.74'/%3E%3Ccircle cx='346' cy='83' r='1.5' opacity='0.81'/%3E%3Ccircle cx='164' cy='352' r='1.5' opacity='0.82'/%3E%3Ccircle cx='300' cy='471' r='1.0' opacity='0.59'/%3E%3Ccircle cx='142' cy='489' r='1.5' opacity='0.58'/%3E%3Ccircle cx='378' cy='321' r='1.4' opacity='1.00'/%3E%3Ccircle cx='232' cy='295' r='1.5' opacity='0.95'/%3E%3Ccircle cx='181' cy='27' r='1.7' opacity='0.71'/%3E%3Ccircle cx='316' cy='123' r='1.3' opacity='0.65'/%3E%3Ccircle cx='151' cy='136' r='1.5' opacity='0.73'/%3E%3C/g%3E%3C/svg%3E");background-size:420px 600px;animation:fall 30s linear infinite}
+  .hero::after{opacity:.75;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='600'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='172' cy='432' r='2.8' opacity='0.84'/%3E%3Ccircle cx='494' cy='225' r='3.2' opacity='0.76'/%3E%3Ccircle cx='191' cy='521' r='2.6' opacity='0.90'/%3E%3Ccircle cx='18' cy='383' r='3.1' opacity='0.74'/%3E%3Ccircle cx='152' cy='241' r='3.1' opacity='0.86'/%3E%3Ccircle cx='451' cy='420' r='2.7' opacity='0.57'/%3E%3Ccircle cx='340' cy='557' r='2.6' opacity='0.60'/%3E%3Ccircle cx='381' cy='27' r='2.2' opacity='0.92'/%3E%3Ccircle cx='131' cy='24' r='2.5' opacity='0.80'/%3E%3Ccircle cx='355' cy='414' r='2.6' opacity='0.63'/%3E%3Ccircle cx='42' cy='485' r='3.0' opacity='0.66'/%3E%3Ccircle cx='206' cy='217' r='2.8' opacity='0.91'/%3E%3C/g%3E%3C/svg%3E");background-size:520px 600px;animation:fall 17s linear infinite}
+  .nwrow>.nwc:nth-child(2),.opens>button:nth-child(2),.hub>.hcard:nth-child(2),.facts>div:nth-child(2),#jList>*:nth-child(2),#tkList>.tk:nth-child(2),#mBody>div:not(.mfull):nth-child(2){animation-delay:90ms}
+  .nwrow>.nwc:nth-child(3),.opens>button:nth-child(3),.hub>.hcard:nth-child(3),.facts>div:nth-child(3),#jList>*:nth-child(3),#tkList>.tk:nth-child(3),#mBody>div:not(.mfull):nth-child(3){animation-delay:135ms}
+  .nwrow>.nwc:nth-child(4),.opens>button:nth-child(4),.hub>.hcard:nth-child(4),.facts>div:nth-child(4),#jList>*:nth-child(4),#tkList>.tk:nth-child(4),#mBody>div:not(.mfull):nth-child(4){animation-delay:180ms}
+  .nwrow>.nwc:nth-child(5),.opens>button:nth-child(5),.hub>.hcard:nth-child(5),.facts>div:nth-child(5),#jList>*:nth-child(5),#tkList>.tk:nth-child(5),#mBody>div:not(.mfull):nth-child(5){animation-delay:225ms}
+  .nwrow>.nwc:nth-child(6),.opens>button:nth-child(6),.hub>.hcard:nth-child(6),.facts>div:nth-child(6),#jList>*:nth-child(6),#tkList>.tk:nth-child(6),#mBody>div:not(.mfull):nth-child(6){animation-delay:270ms}
+  .nwrow>.nwc:nth-child(7),.opens>button:nth-child(7),.hub>.hcard:nth-child(7),.facts>div:nth-child(7),#jList>*:nth-child(7),#tkList>.tk:nth-child(7),#mBody>div:not(.mfull):nth-child(7){animation-delay:315ms}
+  .nwrow>.nwc:nth-child(8),.opens>button:nth-child(8),.hub>.hcard:nth-child(8),.facts>div:nth-child(8),#jList>*:nth-child(8),#tkList>.tk:nth-child(8),#mBody>div:not(.mfull):nth-child(8){animation-delay:360ms}
+  .nwrow>.nwc:nth-child(9),.opens>button:nth-child(9),.hub>.hcard:nth-child(9),.facts>div:nth-child(9),#jList>*:nth-child(9),#tkList>.tk:nth-child(9),#mBody>div:not(.mfull):nth-child(9){animation-delay:405ms}
+  .nwrow>.nwc:nth-child(10),.opens>button:nth-child(10),.hub>.hcard:nth-child(10),.facts>div:nth-child(10),#jList>*:nth-child(10),#tkList>.tk:nth-child(10),#mBody>div:not(.mfull):nth-child(10){animation-delay:450ms}
+  .nwrow>.nwc:nth-child(11),.opens>button:nth-child(11),.hub>.hcard:nth-child(11),.facts>div:nth-child(11),#jList>*:nth-child(11),#tkList>.tk:nth-child(11),#mBody>div:not(.mfull):nth-child(11){animation-delay:495ms}
+  .nwrow>.nwc:nth-child(12),.opens>button:nth-child(12),.hub>.hcard:nth-child(12),.facts>div:nth-child(12),#jList>*:nth-child(12),#tkList>.tk:nth-child(12),#mBody>div:not(.mfull):nth-child(12){animation-delay:540ms}
+}
 </style>
 
 <div class="app">
@@ -541,6 +619,7 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
       <div class="nt-b"><button id="ntDay">오늘 하루 보지 않기</button><button id="ntClose" class="on">닫기</button></div>
     </div>
   </div>
+  <div class="nt" id="nw" hidden role="dialog" aria-modal="true" aria-labelledby="nwT"><div class="nt-box" id="nwBox"></div></div>
   <nav class="nav">
     <button aria-selected="true" data-v="main"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>홈</button>
     <button aria-selected="false" data-v="guide"><svg viewBox="0 0 24 24"><path d="M2 20l7-12 4 6 2.500-3.500L22 20z"/></svg>스키장</button>
@@ -712,6 +791,23 @@ const DIR={
  "휘닉스":[],"오투":[],"에덴밸리":[],
 };
 // 개장 일정. d: 26/27 발표·보도 내용, src: 근거 종류, last: 25/26 실제 개장일
+/* 소식(속보): 리조트 공식 발표·보도를 요약한 카드. 새 소식은 맨 위에 추가.
+   id=영문 소문자·숫자·하이픈(주소로 씀), d=확인일, r=스키장(RESORTS 이름), k=분류(개장·요금·운영 변경·특가·셔틀 등),
+   h=큰 제목(\n으로 2줄, *강조*는 노란색), s=한 줄 요약, li=핵심 항목, src=[출처 이름, 주소], until=마감일(지나면 자동으로 내림), eb=true면 얼리버드 비교 버튼 */
+const NEWS=[
+ {id:"yongpyong-time-ticket",d:"2026-11-14",r:"모나용평",k:"운영 변경",h:"용평 리프트권,\n*시간제*로 바뀐다",
+  s:"오전·오후권 대신 4·6·8시간권으로 바뀌고, 슬로프 운영 시간도 30분~1시간 앞당겨져요.",
+  li:["리프트권: 오전·오후·주간·야간·오후야간권 → 4시간권·6시간권·8시간권","슬로프 운영: 주간 08:30~16:30, 야간 18:00~22:00 (기존 주간 09:00~17:00, 야간 19:00~23:00)","정설 시간: 2시간 → 1시간 30분으로 단축","개장일은 윤곽이 나오는 대로 리조트가 안내할 예정"],
+  src:["모나용평 공식 인스타그램","https://www.instagram.com/yongpyongresort_official/"]},
+ {id:"vivaldi-shuttle-open",d:"2026-11-12",r:"비발디파크",k:"셔틀",h:"비발디 셔틀,\n편도 *1만 원*",
+  s:"26/27 시즌 셔틀버스 예약 페이지가 열렸어요. 서울·경기 일부 출발 기준 요금이에요.",
+  li:["요금: 편도 대인 10,000원, 소인 8,000원 (서울·경기 일부 출발)","현장 결제는 1,000원 추가","운행: 개장일~3월 1일","서울 탑승지: 홍대입구·동대문·건대입구·사당·종합운동장·천호"],
+  src:["비발디파크 셔틀 예약 페이지","https://vivabus.co.kr/sono"]},
+ {id:"konjiam-earlybird",d:"2026-11-04",r:"곤지암",k:"특가",h:"곤지암 얼리버드,\n최대 *47%* 할인",until:"2026-12-06",eb:true,
+  s:"리프트권과 리프트+장비 패키지를 12월 6일까지 미리 팔아요. 개장일부터 폐장일까지 쓸 수 있어요.",
+  li:["판매: 11월 4일~12월 6일, NOL(놀유니버스) 단독. 수량이 소진되면 일찍 끝나요","리프트권 2시간: 주중 44,000원, 주말 54,000원 (정상가 69,000원·83,000원)","리프트+장비 2시간: 주중 56,000원, 주말 67,000원 (정상가 105,000원·122,000원)","4시간권·6시간권도 있고, 사용 기간은 개장일~폐장일","개장은 12월 중 예정이고 정확한 날짜는 날씨에 따라 정해져요"],
+  src:["곤지암리조트 공지","https://www.konjiamresort.co.kr/contact/noticeDetail.dev?idx=1712"]},
+];
 const OPEN={
  "휘닉스":{d:"11월 20일 목표",src:"보도",last:"11월 21일"},
  "모나용평":{d:"11월 27일 예정",src:"보도",last:"11월 21일"},
@@ -762,7 +858,7 @@ function rows(res=st.resort){
   return out;
 }
 function render(){
-  syncHub();
+  syncHub();queueMicrotask(fx);
   $("#people").textContent=st.people+"명"; $("#resort").value=st.resort;
   $$("#grid .rz").forEach(b=>b.setAttribute("aria-pressed",b.dataset.r===st.resort));
   [["day","day"],["scope","scope"],["hours","hours"],["sh","sh"]].forEach(([id,k])=>$$("#"+id+" button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===st[k])));
@@ -805,7 +901,7 @@ function summary(cond){
   $("#count").textContent=`전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${cond}`;
   $("#list").innerHTML=list.map((x,i)=>{const b=x.b;
     if(!b){const dn=(DIR[x.n]||[]).length;return `<button class="rrow na" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${x.has?"이 조건에 맞는 가격이 없어요":openTxt(x.n)+" · 요금 공개 대기"}</div></div><div class="pr"><b>${x.has?"조건 변경":"공개 대기"}</b></div></button>`}
-    const d=b.d;return `<button class="rrow${i===0&&!b.unk?" top":""}" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${d.shop} · ${d.h?d.h+"시간권":"시간 미표기"}${d.season==="25/26"?" · 25/26 가격":""}${d.eb?" · 얼리버드":""}${b.unk?" · 셔틀 요금 미확인":""}</div></div><div class="pr"><b>${won(d.per)}${d.from?"~":""}</b><span>1인 최저 · ${b.n}곳 ›</span></div></button>`}).join("");
+    const d=b.d;return `<button class="rrow${i===0&&!b.unk?" top":""}" data-r="${x.n}"><div><div class="nm">${x.n}</div><div class="sb">${d.shop} · ${d.h?d.h+"시간권":"시간 미표기"}${d.season==="25/26"?" · 25/26 가격":""}${d.eb?" · 얼리버드":""}${b.unk?" · 셔틀 요금 미확인":""}</div></div><div class="pr"><b>${i<6?cu(d.per):won(d.per)}${d.from?"~":""}</b><span>1인 최저 · ${b.n}곳 ›</span></div></button>`}).join("");
 }
 function dirHtml(n){const a=DIR[n];if(n==="all"||!a||!a.length)return "";
   return `<h4>가격표를 확인하지 못한 ${n} 렌탈샵</h4><ul>${a.map(x=>`<li><b>${x[0]}</b><p>${x[1]}</p><a href="${x[2]}" target="_blank" rel="noopener">홈페이지</a></li>`).join("")}</ul>`}
@@ -898,7 +994,7 @@ const LIVE=FB||DEMO;
 function go(v,keep){view=v;$$(".nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===v));
   ["main","guide","home","talk","join","official","report"].forEach(k=>$("#v-"+k).hidden=!VIEWS[v].includes(k));
   if(v==="main"&&location.hash){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
-  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide();if(v==="main")renderMain()}
+  if(!keep)window.scrollTo(0,0);if(v==="join")joinInit();if(v==="talk")talkSync();if(v==="guide")renderGuide();if(v==="main")renderMain();queueMicrotask(fx)}
 function syncHub(){if(view==="guide")renderGuide();if(view==="talk")talkSync()}
 function renderGuide(){
   const n=st.resort,h=$("#gHero"),b=$("#gBody"),want=n==="all"?"":"#g-"+SLUG[n];
@@ -913,11 +1009,12 @@ function renderGuide(){
   const g=GUIDE[n],bs=best(n),s=SHUTTLE[n],o=OPEN[n]||{};
   h.innerHTML=`<button class="back" data-a="all">‹ 전체 스키장</button><h1>${n}</h1><p class="hsub">${REGION[n]}${g&&g.from?" · "+g.from:""} · ${openTxt(n)}</p><div class="hact"><button class="on" data-a="home">최저가 보기</button>${LIVE?'<button data-a="talk">톡</button><button data-a="join">동행 구하기</button>':""}</div>`;
   const sec=x=>`<div class="gsec"><h3>${x.t}</h3>${x.tb?`<div class="tw"><table><tr>${x.tb.h.map(c=>`<th>${c}</th>`).join("")}</tr>${x.tb.r.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`:""}${x.li?`<ul>${x.li.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}</div>`;
-  const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${won(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
+  const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${cu(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
   const bus=`<div class="gsec"><h3>서울 출발 셔틀버스</h3>${s?`<ul><li>${s.rt?"왕복 "+won(s.rt):"요금 미확인"}${s.from?" · 탑승: "+s.from:""}</li><li>${s.st}</li></ul><p class="gsrc"><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a></p>`:`<p>아직 확인하지 못했어요.</p>`}</div>`;
   const ask=`<div class="gask"><b>${g?"아직 확인하지 못한 것":"가이드를 준비하고 있어요"}</b>${g?`<ul>${g.todo.map(c=>`<li>${c}</li>`).join("")}</ul>`:`<p>${n}은(는) 기본 정보만 먼저 올렸어요. 슬로프, 주차, 셔틀처럼 다녀온 사람만 아는 이야기를 기다리고 있어요.</p>`}${LIVE?`<p>아는 분은 ${n} 톡에 한 줄 남겨 주세요. 확인해서 가이드에 반영할게요.</p><button data-a="talk">${n} 톡에 남기기</button>`:""}</div>`;
+  const gn=nwList(n);
   b.className="gut one";
-  b.innerHTML=(g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`+g.secs.map(sec).join(""):`<div class="gsec"><h3>개장 일정</h3><ul><li>${o.d?"26/27 개장 "+o.d+" ("+o.src+")":"26/27 개장일은 아직 발표되지 않았어요."}</li>${o.last?`<li>지난 시즌에는 ${o.last}에 개장했어요.</li>`:""}</ul></div>`)
+  b.innerHTML=(gn.length?`<div class="gsec wide"><h3>${n} 소식</h3><div class="nwrow">${gn.map(nwCard).join("")}</div></div>`:"")+(g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`+g.secs.map(sec).join(""):`<div class="gsec"><h3>개장 일정</h3><ul><li>${o.d?"26/27 개장 "+o.d+" ("+o.src+")":"26/27 개장일은 아직 발표되지 않았어요."}</li>${o.last?`<li>지난 시즌에는 ${o.last}에 개장했어요.</li>`:""}</ul></div>`)
     +price+bus+ask+(g?`<p class="gsrc">${g.base}. 출처: ${g.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join(", ")}. 운영 내용은 시즌마다 바뀌니 방문 전 리조트 공지를 확인하세요.</p>`:"");
 }
 $("#v-guide").addEventListener("click",e=>{
@@ -926,6 +1023,7 @@ $("#v-guide").addEventListener("click",e=>{
   const a=e.target.closest("[data-a]");if(!a)return;const k=a.dataset.a;
   if(k==="nt")openNotice();else if(k==="all"){try{history.pushState(null,"",location.pathname+location.search)}catch(x){}set("resort","all");window.scrollTo(0,0)}else go(k)});
 function route(){const a=location.hash.slice(1);
+  if(a.startsWith("n-")){const id=a.slice(2);try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}setTimeout(()=>openNews(id),0);return}
   if(a.startsWith("q-")){dec();go("home",true);render();return}
   const m=/^([gt])-([a-z0-9]+)$/.exec(a),rn=m&&Object.keys(SLUG).find(k=>SLUG[k]===m[2]);
   if(rn){st.resort=rn;go(m[1]==="t"&&LIVE?"talk":"guide",true);render();return}
@@ -946,7 +1044,7 @@ function talkStore(){
 const ago=ts=>{const m=Math.floor((Date.now()-ts)/6e4);if(m<1)return "방금";if(m<60)return m+"분 전";if(m<1440)return Math.floor(m/60)+"시간 전";const d=new Date(ts);return (d.getMonth()+1)+"월 "+d.getDate()+"일"};
 const ASK=["주말 리프트 대기 시간","주차장이 차는 시간과 매표소까지 거리","셔틀버스 탑승 위치와 좌석 상황","초보가 타기 좋은 슬로프"];
 function talkSide(r){const g=GUIDE[r],bs=best(r);
-  $("#tkSide").innerHTML=`<div class="tkcard"><b>${r} 한눈에</b><p class="sub">${REGION[r]}${g&&g.from?" · "+g.from:""} · ${openTxt(r)}</p>${g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`:""}<button class="rrow${bs?"":" na"}" data-a="price"><div><div class="nm">${bs?"1인 최저 "+won(bs.d.per)+(bs.d.from?"~":""):"26/27 요금 공개 대기"}</div><div class="sb">${bs?`${bs.d.shop} · ${SCOPE[st.scope]} · ${st.people}명 ${st.day==="wd"?"주중":"주말"}`:"공개되는 대로 올려요"}</div></div><div class="pr"><span>${bs?bs.n+"곳 비교 ›":"특가 보기 ›"}</span></div></button><div class="act"><button data-a="guide">${g?"가이드 전체 보기":"기본 정보 보기"}</button>${LIVE?'<button data-go="join">동행 구하기</button>':""}</div></div><div class="gask"><b>이런 이야기를 기다려요</b><ul>${(g?g.todo:ASK).map(c=>`<li>${c}</li>`).join("")}</ul><p>아는 만큼 한 줄만 남겨 주세요. 확인해서 ${r} 가이드에 반영할게요.</p></div>`}
+  $("#tkSide").innerHTML=`<div class="tkcard"><b>${r} 한눈에</b><p class="sub">${REGION[r]}${g&&g.from?" · "+g.from:""} · ${openTxt(r)}</p>${g?`<div class="facts">${g.facts.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("")}</div>`:""}<button class="rrow${bs?"":" na"}" data-a="price"><div><div class="nm">${bs?"1인 최저 "+cu(bs.d.per)+(bs.d.from?"~":""):"26/27 요금 공개 대기"}</div><div class="sb">${bs?`${bs.d.shop} · ${SCOPE[st.scope]} · ${st.people}명 ${st.day==="wd"?"주중":"주말"}`:"공개되는 대로 올려요"}</div></div><div class="pr"><span>${bs?bs.n+"곳 비교 ›":"특가 보기 ›"}</span></div></button><div class="act"><button data-a="guide">${g?"가이드 전체 보기":"기본 정보 보기"}</button>${LIVE?'<button data-go="join">동행 구하기</button>':""}</div></div><div class="gask"><b>이런 이야기를 기다려요</b><ul>${(g?g.todo:ASK).map(c=>`<li>${c}</li>`).join("")}</ul><p>아는 만큼 한 줄만 남겨 주세요. 확인해서 ${r} 가이드에 반영할게요.</p></div>`}
 $("#tkSide").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||!T.resort)return;const r=T.resort;
   if(b.dataset.a==="guide"){try{history.pushState(null,"","#g-"+SLUG[r])}catch(x){}st.resort=r;go("guide");render()}
   else if(b.dataset.a==="price"){st.resort=r;go("home");render()}});
@@ -999,6 +1097,31 @@ $("#ntClose").addEventListener("click",()=>closeNotice(false));
 $("#ntDay").addEventListener("click",()=>closeNotice(true));
 $("#nt").addEventListener("click",e=>{if(e.target.id==="nt")closeNotice(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)});
+/* ── 소식(속보) ── */
+const nwDate=d=>{const m=/^\d+-(\d+)-(\d+)$/.exec(d);return m?(+m[1])+"월 "+(+m[2])+"일":d};
+const nwLeft=x=>{if(!x.until)return null;const t=new Date(x.until+"T00:00:00"),n=new Date();n.setHours(0,0,0,0);return Math.round((t-n)/864e5)};
+const nwNew=x=>(Date.now()-new Date(x.d+"T00:00:00"))/864e5<3;
+const nwHead=h=>esc(h).replace(/\*(.+?)\*/g,"<em>$1</em>").replace("\n","<br>");
+const nwList=r=>NEWS.filter(x=>(!r||x.r===r)&&(nwLeft(x)===null||nwLeft(x)>=0)).sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0);
+const nwCard=x=>`<button class="nwc" data-nw="${x.id}"><span class="nwk">${nwNew(x)?"<i></i>":""}${x.k} · ${x.r}</span><b>${nwHead(x.h)}</b><span class="nws">${esc(x.s)}</span><span class="nwd">${nwDate(x.d)}${x.until?` · 마감 D-${nwLeft(x)}`:""} · 자세히 ›</span></button>`;
+function openNews(id){const x=NEWS.find(n=>n.id===id);if(!x)return;
+  $("#nwBox").innerHTML=`<span class="nwk in">${x.k} · ${x.r}</span><h3 id="nwT" class="nw-h">${esc(x.h).replace(/\*/g,"").replace("\n"," ")}</h3><p>${esc(x.s)}</p><ul class="nwl">${x.li.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><p class="nwf">${nwDate(x.d)} 확인 · 출처: <a href="${x.src[1]}" target="_blank" rel="noopener">${esc(x.src[0])}</a><br>리조트 발표와 보도를 요약한 글이에요. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p><div class="nt-b"><button data-a="share" data-id="${x.id}">공유</button>${x.eb?`<button data-a="eb" data-r="${x.r}">가격 비교</button>`:LIVE?`<button data-a="talk" data-r="${x.r}">${x.r} 톡</button>`:`<button data-a="guide" data-r="${x.r}">${x.r} 정보</button>`}<button class="on" data-a="close">닫기</button></div>`;
+  $("#nw").hidden=false}
+$("#nw").addEventListener("click",e=>{if(e.target.id==="nw"){$("#nw").hidden=true;return}const b=e.target.closest("[data-a]");if(!b)return;const k=b.dataset.a,r=b.dataset.r;
+  if(k==="share"){copy(location.origin+"/news/"+b.dataset.id+"/","소식 링크를 복사했어요. 카톡이나 커뮤니티에 붙여넣어 보세요.");return}
+  $("#nw").hidden=true;
+  if(k==="talk"){st.resort=r;render();go("talk")}else if(k==="guide"){try{history.pushState(null,"","#g-"+SLUG[r])}catch(x){}st.resort=r;go("guide");render()}else if(k==="eb"){st={...init(),resort:r,eb:true};go("home");render()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-nw]");if(b)openNews(b.dataset.nw)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#nw").hidden=true});
+/* ── 움직임: 숫자 카운트 업, 속보 카드 기울기 (동작 줄이기 설정이면 끔) ── */
+const MOTION=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+const cu=(n,sf="원",pf="")=>`<data value="${Math.round(n)}" data-cu="${Math.round(n)}" data-sf="${sf}" data-pf="${pf}">${pf}${Math.round(n).toLocaleString("ko-KR")}${sf}</data>`;
+function fx(){if(!MOTION)return;$$("[data-cu]:not([data-on])").forEach(el=>{el.dataset.on="1";if(el.offsetParent===null)return;
+  const to=+el.dataset.cu,pf=el.dataset.pf,sf=el.dataset.sf,from=to>60?Math.round(to*.55):0,t0=performance.now();
+  const f=t=>{const k=Math.min(1,(t-t0)/700),v=from+(to-from)*(1-Math.pow(1-k,3));el.textContent=pf+Math.round(v).toLocaleString("ko-KR")+sf;if(k<1&&el.isConnected)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+if(MOTION&&matchMedia("(hover:hover)").matches)document.addEventListener("pointermove",e=>{const c=e.target.closest?e.target.closest(".nwc"):null;
+  $$(".nwc.tilt").forEach(x=>{if(x!==c)x.classList.remove("tilt")});if(!c)return;const r=c.getBoundingClientRect();c.classList.add("tilt");
+  c.style.setProperty("--ry",(((e.clientX-r.left)/r.width-.5)*10).toFixed(1)+"deg");c.style.setProperty("--rx",((.5-(e.clientY-r.top)/r.height)*8).toFixed(1)+"deg")});
 /* ── 홈: 개장 임박 · 이야기 · 동행 · 특가. FOCUS는 먼저 채우는 스키장, SY는 시즌 시작 연도 ── */
 const FOCUS="곤지암",SY=2026;
 const M={posts:null,joins:null,at:0};
@@ -1007,14 +1130,15 @@ function dday(n){const m=/(\d+)월 (\d+)일/.exec((OPEN[n]||{}).d||"");if(!m)ret
 function renderMain(){
   $("#mHero").innerHTML=`<h1>스키·보드 타는<br>사람들의 <em>스노우딜</em></h1><p class="hsub">스키장 소식, 다녀온 이야기, 같이 갈 사람, 특가까지 한곳에 모았어요.</p><div class="hact">${LIVE?`<button class="on" data-t="${FOCUS}">이야기 남기기</button><button data-go="join">동행 구하기</button>`:""}<button data-go="home">특가 보기</button></div>`;
   const op=Object.keys(OPEN).filter(n=>OPEN[n].d).map((n,i)=>({n,i,k:dday(n)})).sort((a,b)=>(a.k===null)-(b.k===null)||(a.k-b.k)||(a.i-b.i));
-  const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens" style="--oc:${op.length<=9?op.length:Math.ceil(op.length/2)}">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b${x.k===null&&o.d.length>6?' class="s"':""}>${x.k===null?o.d.replace("~","~<wbr>"):x.k?"D-"+x.k:"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
+  const nws=nwList().slice(0,6),news=nws.length?`<div class="mfull"><div class="mh"><h2><i></i>속보</h2><a href="/news/">전체 소식 ›</a></div><div class="nwrow">${nws.map(nwCard).join("")}</div></div>`:"";
+  const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens" style="--oc:${op.length<=9?op.length:Math.ceil(op.length/2)}">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b${x.k===null&&o.d.length>6?' class="s"':""}>${x.k===null?o.d.replace("~","~<wbr>"):x.k?cu(x.k,"","D-"):"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
   const talk=LIVE?`<div class="msec"><div class="mh"><h2>지금 올라온 이야기</h2><button data-t="${FOCUS}">톡 가기 ›</button></div><div id="mTalk"><div class="empty">이야기를 불러오는 중이에요.</div></div><div class="gask"><b>${FOCUS} 다녀오셨어요?</b><p>설질, 리프트 대기, 주차, 셔틀. 한 줄이면 충분해요. 다음에 가는 사람에게 큰 도움이 됩니다.</p><button data-t="${FOCUS}">${FOCUS} 톡에 한 줄 남기기</button></div></div>`:"";
   const join=LIVE?`<div class="msec"><div class="mh"><h2>같이 갈 사람</h2><button data-go="join">전체 보기 ›</button></div><div id="mJoin" class="msec"></div></div>`:"";
   const eb=DATA.filter(d=>d.eb),ebR=[...new Set(eb.map(d=>d.resort))],ebMin=eb.length?Math.min(...eb.map(d=>Math.min(d.wd,d.we))):0,
     ebPct=Math.max(0,...eb.map(d=>Math.max(d.nwd?1-d.wd/d.nwd:0,d.nwe?1-d.we/d.nwe:0))),priced=RESORTS.filter(([n])=>DATA.some(d=>d.resort===n)).length;
-  const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${won(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
+  const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${cu(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
   const chips=`<div><h2>스키장 바로가기</h2><div class="mchips">${[FOCUS,...RESORTS.map(r=>r[0]).filter(n=>n!==FOCUS)].map(n=>`<button class="chip" data-r="${n}">${n}</button>`).join("")}</div><div class="mlinks"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div></div>`;
-  $("#mBody").innerHTML=opens+talk+join+deals+chips;
+  $("#mBody").innerHTML=news+opens+talk+join+deals+chips;queueMicrotask(fx);
   mainLoad();
 }
 function mainFeed(){const hid=jMine(),ok=p=>(p.reports||0)<3&&!hid.includes(p.id),t=$("#mTalk"),j=$("#mJoin");

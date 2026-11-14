@@ -384,3 +384,81 @@ h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-.01
   #v-talk>.tkside{grid-column:2;grid-row:1/span 2;margin:0;position:sticky;top:20px}
   #v-talk>.note{grid-column:1;grid-row:2}
 }
+/* ── 깊이감: 카드 그림자 토큰 (밝은 화면·어두운 화면) ── */
+:root{--sh:0 12px 24px -18px rgba(10,60,120,.5),0 2px 6px -3px rgba(10,60,120,.14);--sh-up:0 20px 34px -18px rgba(10,60,120,.55),0 4px 10px -4px rgba(10,60,120,.18)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--sh:0 12px 24px -16px rgba(0,0,0,.7),0 2px 6px -3px rgba(0,0,0,.4);--sh-up:0 20px 34px -16px rgba(0,0,0,.8),0 4px 10px -4px rgba(0,0,0,.5)} }
+:root[data-theme="dark"]{--sh:0 12px 24px -16px rgba(0,0,0,.7),0 2px 6px -3px rgba(0,0,0,.4);--sh-up:0 20px 34px -16px rgba(0,0,0,.8),0 4px 10px -4px rgba(0,0,0,.5)}
+.hcard,.rrow,.tkcard,.opens button,.card,.facts div{box-shadow:var(--sh)}
+.rrow.top{box-shadow:0 16px 28px -16px rgba(10,100,200,.75)}
+.hcard,.rrow,.nwc,.opens button,.chip,.cta,.hact button,.gask button,.tkcard .act button{transition:transform .16s ease,box-shadow .2s ease}
+.hcard:active,.rrow:active,.nwc:active,.opens button:active,.chip:active,.cta:active,.hact button:active,.gask button:active,.tkcard .act button:active{transform:scale(.97)}
+@media (hover:hover){
+  .hcard:hover,.rrow:hover,.opens button:hover{transform:translateY(-3px);box-shadow:var(--sh-up)}
+  .rrow.top:hover{box-shadow:0 22px 34px -16px rgba(10,100,200,.8)}
+}
+/* ── 속보(소식) 카드 ── */
+.mh a{flex:none;color:var(--p);font-size:13px;font-weight:700;text-decoration:none}
+.mh h2 i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);margin:0 8px 2px 0;vertical-align:middle}
+.nwrow{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;padding:2px 16px 34px;margin:0 -16px -8px;scrollbar-width:none}
+.nwrow::-webkit-scrollbar{display:none}
+.nwc{position:relative;isolation:isolate;flex:none;width:min(80%,300px);min-height:196px;scroll-snap-align:start;text-align:left;border:0;border-radius:24px;padding:16px;color:#fff;display:flex;flex-direction:column;gap:8px;overflow:hidden;
+  background:linear-gradient(150deg,var(--g1),var(--g2));box-shadow:0 18px 30px -18px rgba(10,79,158,.8),inset 0 1px 0 rgba(255,255,255,.3)}
+.nwc:nth-child(3n+2){background:linear-gradient(150deg,var(--navy),var(--g2))}
+.nwc:nth-child(3n){background:linear-gradient(150deg,var(--g2),var(--navy))}
+.nwc::before{content:"";position:absolute;z-index:-1;right:-22%;top:-38%;width:74%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.26),transparent 66%)}
+.nwc::after{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:38%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.2),transparent);transform:translateX(-130%) skewX(-18deg)}
+.nwc b{font-family:var(--display);font-weight:400;font-size:27px;line-height:1.14;letter-spacing:-.01em;text-wrap:balance}
+.nwc b em,.nw-h em{font-style:normal;color:var(--sun)}
+.nwk{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;background:rgba(255,255,255,.2);border-radius:999px;padding:4px 10px}
+.nwk i{width:7px;height:7px;border-radius:50%;background:var(--sun)}
+.nwk.in{background:var(--p-bg);color:var(--p-dk);margin-bottom:8px}
+.nws{font-size:13px;line-height:1.45;color:rgba(255,255,255,.92)}
+.nwd{margin-top:auto;font-size:11px;font-weight:600;color:rgba(255,255,255,.8)}
+.nwl{margin:0 0 14px;padding-left:18px;font-size:14px;line-height:1.7}
+.nt-box>.nwf{font-size:12px}
+.nwf a{color:var(--p)}
+.nt-b button{white-space:nowrap}
+@media (min-width:960px){
+  .nwrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;overflow:visible;padding:2px 0 6px;margin:0 0 22px}
+  .nwc{width:auto;min-height:210px;padding:20px}
+  .nwc b{font-size:30px}
+  .nwc.tilt{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px);box-shadow:0 28px 40px -20px rgba(10,79,158,.85),inset 0 1px 0 rgba(255,255,255,.3)}
+}
+/* ── 움직임: 화면 전환, 글자 등장, 카드 순차 등장, 눈. 동작 줄이기 설정이면 전부 끔 ── */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes up{from{opacity:0;transform:translateY(16px)}}
+  @keyframes rise{from{clip-path:inset(0 0 100% 0);transform:translateY(34%)}to{clip-path:inset(-12% -4% -12% -4%);transform:none}}
+  @keyframes blurin{from{opacity:0;filter:blur(8px)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,225,77,.75)}70%,100%{box-shadow:0 0 0 9px rgba(255,225,77,0)}}
+  @keyframes pulsered{0%{box-shadow:0 0 0 0 rgba(232,70,107,.6)}70%,100%{box-shadow:0 0 0 9px rgba(232,70,107,0)}}
+  @keyframes sheen{0%,55%{transform:translateX(-130%) skewX(-18deg)}100%{transform:translateX(420%) skewX(-18deg)}}
+  @keyframes mark{to{background-size:100% 34%}}
+  @keyframes pop{40%{transform:translateY(-4px) scale(1.12)}}
+  @keyframes fall{to{transform:translateY(600px)}}
+  .app>section{animation:up .4s cubic-bezier(.2,.7,.2,1) backwards}
+  .hero h1{animation:rise .7s cubic-bezier(.2,.8,.2,1) backwards}
+  .hero h1 em{background:linear-gradient(rgba(255,255,255,.24),rgba(255,255,255,.24)) no-repeat 0 92%/0 34%;animation:mark .55s .6s ease-out forwards}
+  .hero .hsub,.hero .back{animation:up .5s .18s backwards}
+  .hero .hact,.hero .live,.hero .banner{animation:up .5s .3s backwards}
+  .nwrow>.nwc,.opens>button,.hub>.hcard,.facts>div,#list>*,#jList>*,#tkList>.tk,#mBody>div:not(.mfull){animation:up .42s cubic-bezier(.2,.7,.2,1) backwards}
+  .nwc b{animation:blurin .6s .15s backwards}
+  .nwc::after{animation:sheen 4.5s 1s ease-in-out infinite}
+  .nwk i,.live i{animation:pulse 1.8s ease-out infinite}
+  .mh h2 i{animation:pulsered 1.8s ease-out infinite}
+  .nav button[aria-selected="true"] svg{animation:pop .35s ease}
+  .hero{position:relative;isolation:isolate;overflow:hidden}
+  .hero::before,.hero::after{content:"";position:absolute;z-index:-1;left:0;right:0;top:-600px;bottom:0;pointer-events:none;background-repeat:repeat}
+  .hero::before{opacity:.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='600'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='169' cy='158' r='1.2' opacity='0.57'/%3E%3Ccircle cx='278' cy='100' r='1.2' opacity='0.58'/%3E%3Ccircle cx='263' cy='223' r='0.9' opacity='0.75'/%3E%3Ccircle cx='39' cy='250' r='1.0' opacity='0.74'/%3E%3Ccircle cx='293' cy='130' r='1.7' opacity='0.83'/%3E%3Ccircle cx='302' cy='67' r='1.4' opacity='0.73'/%3E%3Ccircle cx='117' cy='51' r='1.3' opacity='0.61'/%3E%3Ccircle cx='218' cy='151' r='1.3' opacity='0.81'/%3E%3Ccircle cx='290' cy='189' r='1.0' opacity='0.81'/%3E%3Ccircle cx='100' cy='385' r='1.0' opacity='0.87'/%3E%3Ccircle cx='292' cy='65' r='1.4' opacity='0.77'/%3E%3Ccircle cx='276' cy='441' r='1.5' opacity='0.76'/%3E%3Ccircle cx='236' cy='374' r='1.1' opacity='0.91'/%3E%3Ccircle cx='361' cy='253' r='1.0' opacity='0.69'/%3E%3Ccircle cx='257' cy='355' r='1.5' opacity='0.68'/%3E%3Ccircle cx='41' cy='124' r='1.3' opacity='0.62'/%3E%3Ccircle cx='179' cy='159' r='1.6' opacity='0.74'/%3E%3Ccircle cx='346' cy='83' r='1.5' opacity='0.81'/%3E%3Ccircle cx='164' cy='352' r='1.5' opacity='0.82'/%3E%3Ccircle cx='300' cy='471' r='1.0' opacity='0.59'/%3E%3Ccircle cx='142' cy='489' r='1.5' opacity='0.58'/%3E%3Ccircle cx='378' cy='321' r='1.4' opacity='1.00'/%3E%3Ccircle cx='232' cy='295' r='1.5' opacity='0.95'/%3E%3Ccircle cx='181' cy='27' r='1.7' opacity='0.71'/%3E%3Ccircle cx='316' cy='123' r='1.3' opacity='0.65'/%3E%3Ccircle cx='151' cy='136' r='1.5' opacity='0.73'/%3E%3C/g%3E%3C/svg%3E");background-size:420px 600px;animation:fall 30s linear infinite}
+  .hero::after{opacity:.75;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='600'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='172' cy='432' r='2.8' opacity='0.84'/%3E%3Ccircle cx='494' cy='225' r='3.2' opacity='0.76'/%3E%3Ccircle cx='191' cy='521' r='2.6' opacity='0.90'/%3E%3Ccircle cx='18' cy='383' r='3.1' opacity='0.74'/%3E%3Ccircle cx='152' cy='241' r='3.1' opacity='0.86'/%3E%3Ccircle cx='451' cy='420' r='2.7' opacity='0.57'/%3E%3Ccircle cx='340' cy='557' r='2.6' opacity='0.60'/%3E%3Ccircle cx='381' cy='27' r='2.2' opacity='0.92'/%3E%3Ccircle cx='131' cy='24' r='2.5' opacity='0.80'/%3E%3Ccircle cx='355' cy='414' r='2.6' opacity='0.63'/%3E%3Ccircle cx='42' cy='485' r='3.0' opacity='0.66'/%3E%3Ccircle cx='206' cy='217' r='2.8' opacity='0.91'/%3E%3C/g%3E%3C/svg%3E");background-size:520px 600px;animation:fall 17s linear infinite}
+  .nwrow>.nwc:nth-child(2),.opens>button:nth-child(2),.hub>.hcard:nth-child(2),.facts>div:nth-child(2),#jList>*:nth-child(2),#tkList>.tk:nth-child(2),#mBody>div:not(.mfull):nth-child(2){animation-delay:90ms}
+  .nwrow>.nwc:nth-child(3),.opens>button:nth-child(3),.hub>.hcard:nth-child(3),.facts>div:nth-child(3),#jList>*:nth-child(3),#tkList>.tk:nth-child(3),#mBody>div:not(.mfull):nth-child(3){animation-delay:135ms}
+  .nwrow>.nwc:nth-child(4),.opens>button:nth-child(4),.hub>.hcard:nth-child(4),.facts>div:nth-child(4),#jList>*:nth-child(4),#tkList>.tk:nth-child(4),#mBody>div:not(.mfull):nth-child(4){animation-delay:180ms}
+  .nwrow>.nwc:nth-child(5),.opens>button:nth-child(5),.hub>.hcard:nth-child(5),.facts>div:nth-child(5),#jList>*:nth-child(5),#tkList>.tk:nth-child(5),#mBody>div:not(.mfull):nth-child(5){animation-delay:225ms}
+  .nwrow>.nwc:nth-child(6),.opens>button:nth-child(6),.hub>.hcard:nth-child(6),.facts>div:nth-child(6),#jList>*:nth-child(6),#tkList>.tk:nth-child(6),#mBody>div:not(.mfull):nth-child(6){animation-delay:270ms}
+  .nwrow>.nwc:nth-child(7),.opens>button:nth-child(7),.hub>.hcard:nth-child(7),.facts>div:nth-child(7),#jList>*:nth-child(7),#tkList>.tk:nth-child(7),#mBody>div:not(.mfull):nth-child(7){animation-delay:315ms}
+  .nwrow>.nwc:nth-child(8),.opens>button:nth-child(8),.hub>.hcard:nth-child(8),.facts>div:nth-child(8),#jList>*:nth-child(8),#tkList>.tk:nth-child(8),#mBody>div:not(.mfull):nth-child(8){animation-delay:360ms}
+  .nwrow>.nwc:nth-child(9),.opens>button:nth-child(9),.hub>.hcard:nth-child(9),.facts>div:nth-child(9),#jList>*:nth-child(9),#tkList>.tk:nth-child(9),#mBody>div:not(.mfull):nth-child(9){animation-delay:405ms}
+  .nwrow>.nwc:nth-child(10),.opens>button:nth-child(10),.hub>.hcard:nth-child(10),.facts>div:nth-child(10),#jList>*:nth-child(10),#tkList>.tk:nth-child(10),#mBody>div:not(.mfull):nth-child(10){animation-delay:450ms}
+  .nwrow>.nwc:nth-child(11),.opens>button:nth-child(11),.hub>.hcard:nth-child(11),.facts>div:nth-child(11),#jList>*:nth-child(11),#tkList>.tk:nth-child(11),#mBody>div:not(.mfull):nth-child(11){animation-delay:495ms}
+  .nwrow>.nwc:nth-child(12),.opens>button:nth-child(12),.hub>.hcard:nth-child(12),.facts>div:nth-child(12),#jList>*:nth-child(12),#tkList>.tk:nth-child(12),#mBody>div:not(.mfull):nth-child(12){animation-delay:540ms}
+}
