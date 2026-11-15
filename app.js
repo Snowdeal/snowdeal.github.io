@@ -58,7 +58,7 @@ function renderNotice(){const rows=Object.keys(OPEN).map(n=>{const o=OPEN[n];ret
   $("#ntTable").innerHTML="<tr><th>스키장</th><th>26/27 개장</th><th>작년 개장</th><th>요금</th></tr>"+rows;
   $(".nt-f").textContent=OPEN_CHECKED+" 확인. 개장일은 기온과 제설 상황에 따라 바뀌니 방문 전 리조트 공지를 확인하세요."}
 const today=()=>new Date().toISOString().slice(0,10);
-function openNotice(){$("#nt").hidden=false}
+function openNotice(){$("#nt").hidden=false;queueMicrotask(fx)}
 function closeNotice(day){$("#nt").hidden=true;if(day){try{localStorage.setItem("ntDay",today())}catch(e){}}}
 function best(n){const r=rows(n);if(!r.length)return null;const k=r.filter(x=>!x.shUnknown);const pool=k.length?k:r;return {d:pool.reduce((a,b)=>b.total<a.total?b:a),n:new Set(r.map(x=>x.shop)).size,unk:!k.length}}
 function summary(cond){
@@ -174,7 +174,7 @@ function renderGuide(){
     b.innerHTML=`<h2>수도권에서 가까운 스키장</h2><div class="hub">${RESORTS.filter(([r])=>GUIDE[r]).map(card).join("")}</div><h2>강원·그 외 스키장</h2><div class="hub">${RESORTS.filter(([r])=>!GUIDE[r]).map(card).join("")}</div><p class="note">가이드는 리조트 안내와 보도자료를 바탕으로 쓴 초안이에요. 수도권 4곳부터 채우고 있고, 다녀온 분들의 이야기는 각 스키장 톡에 모읍니다.</p>`;
     return}
   const g=GUIDE[n],bs=best(n),s=SHUTTLE[n],o=OPEN[n]||{};
-  h.innerHTML=`<button class="back" data-a="all">‹ 전체 스키장</button><h1>${n}</h1><p class="hsub">${REGION[n]}${g&&g.from?" · "+g.from:""} · ${openTxt(n)}</p><div class="hact"><button class="on" data-a="home">최저가 보기</button>${LIVE?'<button data-a="talk">톡</button><button data-a="join">동행 구하기</button>':""}</div>`;
+  h.innerHTML=`<button class="back" data-a="all">‹ 전체 스키장</button><h1 class="scr">${n}</h1><p class="hsub">${REGION[n]}${g&&g.from?" · "+g.from:""} · ${openTxt(n)}</p><div class="hact"><button class="on" data-a="home">최저가 보기</button>${LIVE?'<button data-a="talk">톡</button><button data-a="join">동행 구하기</button>':""}</div>`;
   const sec=x=>`<div class="gsec"><h3>${x.t}</h3>${x.tb?`<div class="tw"><table><tr>${x.tb.h.map(c=>`<th>${c}</th>`).join("")}</tr>${x.tb.r.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`:""}${x.li?`<ul>${x.li.map(c=>`<li>${c}</li>`).join("")}</ul>`:""}</div>`;
   const price=`<div class="gsec"><h3>요금<small>${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"} 기준</small></h3>${bs?`<button class="rrow top" data-a="home"><div><div class="nm">1인 최저 ${cu(bs.d.per)}${bs.d.from?"~":""}</div><div class="sb">${bs.d.shop} · ${bs.d.h?bs.d.h+"시간권":"시간 미표기"}${bs.d.season==="25/26"?" · 25/26 가격":""}${bs.d.eb?" · 얼리버드":""}</div></div><div class="pr"><span>${bs.n}곳 비교 ›</span></div></button>`:`<button class="rrow na" data-a="home"><div><div class="nm">26/27 요금 공개 대기</div><div class="sb">${openTxt(n)} · 공개되는 대로 올려요</div></div><div class="pr"><span>조건 바꾸기 ›</span></div></button>`}</div>`;
   const bus=`<div class="gsec"><h3>서울 출발 셔틀버스</h3>${s?`<ul><li>${s.rt?"왕복 "+won(s.rt):"요금 미확인"}${s.from?" · 탑승: "+s.from:""}</li><li>${s.st}</li></ul><p class="gsrc"><a href="${s.url}" target="_blank" rel="noopener">출처 보기</a></p>`:`<p>아직 확인하지 못했어요.</p>`}</div>`;
@@ -268,12 +268,12 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNotice(false)})
 const nwDate=d=>{const m=/^\d+-(\d+)-(\d+)$/.exec(d);return m?(+m[1])+"월 "+(+m[2])+"일":d};
 const nwLeft=x=>{if(!x.until)return null;const t=new Date(x.until+"T00:00:00"),n=new Date();n.setHours(0,0,0,0);return Math.round((t-n)/864e5)};
 const nwNew=x=>(Date.now()-new Date(x.d+"T00:00:00"))/864e5<3;
-const nwHead=h=>esc(h).replace(/\*(.+?)\*/g,"<em>$1</em>").replace("\n","<br>");
+const nwHead=h=>esc(h).replace(/\*(.+?)\*/g,"<em>$1</em>").split("\n").map(l=>`<span class="ln"><span>${l}</span></span>`).join("");
 const nwList=r=>NEWS.filter(x=>(!r||x.r===r)&&(nwLeft(x)===null||nwLeft(x)>=0)).sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0);
 const nwCard=x=>`<button class="nwc" data-nw="${x.id}"><span class="nwk">${nwNew(x)?"<i></i>":""}${x.k} · ${x.r}</span><b>${nwHead(x.h)}</b><span class="nws">${esc(x.s)}</span><span class="nwd">${nwDate(x.d)}${x.until?` · 마감 D-${nwLeft(x)}`:""} · 자세히 ›</span></button>`;
 function openNews(id){const x=NEWS.find(n=>n.id===id);if(!x)return;
   $("#nwBox").innerHTML=`<span class="nwk in">${x.k} · ${x.r}</span><h3 id="nwT" class="nw-h">${esc(x.h).replace(/\*/g,"").replace("\n"," ")}</h3><p>${esc(x.s)}</p><ul class="nwl">${x.li.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><p class="nwf">${nwDate(x.d)} 확인 · 출처: <a href="${x.src[1]}" target="_blank" rel="noopener">${esc(x.src[0])}</a><br>리조트 발표와 보도를 요약한 글이에요. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p><div class="nt-b"><button data-a="share" data-id="${x.id}">공유</button>${x.eb?`<button data-a="eb" data-r="${x.r}">가격 비교</button>`:LIVE?`<button data-a="talk" data-r="${x.r}">${x.r} 톡</button>`:`<button data-a="guide" data-r="${x.r}">${x.r} 정보</button>`}<button class="on" data-a="close">닫기</button></div>`;
-  $("#nw").hidden=false}
+  $("#nw").hidden=false;queueMicrotask(fx)}
 $("#nw").addEventListener("click",e=>{if(e.target.id==="nw"){$("#nw").hidden=true;return}const b=e.target.closest("[data-a]");if(!b)return;const k=b.dataset.a,r=b.dataset.r;
   if(k==="share"){copy(location.origin+"/news/"+b.dataset.id+"/","소식 링크를 복사했어요. 카톡이나 커뮤니티에 붙여넣어 보세요.");return}
   $("#nw").hidden=true;
@@ -283,9 +283,42 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#nw").hidden=true
 /* ── 움직임: 숫자 카운트 업, 속보 카드 기울기 (동작 줄이기 설정이면 끔) ── */
 const MOTION=!matchMedia("(prefers-reduced-motion: reduce)").matches;
 const cu=(n,sf="원",pf="")=>`<data value="${Math.round(n)}" data-cu="${Math.round(n)}" data-sf="${sf}" data-pf="${pf}">${pf}${Math.round(n).toLocaleString("ko-KR")}${sf}</data>`;
-function fx(){if(!MOTION)return;$$("[data-cu]:not([data-on])").forEach(el=>{el.dataset.on="1";if(el.offsetParent===null)return;
+function fx(){txScan();if(!MOTION)return;$$("[data-cu]:not([data-on])").forEach(el=>{el.dataset.on="1";if(el.offsetParent===null)return;
   const to=+el.dataset.cu,pf=el.dataset.pf,sf=el.dataset.sf,from=to>60?Math.round(to*.55):0,t0=performance.now();
   const f=t=>{const k=Math.min(1,(t-t0)/700),v=from+(to-from)*(1-Math.pow(1-k,3));el.textContent=pf+Math.round(v).toLocaleString("ko-KR")+sf;if(k<1&&el.isConnected)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+/* ── 글자 모션: 글자 순차 등장, 단어 교체, 타이핑, 스크램블 (동작 줄이기 설정이면 글자는 그대로 두고 움직임만 끔) ── */
+const txIO=MOTION&&"IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");txIO.unobserve(e.target)}}),{rootMargin:"0px 0px -6% 0px"}):null;
+const chars=(w,cls)=>{const s=document.createElement("span");s.className=cls;[...w].forEach((c,j)=>{const k=document.createElement("span");k.className="ch";k.style.setProperty("--i",j);k.textContent=c;s.append(k)});return s};
+function txSplit(el){if(el.dataset.tx)return;el.dataset.tx="1";
+  if(!el.hasAttribute("aria-label"))el.setAttribute("aria-label",el.textContent.replace(/\s+/g," ").trim());
+  let i=0;const walk=n=>[...n.childNodes].forEach(c=>{
+    if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w)){f.append(" ");return}
+      const s=chars(w,"wd");s.setAttribute("aria-hidden","true");[...s.children].forEach(k=>k.style.setProperty("--i",i++));f.append(s)});c.replaceWith(f)}
+    else if(c.nodeType===1&&!c.classList.contains("rot")&&!c.hasAttribute("data-cu")&&c.tagName!=="svg")walk(c)});
+  walk(el);el.classList.add("tx");if(txIO)txIO.observe(el);else el.classList.add("in")}
+function scramble(el){const to=el.textContent,pool="스키보드눈설원리프트슬로프곤지암용평휘닉스하이원",t0=performance.now();let last=0;el.setAttribute("aria-label",to);
+  const f=t=>{const k=Math.min(1,(t-t0)/640);if(k<1&&t-last<45){requestAnimationFrame(f);return}last=t;
+    el.textContent=k>=1?to:[...to].map((c,i)=>i<k*to.length||c===" "?c:pool[Math.random()*pool.length|0]).join("");
+    if(k<1&&el.isConnected)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function tyRun(el,set){const ws=el.dataset.ty.split("|");if(!MOTION){set(ws[0]);return}let w=0,n=0,dir=1,hold=0;
+  const tick=()=>{if(!el.isConnected||el.dataset.stop)return;
+    if(document.hidden||el.offsetParent===null){setTimeout(tick,600);return}
+    if(hold>0){hold--;setTimeout(tick,60);return}
+    n+=dir;set(ws[w].slice(0,n));
+    if(dir>0&&n>=ws[w].length){dir=-1;hold=28}else if(dir<0&&n<=0){dir=1;w=(w+1)%ws.length;hold=5}
+    setTimeout(tick,dir>0?58:20)};tick()}
+let rotT;function rotStart(){clearInterval(rotT);const el=$("#rot");if(!el||!MOTION)return;const ws=el.dataset.words.split("|");let i=0;
+  rotT=setInterval(()=>{if(!el.isConnected){clearInterval(rotT);return}if(document.hidden||el.offsetParent===null)return;
+    i=(i+1)%ws.length;const old=el.querySelector(".rw:not(.out)"),nw=chars(ws[i],"rw inn");
+    if(old){old.classList.add("out");setTimeout(()=>old.remove(),460)}el.append(nw)},2300)}
+let scrLast="";
+function txScan(){
+  $$(".ty:not([data-on])").forEach(el=>{el.dataset.on="1";tyRun(el,t=>{el.textContent=t})});
+  if(!MOTION)return;
+  $$(".hero h1:not([data-tx]):not(.scr),.app section h2:not([data-tx]),.nt-box h3:not([data-tx])").forEach(txSplit);
+  const h=$("#gHero h1.scr:not([data-on])");if(h){h.dataset.on="1";if(view==="guide"&&h.textContent!==scrLast){scrLast=h.textContent;scramble(h)}}
+  if(view!=="guide"||st.resort==="all")scrLast=""}
+{const tt=$("#tkText");if(tt)tyRun(tt,t=>{if(document.activeElement!==tt)tt.placeholder="예: "+t})}
 if(MOTION&&matchMedia("(hover:hover)").matches)document.addEventListener("pointermove",e=>{const c=e.target.closest?e.target.closest(".nwc"):null;
   $$(".nwc.tilt").forEach(x=>{if(x!==c)x.classList.remove("tilt")});if(!c)return;const r=c.getBoundingClientRect();c.classList.add("tilt");
   c.style.setProperty("--ry",(((e.clientX-r.left)/r.width-.5)*10).toFixed(1)+"deg");c.style.setProperty("--rx",((.5-(e.clientY-r.top)/r.height)*8).toFixed(1)+"deg")});
@@ -295,17 +328,18 @@ const M={posts:null,joins:null,at:0};
 function dday(n){const m=/(\d+)월 (\d+)일/.exec((OPEN[n]||{}).d||"");if(!m)return null;
   const t=new Date(+m[1]>=7?SY:SY+1,+m[1]-1,+m[2]),now=new Date();now.setHours(0,0,0,0);const k=Math.round((t-now)/864e5);return k<0?null:k}
 function renderMain(){
-  $("#mHero").innerHTML=`<h1>스키·보드 타는<br>사람들의 <em>스노우딜</em></h1><p class="hsub">스키장 소식, 다녀온 이야기, 같이 갈 사람, 특가까지 한곳에 모았어요.</p><div class="hact">${LIVE?`<button class="on" data-t="${FOCUS}">이야기 남기기</button><button data-go="join">동행 구하기</button>`:""}<button data-go="home">특가 보기</button></div>`;
+  const first=Object.keys(OPEN).map(n=>({n,k:dday(n)})).filter(x=>x.k!==null).sort((a,b)=>a.k-b.k)[0];
+  $("#mHero").innerHTML=`${first?`<button class="cdn" data-a="nt"><span>${first.n} ${first.k?"개장까지":"개장"}</span><b>${first.k?cu(first.k,"","D-"):"오늘"}</b><small>${OPEN[first.n].d} · 전체 개장 일정 보기</small></button>`:""}<h1 aria-label="스키장 소식, 이야기, 동행, 특가. 여기 다 있어요">스키장 <span class="rot" id="rot" data-words="소식|이야기|동행|특가" aria-hidden="true"><span class="rw inn" style="--d:260ms"><span class="ch" style="--i:0">소</span><span class="ch" style="--i:1">식</span></span></span><br>여기 다 있어요</h1><p class="hsub">리조트 소식은 속보로, 다녀온 이야기는 톡으로 모읍니다.</p><div class="hact">${LIVE?`<button class="on" data-t="${FOCUS}">이야기 남기기</button><button data-go="join">동행 구하기</button>`:""}<button data-go="home">특가 보기</button></div>`;
   const op=Object.keys(OPEN).filter(n=>OPEN[n].d).map((n,i)=>({n,i,k:dday(n)})).sort((a,b)=>(a.k===null)-(b.k===null)||(a.k-b.k)||(a.i-b.i));
   const nws=nwList().slice(0,6),news=nws.length?`<div class="mfull"><div class="mh"><h2><i></i>속보</h2><a href="/news/">전체 소식 ›</a></div><div class="nwrow">${nws.map(nwCard).join("")}</div></div>`:"";
   const opens=`<div class="mfull"><div class="mh"><h2>개장 임박</h2><button data-a="nt">전체 일정 ›</button></div><div class="opens" style="--oc:${op.length<=9?op.length:Math.ceil(op.length/2)}">${op.map(x=>{const o=OPEN[x.n];return `<button data-r="${x.n}"><span>${x.n}</span><b${x.k===null&&o.d.length>6?' class="s"':""}>${x.k===null?o.d.replace("~","~<wbr>"):x.k?cu(x.k,"","D-"):"오늘"}</b><small>${x.k===null?o.src:o.d}</small></button>`}).join("")}</div></div>`;
-  const talk=LIVE?`<div class="msec"><div class="mh"><h2>지금 올라온 이야기</h2><button data-t="${FOCUS}">톡 가기 ›</button></div><div id="mTalk"><div class="empty">이야기를 불러오는 중이에요.</div></div><div class="gask"><b>${FOCUS} 다녀오셨어요?</b><p>설질, 리프트 대기, 주차, 셔틀. 한 줄이면 충분해요. 다음에 가는 사람에게 큰 도움이 됩니다.</p><button data-t="${FOCUS}">${FOCUS} 톡에 한 줄 남기기</button></div></div>`:"";
+  const talk=LIVE?`<div class="msec"><div class="mh"><h2>지금 올라온 이야기</h2><button data-t="${FOCUS}">톡 가기 ›</button></div><div id="mTalk"><div class="empty">이야기를 불러오는 중이에요.</div></div><div class="gask"><b>${FOCUS} 다녀오셨어요?</b><button class="tyb" data-t="${FOCUS}" aria-label="${FOCUS} 톡에 한 줄 남기기"><span class="ty" data-ty="토요일 9시 도착, 리프트 대기 15분|주차는 8시 전에 가야 편해요|야간 설질 생각보다 좋았어요|셔틀은 잠실에서 앉아서 갔어요"></span><i class="caret"></i><em>남기기</em></button><p>설질, 리프트 대기, 주차, 셔틀. 한 줄이면 다음에 가는 사람에게 큰 도움이 됩니다.</p></div></div>`:"";
   const join=LIVE?`<div class="msec"><div class="mh"><h2>같이 갈 사람</h2><button data-go="join">전체 보기 ›</button></div><div id="mJoin" class="msec"></div></div>`:"";
   const eb=DATA.filter(d=>d.eb),ebR=[...new Set(eb.map(d=>d.resort))],ebMin=eb.length?Math.min(...eb.map(d=>Math.min(d.wd,d.we))):0,
     ebPct=Math.max(0,...eb.map(d=>Math.max(d.nwd?1-d.wd/d.nwd:0,d.nwe?1-d.we/d.nwe:0))),priced=RESORTS.filter(([n])=>DATA.some(d=>d.resort===n)).length;
   const deals=`<div class="msec"><div class="mh"><h2>특가</h2><button data-go="home">전체 보기 ›</button></div>${eb.length?`<button class="rrow top" data-a="eb"><div><div class="nm">얼리버드 특가</div><div class="sb">${ebR.join("·")}${ebPct?` · 정상가 대비 최대 ${Math.round(ebPct*100)}%`:""}</div></div><div class="pr"><b>${cu(ebMin)}~</b><span>1인 · 보러 가기 ›</span></div></button>`:""}<button class="rrow" data-go="home"><div><div class="nm">렌탈샵·리프트권 최저가 비교</div><div class="sb">전국 ${RESORTS.length}곳 중 ${priced}곳 가격 있음 · ${CHECKED}</div></div><div class="pr"><span>비교하기 ›</span></div></button></div>`;
   const chips=`<div><h2>스키장 바로가기</h2><div class="mchips">${[FOCUS,...RESORTS.map(r=>r[0]).filter(n=>n!==FOCUS)].map(n=>`<button class="chip" data-r="${n}">${n}</button>`).join("")}</div><div class="mlinks"><button data-go="official">리조트 공식 요금·셔틀</button><button data-go="report">가격 제보·렌탈샵 등록</button></div></div>`;
-  $("#mBody").innerHTML=news+opens+talk+join+deals+chips;queueMicrotask(fx);
+  $("#mBody").innerHTML=news+opens+talk+join+deals+chips;queueMicrotask(fx);rotStart();
   mainLoad();
 }
 function mainFeed(){const hid=jMine(),ok=p=>(p.reports||0)<3&&!hid.includes(p.id),t=$("#mTalk"),j=$("#mJoin");

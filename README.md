@@ -10,3 +10,5 @@
 - 수정 후 `python3 tools/build.py`를 실행하면 `index.html`, `data.js`, `app.js`, `style.css`, 스키장별 페이지, `sitemap.xml`이 다시 만들어집니다.
 - 조사일은 `tools/build.py`의 `TODAY_ISO`, `TODAY_KO`와 `src/app.html`의 `CHECKED`를 함께 바꿉니다.
 - 소식(속보)은 `src/app.html`의 `NEWS` 배열 맨 위에 추가합니다. 빌드하면 홈 속보 카드, 스키장 페이지, `/news/` 목록과 글별 페이지(`/news/<id>/`)가 함께 만들어집니다. 출처 주소가 있는 공식 발표·보도만 올립니다.
+- 디자인(v3): 밝은 캔버스 위 흰 카드, 제목은 Pretendard 굵은 글자, 파란 그라데이션은 상단바·속보·특가 포스터에만 씁니다. Black Han Sans는 로고·카운트다운 숫자·속보 포스터 제목에만 씁니다. 스타일은 `src/app.html` 맨 아래 "v3" 층이 앞 층을 덮어쓰는 구조입니다.
+- 글자 모션: 제목 글자 순차 등장(`txSplit`), 홈 제목의 단어 교체(`rotStart`), 예시 문장 타이핑(`tyRun`), 스키장 이름 스크램블(`scramble`). 폰의 "동작 줄이기" 설정에서는 모두 꺼지고 글자는 그대로 보입니다.
