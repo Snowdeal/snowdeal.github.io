@@ -152,7 +152,7 @@ for x in NEWS:
     h += f'<p class="gsrc" style="margin-top:18px">{x["k"]} · {x["r"]} · {nw_date(x["d"])} 확인</p>\n<h1>{html.escape(t)}</h1>\n<p class="lead">{html.escape(x["s"])}</p>\n'
     h += '<ul class="nwl">' + "".join(f"<li>{html.escape(c)}</li>" for c in x["li"]) + "</ul>\n"
     h += f'<p class="gsrc">출처: <a href="{html.escape(x["src"][1])}" rel="noopener nofollow" target="_blank">{html.escape(x["src"][0])}</a>. 리조트 발표와 보도를 요약한 글입니다. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p>\n'
-    h += f'<p><a class="btn" href="/#g-{rs}">{x["r"]} 가이드·톡 보기</a> <a class="btn" href="/{rs}/">{x["r"]} 요금표</a> <a class="btn" href="/">스노우딜 홈</a></p>\n'
+    h += f'<p><a class="btn" href="/#n-{x["id"]}">댓글 보기·남기기</a> <a class="btn" href="/#g-{rs}">{x["r"]} 가이드·톡 보기</a> <a class="btn" href="/{rs}/">{x["r"]} 요금표</a> <a class="btn" href="/">스노우딜 홈</a></p>\n'
     more = [y for y in NEWS if y["id"] != x["id"]]
     if more:
         h += '<h2>다른 소식</h2>\n<ul class="notes">' + "".join(f'<li><a href="/news/{y["id"]}/">{html.escape(nw_title(y))}</a> ({y["r"]}, {nw_date(y["d"])})</li>' for y in more) + "</ul>\n"

@@ -1,5 +1,5 @@
 rules_version = '2';
-// 스노우딜 동행 게시판 보안 규칙. Firebase 콘솔 > Firestore Database > 규칙 에 그대로 붙여 넣습니다.
+// 스노우딜 동행·톡·댓글 보안 규칙. Firebase 콘솔 > Firestore Database > 규칙 에 그대로 붙여 넣습니다.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /joins/{id} {
@@ -28,6 +28,23 @@ service cloud.firestore {
     match /talk/{slug}/posts/{id} {
       allow read: if true;
       allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['text','nick','uid','reports','created'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.reports == 0
+        && request.resource.data.created == request.time
+        && request.resource.data.text is string && request.resource.data.text.size() >= 2 && request.resource.data.text.size() <= 300
+        && request.resource.data.nick is string && request.resource.data.nick.size() >= 1 && request.resource.data.nick.size() <= 12;
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reports'])
+        && request.resource.data.reports == resource.data.reports + 1;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+
+    // 댓글: 속보(n-)·톡 글(t-)·동행 글(j-)에 붙는 댓글 (cmt/{글 키}/items)
+    match /cmt/{key}/items/{id} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && key.matches('^[ntj]-[A-Za-z0-9-]{1,80}$')
         && request.resource.data.keys().hasOnly(['text','nick','uid','reports','created'])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.reports == 0

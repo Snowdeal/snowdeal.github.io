@@ -584,6 +584,26 @@ h2{font-size:21px;line-height:1.3}
   .nt:not([hidden]) .nt-box{animation:up .34s cubic-bezier(.2,.8,.2,1) backwards}
   #v-main>.hero>.cdn::after{content:"";position:absolute;z-index:-1;left:0;right:0;top:-600px;bottom:0;pointer-events:none;background:#fff;opacity:.8;-webkit-mask:var(--tile2) repeat 0 0/520px 600px;mask:var(--tile2) repeat 0 0/520px 600px;animation:fall 14s linear infinite}
 }
+/* 댓글: 속보·톡·동행 글 아래에 붙는 한 줄 댓글 */
+.cmb{background:none;border:0;color:var(--muted);font-size:12px;font-weight:700;padding:4px 0;justify-self:start;white-space:nowrap}
+.cmb b{color:var(--p);font-weight:800}
+.cm{display:grid;gap:8px;margin-top:4px;padding:12px;border-radius:16px;background:var(--soft);min-width:0}
+.nt-box .cm{margin:0 0 12px}
+.cm-t{font-size:13px;font-weight:800}
+.cm-l{display:grid;gap:8px;min-width:0}
+.cm-i{display:grid;gap:2px;min-width:0}
+.cm-i+.cm-i{border-top:1px solid var(--line);padding-top:8px}
+.cm-i .h{display:flex;gap:8px;align-items:baseline;font-size:13px}
+.cm-i .h b{font-weight:800}
+.cm-i .h span{color:var(--muted);font-size:12px}
+.cm-i .h .rep{margin-left:auto}
+.cm-i p{margin:0;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--fg)}
+.cm-e{font-size:13px;color:var(--muted)}
+.cm-f{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:6px}
+.cm-f input{font:inherit;font-size:14px;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);width:100%;box-sizing:border-box;min-width:0}
+.cm-f button{border:0;border-radius:12px;background:var(--p);color:var(--p-fg);font-weight:700;font-size:13px;padding:0 13px;white-space:nowrap}
+.cm-f .jerr{grid-column:1/-1}
+.cm-f .jerr:empty{display:none}
 </style>
 
 <div class="app">
@@ -1121,12 +1141,13 @@ function joinRender(){
   $("#jCount").textContent=a.length?`모집 중 ${a.length}건 · 가는 날 빠른 순`:"";
   if(!a.length){$("#jList").innerHTML=`<div class="empty">${r==="all"?"아직 모집글이 없어요.":esc(r)+" 모집글이 아직 없어요."}<br>첫 글을 올려 보세요.</div>`;return}
   $("#jList").innerHTML=a.map(p=>{const dt=new Date(p.date+"T00:00:00"),wd="일월화수목금토"[dt.getDay()],need=Math.max(0,p.want-p.have);
-    return `<article class="jcard"><div><div class="tags"><span class="tag">${esc(p.resort)}</span><span class="tag off">${dt.getMonth()+1}월 ${dt.getDate()}일 (${wd})</span></div>
+    return `<article class="jcard" data-cmh><div><div class="tags"><span class="tag">${esc(p.resort)}</span><span class="tag off">${dt.getMonth()+1}월 ${dt.getDate()}일 (${wd})</span></div>
       <h3>${esc(p.nick)}<span class="jbadge">${need?need+"명 더 구해요":"모집 완료"}</span></h3>
       <div class="jm">지금 ${p.have}명 · 총 ${p.want}명 목표${p.from?" · "+esc(p.from)+" 출발":""}</div></div>
       ${p.memo?`<div class="jmemo">${esc(p.memo)}</div>`:""}
-      <div class="jact"><a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener nofollow">오픈채팅 참여</a><button class="btn ghost" data-a="price" data-id="${esc(p.id)}">${p.want}명 최저가 보기</button>
+      <div class="jact"><a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener nofollow">오픈채팅 참여</a><button class="btn ghost" data-a="price" data-id="${esc(p.id)}">${p.want}명 최저가 보기</button>${cmBtn("j-"+p.id)}
       ${p.uid===J.uid?`<button class="rep" data-a="del" data-id="${esc(p.id)}">내 글 삭제</button>`:`<button class="rep" data-a="rep" data-id="${esc(p.id)}">신고</button>`}</div></article>`}).join("");
+  cmCounts(a.slice(0,30).map(p=>"j-"+p.id));
 }
 function joinForm(open){const f=$("#jf");f.hidden=!open;if(open){$("#jfErr").textContent="";$("#jfDate").min=today();if($("#jResort").value!=="all")$("#jfResort").value=$("#jResort").value}}
 RESORTS.forEach(([n])=>{for(const id of ["jResort","jfResort"]){const o=document.createElement("option");o.value=n;o.textContent=n;$("#"+id).appendChild(o)}});
@@ -1200,7 +1221,8 @@ async function talkSync(force){
   catch(e){if(T.resort===r)$("#tkList").innerHTML='<div class="empty">글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}}
 function talkRender(){const hid=jMine(),a=T.posts.filter(p=>(p.reports||0)<3&&!hid.includes(p.id));
   $("#tkCount").textContent=a.length?`글 ${a.length}개 · 최신순`:"";
-  $("#tkList").innerHTML=a.length?a.map(p=>`<div class="tk"><div class="h"><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span><button class="rep" data-a="${p.uid===J.uid?"del":"rep"}" data-id="${esc(p.id)}">${p.uid===J.uid?"삭제":"신고"}</button></div><p>${esc(p.text)}</p></div>`).join(""):`<div class="empty">${esc(T.resort)} 톡에 아직 글이 없어요.<br>첫 글을 남겨 보세요.</div>`}
+  cmCounts(a.slice(0,30).map(p=>"t-"+SLUG[T.resort]+"-"+p.id));
+  $("#tkList").innerHTML=a.length?a.map(p=>`<div class="tk" data-cmh><div class="h"><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span><button class="rep" data-a="${p.uid===J.uid?"del":"rep"}" data-id="${esc(p.id)}">${p.uid===J.uid?"삭제":"신고"}</button></div><p>${esc(p.text)}</p>${cmBtn("t-"+SLUG[T.resort]+"-"+p.id)}</div>`).join(""):`<div class="empty">${esc(T.resort)} 톡에 아직 글이 없어요.<br>첫 글을 남겨 보세요.</div>`}
 RESORTS.forEach(([n])=>{const o=document.createElement("option");o.value=n;o.textContent=n;$("#tkResort").appendChild(o)});
 try{$("#tkNick").value=localStorage.getItem("tkNick")||""}catch(e){}
 $("#tkResort").addEventListener("change",e=>set("resort",e.target.value));
@@ -1249,14 +1271,52 @@ const nwHead=h=>esc(h).replace(/\*(.+?)\*/g,"<em>$1</em>").split("\n").map(l=>`<
 const nwList=r=>NEWS.filter(x=>(!r||x.r===r)&&(nwLeft(x)===null||nwLeft(x)>=0)).sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0);
 const nwCard=x=>`<button class="nwc" data-nw="${x.id}"><span class="nwk">${nwNew(x)?"<i></i>":""}${x.k} · ${x.r}</span><b>${nwHead(x.h)}</b><span class="nws">${esc(x.s)}</span><span class="nwd">${nwDate(x.d)}${x.until?` · 마감 D-${nwLeft(x)}`:""} · 자세히 ›</span></button>`;
 function openNews(id){const x=NEWS.find(n=>n.id===id);if(!x)return;
-  $("#nwBox").innerHTML=`<span class="nwk in">${x.k} · ${x.r}</span><h3 id="nwT" class="nw-h">${esc(x.h).replace(/\*/g,"").replace("\n"," ")}</h3><p>${esc(x.s)}</p><ul class="nwl">${x.li.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><p class="nwf">${nwDate(x.d)} 확인 · 출처: <a href="${x.src[1]}" target="_blank" rel="noopener">${esc(x.src[0])}</a><br>리조트 발표와 보도를 요약한 글이에요. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p><div class="nt-b"><button data-a="share" data-id="${x.id}">공유</button>${x.eb?`<button data-a="eb" data-r="${x.r}">가격 비교</button>`:LIVE?`<button data-a="talk" data-r="${x.r}">${x.r} 톡</button>`:`<button data-a="guide" data-r="${x.r}">${x.r} 정보</button>`}<button class="on" data-a="close">닫기</button></div>`;
-  $("#nw").hidden=false;queueMicrotask(fx)}
+  $("#nwBox").innerHTML=`<span class="nwk in">${x.k} · ${x.r}</span><h3 id="nwT" class="nw-h">${esc(x.h).replace(/\*/g,"").replace("\n"," ")}</h3><p>${esc(x.s)}</p><ul class="nwl">${x.li.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><p class="nwf">${nwDate(x.d)} 확인 · 출처: <a href="${x.src[1]}" target="_blank" rel="noopener">${esc(x.src[0])}</a><br>리조트 발표와 보도를 요약한 글이에요. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p>${LIVE?cmBox("n-"+x.id,"댓글"):""}<div class="nt-b"><button data-a="share" data-id="${x.id}">공유</button>${x.eb?`<button data-a="eb" data-r="${x.r}">가격 비교</button>`:LIVE?`<button data-a="talk" data-r="${x.r}">${x.r} 톡</button>`:`<button data-a="guide" data-r="${x.r}">${x.r} 정보</button>`}<button class="on" data-a="close">닫기</button></div>`;
+  $("#nw").hidden=false;queueMicrotask(fx);const cb=$("#nwBox .cm");if(cb)cmLoad(cb)}
 $("#nw").addEventListener("click",e=>{if(e.target.id==="nw"){$("#nw").hidden=true;return}const b=e.target.closest("[data-a]");if(!b)return;const k=b.dataset.a,r=b.dataset.r;
   if(k==="share"){copy(location.origin+"/news/"+b.dataset.id+"/","소식 링크를 복사했어요. 카톡이나 커뮤니티에 붙여넣어 보세요.");return}
   $("#nw").hidden=true;
   if(k==="talk"){st.resort=r;render();go("talk")}else if(k==="guide"){try{history.pushState(null,"","#g-"+SLUG[r])}catch(x){}st.resort=r;go("guide");render()}else if(k==="eb"){st={...init(),resort:r,eb:true};go("home");render()}});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-nw]");if(b)openNews(b.dataset.nw)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#nw").hidden=true});
+/* ── 댓글: 속보(n-글id)·톡 글(t-스키장-글id)·동행 글(j-글id)에 붙는다. 저장 위치는 cmt/{글 키}/items ── */
+const CM={store:null,last:0};
+function cmStore(){
+  if(DEMO){const m={"n-konjiam-night-owl":[{id:"c1",nick:"야간러",text:"평일 퇴근하고 가기 딱 좋네요.",uid:"x",reports:0,ts:Date.now()-36e5}],"t-konjiam-t1":[{id:"c2",nick:"눈사람",text:"몇 시쯤부터 줄이 길어졌나요?",uid:"me",reports:0,ts:Date.now()-6e5}]};let n=3;const g=k=>m[k]||(m[k]=[]);
+    return {list:async k=>g(k).slice(),count:async k=>g(k).length,add:async(k,p)=>{g(k).push({...p,id:"c"+n++,uid:"me",reports:0,ts:Date.now()})},del:async(k,id)=>{const a=g(k);a.splice(a.findIndex(x=>x.id===id),1)},report:async(k,id)=>{g(k).find(x=>x.id===id).reports++}}}
+  const db=firebase.firestore(),col=k=>db.collection("cmt").doc(k).collection("items"),inc=firebase.firestore.FieldValue.increment(1);
+  return {list:async k=>(await col(k).orderBy("created").limit(200).get()).docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,...x,ts:x.created&&x.created.toMillis?x.created.toMillis():Date.now()}}),
+    count:async k=>{const q=col(k);if(typeof q.count!=="function")return null;return (await q.count().get()).data().count},
+    add:(k,p)=>col(k).add({...p,uid:J.uid,reports:0,created:firebase.firestore.FieldValue.serverTimestamp()}),del:(k,id)=>col(k).doc(id).delete(),report:(k,id)=>col(k).doc(id).update({reports:inc})}}
+const cmBtn=k=>LIVE?`<button type="button" class="cmb" data-cmo="${esc(k)}" aria-expanded="false">댓글<b data-cc="${esc(k)}"></b></button>`:"";
+const cmBox=(k,t)=>`<div class="cm" data-cm="${esc(k)}">${t?`<div class="cm-t">${t}<b data-cc="${esc(k)}"></b></div>`:""}<div class="cm-l"><div class="cm-e">댓글을 불러오는 중이에요.</div></div><form class="cm-f" novalidate><input type="text" name="nick" maxlength="12" placeholder="닉네임" aria-label="닉네임"><input type="text" name="text" maxlength="300" placeholder="댓글 남기기" aria-label="댓글" autocomplete="off"><button type="submit">등록</button><span class="jerr" role="alert"></span></form></div>`;
+function cmSet(k,n){$$("[data-cc]").forEach(b=>{if(b.dataset.cc===k)b.textContent=n?" "+n:""})}
+async function cmLoad(el){const k=el.dataset.cm,l=el.querySelector(".cm-l"),nk=el.querySelector("[name=nick]");
+  if(!nk.value){try{nk.value=localStorage.getItem("tkNick")||""}catch(e){}}
+  try{await fbReady();CM.store=CM.store||cmStore();const hid=jMine(),a=(await CM.store.list(k)).filter(p=>(p.reports||0)<3&&!hid.includes(p.id));if(!el.isConnected)return;
+    l.innerHTML=a.length?a.map(p=>`<div class="cm-i"><div class="h"><b>${esc(p.nick)}</b><span>${ago(p.ts)}</span><button type="button" class="rep" data-ca="${p.uid===J.uid?"del":"rep"}" data-id="${esc(p.id)}">${p.uid===J.uid?"삭제":"신고"}</button></div><p>${esc(p.text)}</p></div>`).join(""):'<div class="cm-e">아직 댓글이 없어요. 첫 댓글을 남겨 보세요.</div>';cmSet(k,a.length)}
+  catch(e){if(el.isConnected)l.innerHTML='<div class="cm-e">댓글을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</div>'}}
+async function cmCounts(keys){if(!LIVE||!keys.length)return;
+  try{await fbReady();CM.store=CM.store||cmStore();keys.forEach(k=>CM.store.count(k).then(n=>{if(n!=null)cmSet(k,n)},()=>{}))}catch(e){}}
+document.addEventListener("click",async e=>{
+  const o=e.target.closest("[data-cmo]");
+  if(o){const h=o.closest("[data-cmh]")||o.parentNode,old=[...h.children].find(c=>c.classList.contains("cm"));
+    if(old){old.remove();o.setAttribute("aria-expanded","false");return}
+    h.insertAdjacentHTML("beforeend",cmBox(o.dataset.cmo));o.setAttribute("aria-expanded","true");cmLoad(h.lastElementChild);return}
+  const b=e.target.closest("[data-ca]");if(!b)return;const el=b.closest(".cm"),k=el.dataset.cm,id=b.dataset.id;
+  if(!b.dataset.sure){b.dataset.sure="1";b.textContent=b.dataset.ca==="del"?"한 번 더 누르면 삭제":"한 번 더 누르면 신고";return}
+  if(b.dataset.ca==="del"){try{await CM.store.del(k,id);toast("댓글을 삭제했어요.")}catch(x){toast("삭제하지 못했어요.")}}
+  else{try{await CM.store.report(k,id)}catch(x){}try{localStorage.setItem("jRep",JSON.stringify([...jMine(),id]))}catch(x){}toast("신고했어요. 이 댓글은 내 화면에서 가려집니다.")}
+  cmLoad(el)});
+document.addEventListener("submit",async e=>{const f=e.target.closest(".cm-f");if(!f)return;e.preventDefault();
+  const el=f.closest(".cm"),err=m=>{f.querySelector(".jerr").textContent=m},nick=f.nick.value.trim(),text=f.text.value.trim();err("");
+  if(!nick)return err("닉네임을 넣어 주세요.");
+  if(text.length<2)return err("댓글을 두 글자 이상 적어 주세요.");
+  if(/https?:\/\/|www\./i.test(text))return err("링크는 올릴 수 없어요.");
+  if(/01[016789][-.\s]?\d{3,4}[-.\s]?\d{4}/.test(text+" "+nick))return err("전화번호는 올릴 수 없어요.");
+  if(Date.now()-CM.last<15000)return err("잠시 뒤에 다시 남겨 주세요.");
+  try{await fbReady();CM.store=CM.store||cmStore();await CM.store.add(el.dataset.cm,{nick,text});CM.last=Date.now();try{localStorage.setItem("tkNick",nick)}catch(x){}f.text.value="";toast("댓글을 남겼어요.");cmLoad(el)}
+  catch(x){err("남기지 못했어요. 잠시 뒤 다시 시도해 주세요.")}});
 /* ── 움직임: 숫자 카운트 업, 속보 카드 기울기 (동작 줄이기 설정이면 끔) ── */
 const MOTION=!matchMedia("(prefers-reduced-motion: reduce)").matches;
 const cu=(n,sf="원",pf="")=>`<data value="${Math.round(n)}" data-cu="${Math.round(n)}" data-sf="${sf}" data-pf="${pf}">${pf}${Math.round(n).toLocaleString("ko-KR")}${sf}</data>`;
