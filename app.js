@@ -74,6 +74,10 @@ function dirHtml(n){const a=DIR[n];if(n==="all"||!a||!a.length)return "";
   return `<h4>가격표를 확인하지 못한 ${n} 렌탈샵</h4><ul>${a.map(x=>`<li><b>${x[0]}</b><p>${x[1]}</p><a href="${x[2]}" target="_blank" rel="noopener">홈페이지</a></li>`).join("")}</ul>`}
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,5000)}
 function copy(text,ok){const done=()=>toast(ok),fail=()=>toast(text);try{navigator.clipboard.writeText(text).then(done,fail)}catch(e){fail()}}
+/* 공유: 폰에서는 기본 공유 창(카카오톡 등)을 띄우고, 공유 창이 없거나 PC면 복사로 대신한다 */
+function share(d,copyText,ok){
+  if(navigator.share&&matchMedia("(pointer:coarse)").matches){navigator.share(d).catch(e=>{if(!e||e.name!=="AbortError")copy(copyText,ok)});return}
+  copy(copyText,ok)}
 const enc=()=>["q",st.resort==="all"?"all":SLUG[st.resort],"p"+st.people,st.day,st.scope,"h"+st.hours,st.sh].join("-");
 function dec(){const a=location.hash.slice(1).split("-");if(a[0]!=="q"||a.length!==7)return;
   const rn=a[1]==="all"?"all":Object.keys(SLUG).find(k=>SLUG[k]===a[1]);const pp=parseInt(a[2].slice(1));
@@ -109,7 +113,8 @@ $("#shareBtn").addEventListener("click",()=>{location.hash=enc();
   const hosted=/github\.io$|\.kr$|\.com$/.test(location.hostname)&&!/claude/.test(location.hostname);
   const b=st.resort==="all"?null:best(st.resort);
   const line=`${st.resort==="all"?"전국 스키장":st.resort} · ${SCOPE[st.scope]} · ${st.people}명 · ${st.day==="wd"?"주중":"주말"}${st.sh==="bus"?" · 셔틀 포함":""}${b?`\n최저 ${b.d.shop} 1인 ${won(b.d.per)}${b.d.from?"~":""}`:""}`;
-  copy(hosted?line+"\n"+location.href:line,hosted?"조건과 링크가 복사됐어요.":"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
+  if(hosted){share({title:"스노우딜",text:line,url:location.href},line+"\n"+location.href,"조건과 링크가 복사됐어요.");return}
+  copy(line,"조건이 복사됐고 주소에도 담겼어요. 링크는 화면 위 공유 메뉴에서 복사해 주세요.")});
 window.addEventListener("hashchange",route);window.addEventListener("popstate",route);
 /* ── 동행 구하기 ── */
 const esc=t=>String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -277,7 +282,8 @@ function openNews(id){const x=NEWS.find(n=>n.id===id);if(!x)return;
   $("#nwBox").innerHTML=`<span class="nwk in">${x.k} · ${x.r}</span><h3 id="nwT" class="nw-h">${esc(x.h).replace(/\*/g,"").replace("\n"," ")}</h3><p>${esc(x.s)}</p><ul class="nwl">${x.li.map(c=>`<li>${esc(c)}</li>`).join("")}</ul><p class="nwf">${nwDate(x.d)} 확인 · 출처: <a href="${x.src[1]}" target="_blank" rel="noopener">${esc(x.src[0])}</a><br>리조트 발표와 보도를 요약한 글이에요. 바뀔 수 있으니 방문 전 공식 안내를 확인하세요.</p>${LIVE?cmBox("n-"+x.id,"댓글"):""}<div class="nt-b"><button data-a="share" data-id="${x.id}">공유</button>${x.eb?`<button data-a="eb" data-r="${x.r}">가격 비교</button>`:LIVE?`<button data-a="talk" data-r="${x.r}">${x.r} 톡</button>`:`<button data-a="guide" data-r="${x.r}">${x.r} 정보</button>`}<button class="on" data-a="close">닫기</button></div>`;
   $("#nw").hidden=false;queueMicrotask(fx);const cb=$("#nwBox .cm");if(cb)cmLoad(cb)}
 $("#nw").addEventListener("click",e=>{if(e.target.id==="nw"){$("#nw").hidden=true;return}const b=e.target.closest("[data-a]");if(!b)return;const k=b.dataset.a,r=b.dataset.r;
-  if(k==="share"){copy(location.origin+"/news/"+b.dataset.id+"/","소식 링크를 복사했어요. 카톡이나 커뮤니티에 붙여넣어 보세요.");return}
+  if(k==="share"){const x=NEWS.find(n=>n.id===b.dataset.id),u=location.origin+"/news/"+b.dataset.id+"/";
+    share({title:x?x.h.replace(/\*/g,"").replace("\n"," "):"스노우딜 소식",url:u},u,"소식 링크를 복사했어요. 카톡이나 커뮤니티에 붙여넣어 보세요.");return}
   $("#nw").hidden=true;
   if(k==="talk"){st.resort=r;render();go("talk")}else if(k==="guide"){try{history.pushState(null,"","#g-"+SLUG[r])}catch(x){}st.resort=r;go("guide");render()}else if(k==="eb"){st={...init(),resort:r,eb:true};go("home");render()}});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-nw]");if(b)openNews(b.dataset.nw)});
