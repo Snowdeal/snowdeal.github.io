@@ -3,7 +3,7 @@
 import json, re, subprocess, pathlib, html
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = "https://snowdeal.github.io"
-TODAY_ISO, TODAY_KO = "2026-11-16", "2026년 11월 16일"
+TODAY_ISO, TODAY_KO = "2026-11-17", "2026년 11월 17일"
 src = (ROOT / "src/app.html").read_text(encoding="utf-8").split("\n")
 style = "\n".join(src[src.index("<style>") + 1: src.index("</style>")])
 body = "\n".join(src[src.index('<div class="app">'): src.index("<script>")])
